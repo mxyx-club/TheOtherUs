@@ -105,6 +105,8 @@ namespace TheOtherRoles.Patches
             {
                 crewmateMax = crewmates.Count - neutralMin;
                 crewmateMin = crewmates.Count - neutralMax;
+                crewmateMin += neutralMax;
+                crewmateMax += neutralMax;
             }
 
             // Get the maximum allowed count of each role type based on the minimum and maximum option

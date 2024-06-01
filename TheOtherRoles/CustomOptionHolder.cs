@@ -641,8 +641,9 @@ public class CustomOptionHolder
         randomGameStartPosition = CustomOption.Create(50, Types.General, "Random Spawn Location", false, null, true);
         randomGameStartToVents = CustomOption.Create(51, Types.General, "Random Spawn To Vents", false, randomGameStartPosition);
         ShowVentsOnMap = CustomOption.Create(65, Types.General, "Show Vents On Map", false, null, true);
-        ShowVentsOnMeetingMap = CustomOption.Create(66, Types.General, "Show Vents On Map", false, null, true);
-        enableBetterPolus = CustomOption.Create(60, Types.General, "Enable Better Polus", false);
+        ShowVentsOnMeetingMap = CustomOption.Create(66, Types.General, "Only show position of vents\n  during the meeting", true, ShowVentsOnMap);
+
+        enableBetterPolus = CustomOption.Create(60, Types.General, "Enable Better Polus", false, null, true);
         movePolusVents = CustomOption.Create(61, Types.General, "Adjust Vents", false, enableBetterPolus, false);
         movePolusVitals = CustomOption.Create(62, Types.General, "Move Vitals To Labs", false, enableBetterPolus, false);
         swapNavWifi = CustomOption.Create(63, Types.General, "Swap Reboot And Chart Course", false, enableBetterPolus, false);

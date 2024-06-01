@@ -98,6 +98,7 @@ namespace TheOtherRoles.Patches
 
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
             {
+                if (TORMapOptions.ShowVentsOnMeetingMap && MeetingHud.Instance == null) return;
                 if (vent.name.StartsWith("JackInThe") && !(PlayerControl.LocalPlayer == Trickster.trickster || PlayerControl.LocalPlayer.Data.IsDead)) continue; //for trickster vents
 
                 if (!TORMapOptions.ShowVentsOnMap)
