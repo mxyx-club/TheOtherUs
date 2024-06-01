@@ -1448,6 +1448,7 @@ namespace TheOtherRoles
 
         public static void shifterShift(byte targetId)
         {
+            if (Shifter.shifter.Data.IsDead) return;
             PlayerControl oldShifter = Shifter.shifter;
             PlayerControl player = playerById(targetId);
             if (player == null || oldShifter == null) return;
@@ -1465,7 +1466,6 @@ namespace TheOtherRoles
                 lawyerPromotesToPursuer();
                 return;
             }
-
             Shifter.shiftRole(oldShifter, player);
 
             // Set cooldowns to max for both players

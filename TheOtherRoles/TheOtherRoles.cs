@@ -279,7 +279,7 @@ namespace TheOtherRoles
                 {
                     foreach (Arrow arrow in localArrows)
                         if (arrow?.arrow != null)
-                            UnityEngine.Object.Destroy(arrow.arrow);
+                            Object.Destroy(arrow.arrow);
                 }
                 localArrows = new List<Arrow>();
                 cultist = null;
@@ -307,7 +307,7 @@ namespace TheOtherRoles
                 {
                     foreach (Arrow arrow in localArrows)
                         if (arrow?.arrow != null)
-                            UnityEngine.Object.Destroy(arrow.arrow);
+                            Object.Destroy(arrow.arrow);
                 }
                 localArrows = new List<Arrow>();
                 follower = null;
@@ -710,7 +710,7 @@ namespace TheOtherRoles
             {
                 foreach (Arrow arrow in localArrows)
                     if (arrow?.arrow != null)
-                        UnityEngine.Object.Destroy(arrow.arrow);
+                        Object.Destroy(arrow.arrow);
             }
             localArrows = new List<Arrow>();
         }
@@ -1215,42 +1215,6 @@ namespace TheOtherRoles
             garlicButton = CustomOptionHolder.vampireGarlicButton.getBool();
         }
     }
-    /*
-    public static class Snitch {
-        public static PlayerControl snitch;
-        public static Color color = new Color32(184, 251, 79, byte.MaxValue);
-        public enum Mode {
-            Chat = 0,
-            Map = 1,
-            ChatAndMap = 2
-        }
-        public enum Targets {
-            EvilPlayers = 0,
-            Killers = 1
-        }
-
-        public static Mode mode = Mode.Chat;
-        public static Targets targets = Targets.EvilPlayers;
-        public static int taskCountForReveal = 1;
-
-        public static bool isRevealed = false;
-        public static Dictionary<byte, byte> playerRoomMap = new Dictionary<byte, byte>();
-        public static TMPro.TextMeshPro text = null;
-        public static bool needsUpdate = true;
-
-        public static void clearAndReload() {
-            taskCountForReveal = Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.getFloat());
-            snitch = null;
-            isRevealed = false;
-            playerRoomMap = new Dictionary<byte, byte>();
-            if (text != null) UnityEngine.Object.Destroy(text);
-            text = null;
-            needsUpdate = true;
-            mode = (Mode) CustomOptionHolder.snitchMode.getSelection();
-            targets = (Targets) CustomOptionHolder.snitchTargets.getSelection();
-        }
-    }
-    */
 
     public static class Snitch
     {
@@ -1264,7 +1228,6 @@ namespace TheOtherRoles
         //public static bool includeTeamJackal = false;
         //public static bool includeNeutralTeam = false;
         public static bool teamNeutraUseDifferentArrowColor = true;
-        public static bool needsUpdate = true;
 
         public enum includeNeutralTeam
         {
@@ -1275,8 +1238,7 @@ namespace TheOtherRoles
         }
 
         public static includeNeutralTeam Team = includeNeutralTeam.KillNeutral;
-        public static TextMeshPro text;
-        public static bool isRevealed;
+        public static TextMeshPro text = null;
 
 
         public static void clearAndReload()
@@ -1284,16 +1246,13 @@ namespace TheOtherRoles
             if (localArrows != null)
             {
                 foreach (Arrow arrow in localArrows)
-                    if (arrow?.arrow != null)
-                        UnityEngine.Object.Destroy(arrow.arrow);
+                    if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
             }
             localArrows = new List<Arrow>();
             taskCountForReveal = Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.getFloat());
             seeInMeeting = CustomOptionHolder.snitchSeeMeeting.getBool();
-            isRevealed = false;
-            if (text != null) UnityEngine.Object.Destroy(text);
+            if (text != null) Object.Destroy(text);
             text = null;
-            needsUpdate = true;
 
             canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
             //includeNeutralTeam = CustomOptionHolder.snitchIncludeNeutralTeam.getBool();
@@ -1791,7 +1750,7 @@ namespace TheOtherRoles
         public static Sprite getMarkButtonSprite()
         {
             if (markButtonSprite) return markButtonSprite;
-            markButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.YoyoMarkButtonSprite.png", 115f);
+            markButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.YoyoMarkButtonSprite.png", 115f);
             return markButtonSprite;
         }
         private static Sprite blinkButtonSprite;
@@ -1799,7 +1758,7 @@ namespace TheOtherRoles
         public static Sprite getBlinkButtonSprite()
         {
             if (blinkButtonSprite) return blinkButtonSprite;
-            blinkButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.YoyoBlinkButtonSprite.png", 115f);
+            blinkButtonSprite = loadSpriteFromResources("TheOtherRoles.Resources.YoyoBlinkButtonSprite.png", 115f);
             return blinkButtonSprite;
         }
 
@@ -2092,7 +2051,7 @@ namespace TheOtherRoles
         public static float arrowUpdateTimer = 0f;
         public static float bountyUpdateTimer = 0f;
         public static PlayerControl bounty;
-        public static TMPro.TextMeshPro cooldownText;
+        public static TextMeshPro cooldownText;
 
         public static void clearAndReload()
         {
@@ -2101,9 +2060,9 @@ namespace TheOtherRoles
             bounty = null;
             arrowUpdateTimer = 0f;
             bountyUpdateTimer = 0f;
-            if (arrow != null && arrow.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
+            if (arrow != null && arrow.arrow != null) Object.Destroy(arrow.arrow);
             arrow = null;
-            if (cooldownText != null && cooldownText.gameObject != null) UnityEngine.Object.Destroy(cooldownText.gameObject);
+            if (cooldownText != null && cooldownText.gameObject != null) Object.Destroy(cooldownText.gameObject);
             cooldownText = null;
             foreach (PoolablePlayer p in TORMapOptions.playerIcons.Values)
             {
@@ -2151,7 +2110,7 @@ namespace TheOtherRoles
             {
                 foreach (Arrow arrow in localArrows)
                     if (arrow?.arrow != null)
-                        UnityEngine.Object.Destroy(arrow.arrow);
+                        Object.Destroy(arrow.arrow);
             }
             localArrows = new List<Arrow>();
         }
@@ -2488,7 +2447,7 @@ namespace TheOtherRoles
             invisibleDuration = CustomOptionHolder.ninjaInvisibleDuration.getFloat();
             invisibleTimer = 0f;
             isInvisble = false;
-            if (arrow?.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
+            if (arrow?.arrow != null) Object.Destroy(arrow.arrow);
             arrow = new Arrow(Color.black);
             if (arrow.arrow != null) arrow.arrow.SetActive(false);
         }
@@ -2748,8 +2707,8 @@ namespace TheOtherRoles
         {
             if (bomb != null)
             {
-                UnityEngine.Object.Destroy(bomb.bomb);
-                UnityEngine.Object.Destroy(bomb.background);
+                Object.Destroy(bomb.bomb);
+                Object.Destroy(bomb.background);
                 bomb = null;
             }
             isPlanted = false;
@@ -2942,7 +2901,7 @@ namespace TheOtherRoles
             {
                 foreach (Arrow arrow in localArrows)
                     if (arrow?.arrow != null)
-                        UnityEngine.Object.Destroy(arrow.arrow);
+                        Object.Destroy(arrow.arrow);
             }
             localArrows = new List<Arrow>();
         }
@@ -3182,7 +3141,12 @@ namespace TheOtherRoles
 
         public static void shiftRole(PlayerControl player1, PlayerControl player2, bool repeat = true)
         {
-            if (Mayor.mayor != null && Mayor.mayor == player2)
+            if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Guesser.niceGuesser = player1;
+            }
+            else if (Mayor.mayor != null && Mayor.mayor == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);
                 Mayor.mayor = player1;
@@ -3197,10 +3161,16 @@ namespace TheOtherRoles
                 if (repeat) shiftRole(player2, player1, false);
                 Engineer.engineer = player1;
             }
+            else if (PrivateInvestigator.privateInvestigator != null && PrivateInvestigator.privateInvestigator == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                PrivateInvestigator.privateInvestigator = player1;
+            }
             else if (Sheriff.sheriff != null && Sheriff.sheriff == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);
-                if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff) Sheriff.formerDeputy = player1;  // Shifter also shifts info on promoted deputy (to get handcuffs)
+                if (Sheriff.formerDeputy != null && Sheriff.formerDeputy == Sheriff.sheriff)
+                    Sheriff.formerDeputy = player1; // Shifter also shifts info on promoted deputy (to get handcuffs)
                 Sheriff.sheriff = player1;
             }
             else if (Deputy.deputy != null && Deputy.deputy == player2)
@@ -3208,10 +3178,20 @@ namespace TheOtherRoles
                 if (repeat) shiftRole(player2, player1, false);
                 Deputy.deputy = player1;
             }
+            else if (BodyGuard.bodyguard != null && BodyGuard.bodyguard == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                BodyGuard.bodyguard = player1;
+            }
             else if (Lighter.lighter != null && Lighter.lighter == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);
                 Lighter.lighter = player1;
+            }
+            else if (Jumper.jumper != null && Jumper.jumper == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Jumper.jumper = player1;
             }
             else if (Detective.detective != null && Detective.detective == player2)
             {
@@ -3222,6 +3202,11 @@ namespace TheOtherRoles
             {
                 if (repeat) shiftRole(player2, player1, false);
                 TimeMaster.timeMaster = player1;
+            }
+            else if (Veteren.veteren != null && Veteren.veteren == player2)
+            {
+                if (repeat) shiftRole(player2, player1, false);
+                Veteren.veteren = player1;
             }
             else if (Medic.medic != null && Medic.medic == player2)
             {
@@ -3263,20 +3248,10 @@ namespace TheOtherRoles
                 if (repeat) shiftRole(player2, player1, false);
                 SecurityGuard.securityGuard = player1;
             }
-            else if (Guesser.niceGuesser != null && Guesser.niceGuesser == player2)
-            {
-                if (repeat) shiftRole(player2, player1, false);
-                Guesser.niceGuesser = player1;
-            }
             else if (Medium.medium != null && Medium.medium == player2)
             {
                 if (repeat) shiftRole(player2, player1, false);
                 Medium.medium = player1;
-            }
-            else if (Pursuer.pursuer != null && Pursuer.pursuer == player2)
-            {
-                if (repeat) shiftRole(player2, player1, false);
-                Pursuer.pursuer = player1;
             }
             else if (Trapper.trapper != null && Trapper.trapper == player2)
             {

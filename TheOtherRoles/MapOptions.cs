@@ -26,7 +26,8 @@ namespace TheOtherRoles
         public static bool impostorSeeRoles = false;
         public static bool transparentTasks = false;
         public static bool hideOutOfSightNametags = false;
-        public static bool ShowVentsOnMap = true;
+        public static bool ShowVentsOnMap = false;
+        public static bool ShowVentsOnMeetingMap = true;
         public static bool disableMedscanWalking = false;
         public static int restrictDevices = 0;
         // public static float restrictAdminTime = 600f;
@@ -75,7 +76,10 @@ namespace TheOtherRoles
             restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.restrictVents.getFloat();
             disableCamsRoundOne = CustomOptionHolder.disableCamsRound1.getBool();
             randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
-            allowModGuess = CustomOptionHolder.allowModGuess.getBool();
+            ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
+            ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
+            allowModGuess = false;
+            //allowModGuess = CustomOptionHolder.allowModGuess.getBool();
             firstKillPlayer = null;
             isRoundOne = true;
         }
@@ -91,7 +95,6 @@ namespace TheOtherRoles
             toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value;
             enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
             enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
-            ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value;
 
             //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
         }

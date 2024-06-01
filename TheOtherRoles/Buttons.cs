@@ -1803,7 +1803,7 @@ namespace TheOtherRoles
                     if (Yoyo.markedLocation == null)
                     {
                         Message($"marked location is null in button press");
-                        MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, Hazel.SendOption.Reliable);
+                        MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
                         writer.WriteBytesAndSize(buff);
                         writer.EndMessage();
                         RPCProcedure.yoyoMarkLocation(buff);
@@ -1823,7 +1823,7 @@ namespace TheOtherRoles
                         {
                             SubmergedCompatibility.ChangeFloor(exit.y > -7);
                         }
-                        MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, Hazel.SendOption.Reliable);
+                        MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                         writer.Write(Byte.MaxValue);
                         writer.WriteBytesAndSize(buff);
                         writer.EndMessage();
@@ -1881,7 +1881,7 @@ namespace TheOtherRoles
                     {
                         SubmergedCompatibility.ChangeFloor(exit.y > -7);
                     }
-                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, Hazel.SendOption.Reliable);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, SendOption.Reliable);
                     writer.Write((byte)0);
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
@@ -2588,7 +2588,7 @@ namespace TheOtherRoles
                         writer.Write(Jumper.jumpLocation.y);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-                        PlayerControl.LocalPlayer.transform.position = Jumper.jumpLocation;
+                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Jumper.jumpLocation);
 
 
 
@@ -2638,7 +2638,7 @@ namespace TheOtherRoles
                         writer.Write(Escapist.escapeLocation.y);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-                        PlayerControl.LocalPlayer.transform.position = Escapist.escapeLocation;
+                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(Escapist.escapeLocation);
 
 
 

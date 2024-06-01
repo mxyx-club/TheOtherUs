@@ -100,7 +100,7 @@ namespace TheOtherRoles.Patches
             {
                 if (vent.name.StartsWith("JackInThe") && !(PlayerControl.LocalPlayer == Trickster.trickster || PlayerControl.LocalPlayer.Data.IsDead)) continue; //for trickster vents
 
-                if (!TheOtherRolesPlugin.ShowVentsOnMap.Value)
+                if (!TORMapOptions.ShowVentsOnMap)
                 {
                     if (mapIcons.Count > 0)
                     {

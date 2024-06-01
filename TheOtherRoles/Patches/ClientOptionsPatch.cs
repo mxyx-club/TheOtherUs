@@ -20,8 +20,7 @@ namespace TheOtherRoles.Patches
             new("Show Role Summary", () => TORMapOptions.showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value = !TheOtherRolesPlugin.ShowRoleSummary.Value, TheOtherRolesPlugin.ShowRoleSummary.Value),
             new("Show Lighter / Darker", () => TORMapOptions.showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value = !TheOtherRolesPlugin.ShowLighterDarker.Value, TheOtherRolesPlugin.ShowLighterDarker.Value),
             new SelectionBehaviour("Better Cursor", () => TORMapOptions.toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value = !TheOtherRolesPlugin.ToggleCursor.Value, TheOtherRolesPlugin.ToggleCursor.Value),
-            new("Enable Sound Effects", () => TORMapOptions.enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value = !TheOtherRolesPlugin.EnableSoundEffects.Value, TheOtherRolesPlugin.EnableSoundEffects.Value),
-            new("Show Vents On Map", () => TORMapOptions.ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value = !TheOtherRolesPlugin.ShowVentsOnMap.Value, TheOtherRolesPlugin.ShowVentsOnMap.Value),
+            new("Enable Sound Effects", () => TORMapOptions.enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value = !TheOtherRolesPlugin.EnableSoundEffects.Value, TheOtherRolesPlugin.EnableSoundEffects.Value)
         };
 
         private static GameObject popUp;

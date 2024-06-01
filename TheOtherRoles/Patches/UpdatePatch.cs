@@ -125,7 +125,7 @@ namespace TheOtherRoles.Patches
                 {
                     foreach (PlayerControl p in CachedPlayer.AllPlayers)
                     {
-                        if (p == (forImp || forKillerTeam || forEvilTeam || forNeutraTeam))
+                        if (forImp || forKillerTeam || forEvilTeam || forNeutraTeam)
                         {
                             setPlayerNameColor(Snitch.snitch, Snitch.color);
                         }

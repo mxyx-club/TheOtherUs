@@ -480,7 +480,7 @@ namespace TheOtherRoles.Patches
             foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
             {
                 RoleId guesserRole = (Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? RoleId.NiceGuesser : RoleId.EvilGuesser;
-                if (CustomOptionHolder.allowModGuess.getBool() && roleInfo.isModifier)
+                if (allowModGuess && roleInfo.isModifier)
                 {
                     // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
                     if (roleInfo.roleId != RoleId.Bait &&
@@ -535,7 +535,7 @@ namespace TheOtherRoles.Patches
                 buttonParent.localPosition = new Vector3(-3.47f + (1.55f * col), 1.5f - (0.35f * row), -5);
                 buttonParent.localScale = new Vector3(0.45f, 0.45f, 1f);
                 label.text = cs(roleInfo.color, roleInfo.name);
-                label.alignment = TMPro.TextAlignmentOptions.Center;
+                label.alignment = TextAlignmentOptions.Center;
                 label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
                 label.transform.localScale *= 1.7f;
                 int copiedIndex = i;
@@ -681,7 +681,7 @@ namespace TheOtherRoles.Patches
 
                 meetingExtraButtonParent.localPosition = new Vector3(0, -2.225f, -5);
                 meetingExtraButtonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
-                meetingExtraButtonLabel.alignment = TMPro.TextAlignmentOptions.Center;
+                meetingExtraButtonLabel.alignment = TextAlignmentOptions.Center;
                 meetingExtraButtonLabel.transform.localPosition = new Vector3(0, 0, meetingExtraButtonLabel.transform.localPosition.z);
                 if (addSwapperButtons)
                 {

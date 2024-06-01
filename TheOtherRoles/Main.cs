@@ -44,7 +44,6 @@ namespace TheOtherRoles
         public static ConfigEntry<bool> EnableSoundEffects { get; set; }
         public static ConfigEntry<bool> EnableHorseMode { get; set; }
         public static ConfigEntry<bool> ToggleCursor { get; set; }
-        public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
         public static ConfigEntry<string> Ip { get; set; }
         public static ConfigEntry<ushort> Port { get; set; }
         public static ConfigEntry<string> ShowPopUpVersion { get; set; }
@@ -99,12 +98,11 @@ namespace TheOtherRoles
             GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
             GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
             ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
-            ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", false);
+            ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", true);
             ToggleCursor = Config.Bind("Custom", "Better Cursor", true);
             EnableSoundEffects = Config.Bind("Custom", "Enable Sound Effects", true);
             EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
             ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
-            ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
 
             Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
             Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

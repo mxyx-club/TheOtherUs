@@ -460,7 +460,9 @@ public class CustomOptionHolder
     public static CustomOption transparentTasks;
     public static CustomOption randomGameStartPosition;
     public static CustomOption randomGameStartToVents;
-    public static CustomOption allowModGuess;
+    public static CustomOption ShowVentsOnMap;
+    public static CustomOption ShowVentsOnMeetingMap;
+    //public static CustomOption allowModGuess;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
     public static CustomOption camsNoNightVisionIfImpVision;
@@ -627,7 +629,7 @@ public class CustomOptionHolder
         showButtonTarget = CustomOption.Create(28, Types.General, "Show Button Target", true);
         impostorSeeRoles = CustomOption.Create(29, Types.General, "Impostors Can See The Roles Of Their Team", false);
         blockGameEnd = CustomOption.Create(30, Types.General, "Block Game End If Power Crew Is Alive", false);
-        allowModGuess = CustomOption.Create(31, Types.General, "Allow Guessing Some Modifiers", false);
+        //allowModGuess = CustomOption.Create(31, Types.General, "Allow Guessing Some Modifiers", false);
 
         transparentTasks = CustomOption.Create(32, Types.General, "Tasks Are Transparent", false, null, true);
         disableMedbayWalk = CustomOption.Create(33, Types.General, "Disable MedBay Animations", false);
@@ -638,6 +640,8 @@ public class CustomOptionHolder
         //Map options
         randomGameStartPosition = CustomOption.Create(50, Types.General, "Random Spawn Location", false, null, true);
         randomGameStartToVents = CustomOption.Create(51, Types.General, "Random Spawn To Vents", false, randomGameStartPosition);
+        ShowVentsOnMap = CustomOption.Create(65, Types.General, "Show Vents On Map", false, null, true);
+        ShowVentsOnMeetingMap = CustomOption.Create(66, Types.General, "Show Vents On Map", false, null, true);
         enableBetterPolus = CustomOption.Create(60, Types.General, "Enable Better Polus", false);
         movePolusVents = CustomOption.Create(61, Types.General, "Adjust Vents", false, enableBetterPolus, false);
         movePolusVitals = CustomOption.Create(62, Types.General, "Move Vitals To Labs", false, enableBetterPolus, false);
@@ -933,17 +937,11 @@ public class CustomOptionHolder
         trackerCorpsesTrackingCooldown = CustomOption.Create(30164, Types.Crewmate, "Corpses Tracking Cooldown", 30f, 5f, 120f, 5f, trackerCanTrackCorpses);
         trackerCorpsesTrackingDuration = CustomOption.Create(30165, Types.Crewmate, "Corpses Tracking Duration", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
         trackerTrackingMethod = CustomOption.Create(30166, Types.Crewmate, "How Tracker Gets Target Location", new string[] { "Arrow Only", "Proximity Dectector Only", "Arrow + Proximity" }, trackerSpawnRate);
-        /*
-        snitchSpawnRate = CustomOption.Create(30170, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
-        snitchLeftTasksForReveal = CustomOption.Create(30171, Types.Crewmate, "Task Count Where The Snitch Will Be Revealed", 5f, 0f, 25f, 1f, snitchSpawnRate);
-        snitchMode = CustomOption.Create(30172, Types.Crewmate, "Information Mode", new string[] { "Chat", "Map", "Chat & Map" }, snitchSpawnRate);
-        snitchTargets = CustomOption.Create(30173, Types.Crewmate, "Targets", new string[] { "All Evil Players", "Killing Players" }, snitchSpawnRate);
-        */
 
         snitchSpawnRate = CustomOption.Create(30170, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = CustomOption.Create(30171, Types.Crewmate, "Task Count Where The Snitch Will Be Revealed", 1f, 0f, 10f, 1f, snitchSpawnRate);
-        snitchSeeMeeting = CustomOption.Create(30172, Types.Crewmate, "Show Roles In Meeting", false, snitchSpawnRate);
-        snitchCanSeeRoles = CustomOption.Create(30173, Types.Crewmate, "Can See Roles", false, snitchSpawnRate);
+        snitchSeeMeeting = CustomOption.Create(30172, Types.Crewmate, "Show Roles Color", true, snitchSpawnRate);
+        snitchCanSeeRoles = CustomOption.Create(30173, Types.Crewmate, "Can See Roles Info", false, snitchSeeMeeting);
         snitchIncludeNeutralTeam = CustomOption.Create(30174, Types.Crewmate, "Include Team Neutral", ["Off", "Killer", "Evil", "All"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = CustomOption.Create(30175, Types.Crewmate, "Use Different Color For Neutra Team", true, snitchIncludeNeutralTeam);
 
@@ -1010,7 +1008,7 @@ public class CustomOptionHolder
         modifierDisperser = CustomOption.Create(1010, Types.Modifier, cs(Color.red, "Disperser"), rates, null, true);
         modifierDisperserCooldown = CustomOption.Create(1011, Types.Modifier, "Disperser Cooldown", 30f, 10f, 60f, 2.5f, modifierDisperser);
         modifierDisperserNumberOfUses = CustomOption.Create(1012, Types.Modifier, "Number Of Uses", 1, 1, 5, 1, modifierDisperser);
-        modifierDisperserDispersesToVent = CustomOption.Create(1013, Types.Modifier, "Disperser To Vent", true, modifierDisperser);
+        modifierDisperserDispersesToVent = CustomOption.Create(1013, Types.Modifier, "disperse To Vent", true, modifierDisperser);
 
         modifierBloody = CustomOption.Create(1020, Types.Modifier, cs(Color.yellow, "Bloody"), rates, null, true);
         modifierBloodyQuantity = CustomOption.Create(1021, Types.Modifier, cs(Color.yellow, "Bloody Quantity"), ratesModifier, modifierBloody);
@@ -1083,17 +1081,17 @@ public class CustomOptionHolder
 
         // Guesser Gamemode (2000 - 2999)
         guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "Number of Crew Guessers"), 15f, 1f, 15f, 1f, null, true);
-        guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "Number of Neutral Guessers"), 15f, 1f, 15f, 1f, null, true);
-        guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "Number of Impostor Guessers"), 15f, 1f, 15f, 1f, null, true);
+        guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "Number of Neutral Guessers"), 15f, 1f, 15f, 1f);
+        guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "Number of Impostor Guessers"), 15f, 1f, 15f, 1f);
         guesserForceJackalGuesser = CustomOption.Create(2007, Types.Guesser, "Force Jackal Guesser", false, null, true);
-        guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "Sidekick Is Always Guesser", false, null);
-        guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "Force Thief Guesser", false, null, true);
-        guesserGamemodeHaveModifier = CustomOption.Create(2004, Types.Guesser, "Guessers Can Have A Modifier", true, null);
-        guesserGamemodeNumberOfShots = CustomOption.Create(2005, Types.Guesser, "Guesser Number Of Shots", 3f, 1f, 15f, 1f, null);
-        guesserGamemodeHasMultipleShotsPerMeeting = CustomOption.Create(2006, Types.Guesser, "Guesser Can Shoot Multiple Times Per Meeting", false, null);
-        guesserGamemodeKillsThroughShield = CustomOption.Create(2008, Types.Guesser, "Guesses Ignore The Medic Shield", true, null);
-        guesserGamemodeEvilCanKillSpy = CustomOption.Create(2009, Types.Guesser, "Evil Guesser Can Guess The Spy", true, null);
-        guesserGamemodeCantGuessSnitchIfTaksDone = CustomOption.Create(2010, Types.Guesser, "Guesser Can't Guess Snitch When Tasks Completed", true, null);
+        guesserGamemodeSidekickIsAlwaysGuesser = CustomOption.Create(2012, Types.Guesser, "Sidekick Is Always Guesser", false);
+        guesserForceThiefGuesser = CustomOption.Create(2011, Types.Guesser, "Force Thief Guesser", false);
+        guesserGamemodeHaveModifier = CustomOption.Create(2004, Types.Guesser, "Guessers Can Have A Modifier", true, null, true);
+        guesserGamemodeNumberOfShots = CustomOption.Create(2005, Types.Guesser, "Guesser Number Of Shots", 3f, 1f, 15f, 1f);
+        guesserGamemodeHasMultipleShotsPerMeeting = CustomOption.Create(2006, Types.Guesser, "Guesser Can Shoot Multiple Times Per Meeting", false);
+        guesserGamemodeKillsThroughShield = CustomOption.Create(2008, Types.Guesser, "Guesses Ignore The Medic Shield", true);
+        guesserGamemodeEvilCanKillSpy = CustomOption.Create(2009, Types.Guesser, "Evil Guesser Can Guess The Spy", true);
+        guesserGamemodeCantGuessSnitchIfTaksDone = CustomOption.Create(2010, Types.Guesser, "Guesser Can't Guess Snitch When Tasks Completed", true);
 
         //-------------------------- Hide N Seek 3000 - 3999 -------------------------- //
 

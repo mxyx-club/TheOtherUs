@@ -4,10 +4,12 @@ using System.Linq;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
+using Reactor.Utilities.Extensions;
 using Sentry.Internal.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
+using TMPro;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.TheOtherRoles;
@@ -572,7 +574,7 @@ public static class PlayerControlFixedUpdatePatch
                     Vector3 position = Tracker.tracked.transform.position;
                     if (!trackedOnMap)
                     { // Check for dead body
-                        DeadBody body = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
+                        DeadBody body = Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracker.tracked.PlayerId);
                         if (body != null)
                         {
                             trackedOnMap = true;
@@ -659,27 +661,26 @@ public static class PlayerControlFixedUpdatePatch
 
     public static void updatePlayerInfo()
     {
-        Vector3 colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
-        Vector3 colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
+        var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
+        var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
-
             // Colorblind Text in Meeting
-            PlayerVoteArea playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
+            var playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
             if (playerVoteArea != null && playerVoteArea.ColorBlindName.gameObject.active)
             {
-                playerVoteArea.ColorBlindName.transform.localPosition = colorBlindTextMeetingInitialLocalPos + new Vector3(0f, 0.4f, 0f);
+                playerVoteArea.ColorBlindName.transform.localPosition =
+                    colorBlindTextMeetingInitialLocalPos + new Vector3(0f, 0.4f, 0f);
                 playerVoteArea.ColorBlindName.transform.localScale = colorBlindTextMeetingInitialLocalScale * 0.8f;
             }
 
             // Colorblind Text During the round
-            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active)
-            {
+            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText &&
+                p.cosmetics.colorBlindText.gameObject.active)
                 p.cosmetics.colorBlindText.transform.localPosition = new Vector3(0, -1f, 0f);
-            }
 
-            // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
-            p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);
+            p.cosmetics.nameText.transform.parent
+                .SetLocalZ(-0.0001f); // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
 
             //Snitch See Roles
             bool snitchFlag = false;
@@ -687,18 +688,26 @@ public static class PlayerControlFixedUpdatePatch
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
                 int numberOfTasks = playerTotal - playerCompleted;
-                bool completedSnitch = Snitch.seeInMeeting && CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
+                bool completedSnitch = CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
                 bool forImpTeam = p.Data.Role.IsImpostor;
                 bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
                 bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
                 bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
-                snitchFlag = completedSnitch && (p == (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam));
+                snitchFlag = completedSnitch && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam);
             }
 
-            if (snitchFlag || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) || p == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead || (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth && Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) || (TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead)) || (CachedPlayer.LocalPlayer.PlayerControl == Poucher.poucher && Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
+            if (snitchFlag || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
+                   p == CachedPlayer.LocalPlayer.PlayerControl ||
+                CachedPlayer.LocalPlayer.Data.IsDead ||
+                (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth &&
+                 Slueth.reported.Any(x => x.PlayerId == p.PlayerId)) ||
+                (TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
+                 !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead)) ||
+                (CachedPlayer.LocalPlayer.PlayerControl == Poucher.poucher &&
+                 Poucher.killed.Any(x => x.PlayerId == p.PlayerId)))
             {
-                Transform playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
-                TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
+                var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
+                var playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TextMeshPro>() : null;
                 if (playerInfo == null)
                 {
                     playerInfo = Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
@@ -708,8 +717,12 @@ public static class PlayerControlFixedUpdatePatch
                     playerInfo.color = playerInfo.color.SetAlpha(1f);
                 }
 
-                Transform meetingInfoTransform = playerVoteArea != null ? playerVoteArea.NameText.transform.parent.FindChild("Info") : null;
-                TMPro.TextMeshPro meetingInfo = meetingInfoTransform != null ? meetingInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
+                var meetingInfoTransform = playerVoteArea != null
+                    ? playerVoteArea.NameText.transform.parent.FindChild("Info")
+                    : null;
+                var meetingInfo = meetingInfoTransform != null
+                    ? meetingInfoTransform.GetComponent<TextMeshPro>()
+                    : null;
                 if (meetingInfo == null && playerVoteArea != null)
                 {
                     meetingInfo = Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
@@ -726,22 +739,28 @@ public static class PlayerControlFixedUpdatePatch
                 }
 
                 var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
-                string roleNames = RoleInfo.GetRolesString(p, true, false);
-                string roleText = RoleInfo.GetRolesString(p, true, TORMapOptions.ghostsSeeModifier);
-                string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
+                var roleNames = RoleInfo.GetRolesString(p, true, false);
+                var roleText = RoleInfo.GetRolesString(p, true, TORMapOptions.ghostsSeeModifier);
+                var taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
 
-                string playerInfoText = "";
-                string meetingInfoText = "";
-                if (p == CachedPlayer.LocalPlayer.PlayerControl || (TORMapOptions.impostorSeeRoles && Spy.spy == null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor && !CachedPlayer.LocalPlayer.Data.IsDead && p == (p.Data.Role.IsImpostor && !p.Data.IsDead)))
+                var playerInfoText = "";
+                var meetingInfoText = "";
+                if (p == CachedPlayer.LocalPlayer.PlayerControl || (TORMapOptions.impostorSeeRoles && Spy.spy == null &&
+                                                                    CachedPlayer.LocalPlayer.Data.Role.IsImpostor &&
+                                                                    !CachedPlayer.LocalPlayer.Data.IsDead &&
+                                                                    p == (p.Data.Role.IsImpostor && !p.Data.IsDead)))
                 {
                     if (p.Data.IsDead) roleNames = roleText;
                     playerInfoText = $"{roleNames}";
-                    if (p == Swapper.swapper) playerInfoText = $"{roleNames}" + cs(Swapper.color, $" ({Swapper.charges})");
+                    if (p == Swapper.swapper)
+                        playerInfoText = $"{roleNames}" + cs(Swapper.color, $" ({Swapper.charges})");
                     if (HudManager.Instance.TaskPanel != null)
                     {
-                        TMPro.TextMeshPro tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP").GetComponent<TMPro.TextMeshPro>();
+                        var tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP")
+                            .GetComponent<TextMeshPro>();
                         tabText.SetText($"Tasks {taskInfo}");
                     }
+
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
                 }
                 else if (TORMapOptions.ghostsSeeRoles && TORMapOptions.ghostsSeeInformation)
@@ -762,7 +781,10 @@ public static class PlayerControlFixedUpdatePatch
 
                 playerInfo.text = playerInfoText;
                 playerInfo.gameObject.SetActive(p.Visible);
-                if (meetingInfo != null) meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
+                if (meetingInfo != null)
+                    meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results
+                        ? ""
+                        : meetingInfoText;
             }
         }
     }
@@ -838,7 +860,6 @@ public static class PlayerControlFixedUpdatePatch
         bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(local);
         bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
         bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
-        if (numberOfTasks <= Snitch.taskCountForReveal) Snitch.isRevealed = true;
 
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam))
         {
@@ -888,11 +909,7 @@ public static class PlayerControlFixedUpdatePatch
     // Snitch Text
     private static void snitchTextUpdate()
     {
-        if (Snitch.localArrows == null || Snitch.snitch == null)
-        {
-            Snitch.text = null;
-            return;
-        };
+        if (Snitch.snitch == null) return;
         var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
@@ -905,11 +922,9 @@ public static class PlayerControlFixedUpdatePatch
         bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(local);
         bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(local);
 
-        if (numberOfTasks > Snitch.taskCountForReveal) Snitch.text = null;
-
         if (numberOfTasks <= Snitch.taskCountForReveal && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam || isDead))
         {
-            if (Snitch.text == null)
+            if (Snitch.text == null && !snitchIsDead)
             {
                 Snitch.text = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 Snitch.text.enableWordWrapping = false;
@@ -917,15 +932,16 @@ public static class PlayerControlFixedUpdatePatch
                 Snitch.text.transform.localPosition += new Vector3(0f, 1.8f, -69f);
                 Snitch.text.gameObject.SetActive(true);
             }
-            else if (!snitchIsDead && Snitch.snitch != null)
+            else if (!snitchIsDead)
             {
-                Snitch.text.text = "Snitch is alive: " + playerCompleted + "/" + playerTotal;
+                Snitch.text.text = $"Snitch is alive: {playerCompleted} / {playerTotal}";
             }
-            else if (snitchIsDead || Snitch.snitch == null)
+            else
             {
-                Snitch.text.text = null;
+                Snitch.text?.Destroy();
             }
         }
+        else Snitch.text?.Destroy();
     }
 
 
