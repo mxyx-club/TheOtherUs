@@ -1,11 +1,12 @@
-using Hazel;
 using System;
+using Hazel;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.Objects
 {
-    public class Bomb {
+    public class Bomb
+    {
         public GameObject bomb;
         public GameObject background;
 
@@ -14,27 +15,31 @@ namespace TheOtherRoles.Objects
         private static Sprite defuseSprite;
         public static bool canDefuse = false;
 
-        public static Sprite getBombSprite() {
+        public static Sprite getBombSprite()
+        {
             if (bombSprite) return bombSprite;
-            bombSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomb.png", 300f);
+            bombSprite = loadSpriteFromResources("TheOtherRoles.Resources.Bomb.png", 300f);
             return bombSprite;
         }
-        public static Sprite getBackgroundSprite() {
+        public static Sprite getBackgroundSprite()
+        {
             if (backgroundSprite) return backgroundSprite;
-            backgroundSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Bomber.hearRange);
+            backgroundSprite = loadSpriteFromResources("TheOtherRoles.Resources.BombBackground.png", 110f / Bomber.hearRange);
             return backgroundSprite;
         }
 
-        public static Sprite getDefuseSprite() {
+        public static Sprite getDefuseSprite()
+        {
             if (defuseSprite) return defuseSprite;
-            defuseSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Bomb_Button_Defuse.png", 115f);
+            defuseSprite = loadSpriteFromResources("TheOtherRoles.Resources.Bomb_Button_Defuse.png", 115f);
             return defuseSprite;
         }
 
-        public Bomb(Vector2 p) {
+        public Bomb(Vector2 p)
+        {
             bomb = new GameObject("Bomb") { layer = 11 };
             bomb.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-            Vector3 position = new Vector3(p.x, p.y, p.y / 1000 + 0.001f); // just behind player
+            Vector3 position = new Vector3(p.x, p.y, (p.y / 1000) + 0.001f); // just behind player
             bomb.transform.position = position;
 
             background = new GameObject("Background") { layer = 11 };
@@ -49,7 +54,8 @@ namespace TheOtherRoles.Objects
 
             bomb.SetActive(false);
             background.SetActive(false);
-            if (CachedPlayer.LocalPlayer.PlayerControl == Bomber.bomber) {
+            if (CachedPlayer.LocalPlayer.PlayerControl == Bomber.bomber)
+            {
                 bomb.SetActive(true);
             }
             Bomber.bomb = this;
@@ -58,17 +64,21 @@ namespace TheOtherRoles.Objects
             backgroundRenderer.color = Color.white;
             Bomber.isActive = false;
 
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombActiveAfter, new Action<float>((x) => {
-                if (x == 1f && this != null) {
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombActiveAfter, new Action<float>((x) =>
+            {
+                if (x == 1f && this != null)
+                {
                     bomb.SetActive(true);
                     background.SetActive(true);
                     SoundEffectsManager.playAtPosition("bombFuseBurning", p, Bomber.destructionTime, Bomber.hearRange, true);
                     Bomber.isActive = true;
 
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.destructionTime, new Action<float>((x) => { // can you feel the pain?
-                        Color combinedColor = Mathf.Clamp01(x) * g + Mathf.Clamp01(1 - x) * c;
+                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.destructionTime, new Action<float>((x) =>
+                    { // can you feel the pain?
+                        Color combinedColor = (Mathf.Clamp01(x) * g) + (Mathf.Clamp01(1 - x) * c);
                         if (backgroundRenderer) backgroundRenderer.color = combinedColor;
-                        if (x == 1f && this != null) {
+                        if (x == 1f && this != null)
+                        {
                             explode(this);
                         }
                     })));
@@ -76,15 +86,18 @@ namespace TheOtherRoles.Objects
             })));
 
         }
-        public static void explode(Bomb b) {
+        public static void explode(Bomb b)
+        {
             if (b == null) return;
-            if (Bomber.bomber != null) {
+            if (Bomber.bomber != null)
+            {
                 var position = b.bomb.transform.position;
                 var distance = Vector2.Distance(position, CachedPlayer.LocalPlayer.transform.position);  // every player only checks that for their own client (desynct with positions sucks)
-                if (distance < Bomber.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead) {
-                    Helpers.checkMurderAttemptAndKill(Bomber.bomber, CachedPlayer.LocalPlayer.PlayerControl, false, false, true, true);
-                    
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, Hazel.SendOption.Reliable, -1);
+                if (distance < Bomber.destructionRange && !CachedPlayer.LocalPlayer.Data.IsDead)
+                {
+                    checkMurderAttemptAndKill(Bomber.bomber, CachedPlayer.LocalPlayer.PlayerControl, false, false, true, true);
+
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable, -1);
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                     writer.Write((byte)RPCProcedure.GhostInfoTypes.DeathReasonAndKiller);
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
@@ -93,21 +106,24 @@ namespace TheOtherRoles.Objects
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     GameHistory.overrideDeathReasonAndKiller(CachedPlayer.LocalPlayer, DeadPlayer.CustomDeathReason.Bomb, killer: Bomber.bomber);
                 }
-                SoundEffectsManager.playAtPosition("bombExplosion", position, range: Bomber.hearRange) ;
+                SoundEffectsManager.playAtPosition("bombExplosion", position, range: Bomber.hearRange);
             }
             Bomber.clearBomb();
             canDefuse = false;
             Bomber.isActive = false;
         }
 
-        public static void update() {
-            if (Bomber.bomb == null || !Bomber.isActive) {
+        public static void update()
+        {
+            if (Bomber.bomb == null || !Bomber.isActive)
+            {
                 canDefuse = false;
                 return;
             }
             Bomber.bomb.background.transform.Rotate(Vector3.forward * 50 * Time.fixedDeltaTime);
 
-            if (MeetingHud.Instance && Bomber.bomb != null) {
+            if (MeetingHud.Instance && Bomber.bomb != null)
+            {
                 Bomber.clearBomb();
             }
 
@@ -115,7 +131,8 @@ namespace TheOtherRoles.Objects
             else canDefuse = true;
         }
 
-        public static void clearBackgroundSprite() {
+        public static void clearBackgroundSprite()
+        {
             backgroundSprite = null;
         }
     }

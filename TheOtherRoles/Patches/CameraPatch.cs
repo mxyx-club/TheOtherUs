@@ -1,6 +1,6 @@
-using Hazel;
 using System;
 using System.Linq;
+using Hazel;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -22,9 +22,9 @@ namespace TheOtherRoles.Patches
         static void UseCameraTime()
         {
             // Don't waste network traffic if we're out of time.
-            if (TORMapOptions.restrictDevices > 0 && TORMapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive()  && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard)
+            if (TORMapOptions.restrictDevices > 0 && TORMapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive() && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseCameraTime, Hazel.SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseCameraTime, SendOption.Reliable, -1);
                 writer.Write(cameraTimer);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.useCameraTime(cameraTimer);
@@ -99,12 +99,13 @@ namespace TheOtherRoles.Patches
                             TimeRemaining.transform.localScale *= 1.8f;
                             TimeRemaining.color = Palette.White;
                         }
-                        if (TORMapOptions.disableCamsRoundOne && TORMapOptions.isRoundOne) {
+                        if (TORMapOptions.disableCamsRoundOne && TORMapOptions.isRoundOne)
+                        {
                             __instance.Close();
                             return false;
-						}
+                        }
 
-                        if (TORMapOptions.restrictCamerasTime <= 0f  && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard && !CachedPlayer.LocalPlayer.Data.IsDead)
+                        if (TORMapOptions.restrictCamerasTime <= 0f && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard && !CachedPlayer.LocalPlayer.Data.IsDead)
                         {
                             __instance.Close();
                             return false;
@@ -142,8 +143,8 @@ namespace TheOtherRoles.Patches
                         {
                             __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
                             __instance.SabText[i].gameObject.SetActive(false);
-                            if (page * 4 + i < __instance.textures.Length)
-                                __instance.ViewPorts[i].material.SetTexture("_MainTex", __instance.textures[page * 4 + i]);
+                            if ((page * 4) + i < __instance.textures.Length)
+                                __instance.ViewPorts[i].material.SetTexture("_MainTex", __instance.textures[(page * 4) + i]);
                             else
                                 __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
                         }
@@ -214,12 +215,13 @@ namespace TheOtherRoles.Patches
                             TimeRemaining.transform.localScale *= 1.8f;
                             TimeRemaining.color = Palette.White;
                         }
-                        if (TORMapOptions.disableCamsRoundOne && TORMapOptions.isRoundOne) {
+                        if (TORMapOptions.disableCamsRoundOne && TORMapOptions.isRoundOne)
+                        {
                             __instance.Close();
                             return false;
-						}
+                        }
 
-                        if (TORMapOptions.restrictCamerasTime <= 0f   && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard && !CachedPlayer.LocalPlayer.Data.IsDead)
+                        if (TORMapOptions.restrictCamerasTime <= 0f && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard && !CachedPlayer.LocalPlayer.Data.IsDead)
                         {
                             __instance.Close();
                             return false;
@@ -290,7 +292,7 @@ namespace TheOtherRoles.Patches
                             TimeRemaining.color = Palette.White;
                         }
 
-                        if (TORMapOptions.restrictCamerasTime <= 0f  && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard && !CachedPlayer.LocalPlayer.Data.IsDead)
+                        if (TORMapOptions.restrictCamerasTime <= 0f && CachedPlayer.LocalPlayer.PlayerControl != Hacker.hacker && CachedPlayer.LocalPlayer.PlayerControl != SecurityGuard.securityGuard && !CachedPlayer.LocalPlayer.Data.IsDead)
                         {
                             __instance.Close();
                             return false;

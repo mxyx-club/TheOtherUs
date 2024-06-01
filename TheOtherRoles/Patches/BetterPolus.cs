@@ -10,13 +10,13 @@ namespace TheOtherRoles.Patches
         // Positions
         public static readonly Vector3 DvdScreenNewPos = new Vector3(26.635f, -15.92f, 1f);
         public static readonly Vector3 VitalsNewPos = new Vector3(31.275f, -6.45f, 1f);
-        
+
         public static readonly Vector3 WifiNewPos = new Vector3(15.975f, 0.084f, 1f);
         public static readonly Vector3 NavNewPos = new Vector3(11.07f, -15.298f, -0.015f);
-        
+
         public static readonly Vector3 TempColdNewPos = new Vector3(25.4f, -6.4f, 1f);
         public static readonly Vector3 TempColdNewPosDV = new Vector3(7.772f, -17.103f, -0.017f);
-        
+
         // Scales
         public const float DvdScreenNewScale = 0.75f;
 
@@ -39,10 +39,10 @@ namespace TheOtherRoles.Patches
         public static Vent ElectricalVent;
         public static Vent ScienceBuildingVent;
         public static Vent StorageVent;
-        
+
         // TempCold Tweak
         public static Console TempCold;
-        
+
         // Rooms
         public static GameObject Comms;
         public static GameObject DropShip;
@@ -53,7 +53,7 @@ namespace TheOtherRoles.Patches
         public static class ShipStatusBeginPatch
         {
             [HarmonyPrefix]
-            [HarmonyPatch]       
+            [HarmonyPatch]
             public static void Prefix(ShipStatus __instance)
             {
                 ApplyChanges(__instance);
@@ -103,12 +103,12 @@ namespace TheOtherRoles.Patches
 
         public static void AdjustPolus()
         {
-			if (!CustomOptionHolder.enableBetterPolus.getBool()) return;
+            if (!CustomOptionHolder.enableBetterPolus.getBool()) return;
             if (IsObjectsFetched && IsRoomsFetched)
             {
                 if (CustomOptionHolder.movePolusVitals.getBool()) MoveVitals();
                 if (CustomOptionHolder.swapNavWifi.getBool()) SwitchNavWifi();
-				if (CustomOptionHolder.movePolusVitals.getBool() && !CustomOptionHolder.moveColdTemp.getBool()) MoveTempCold();
+                if (CustomOptionHolder.movePolusVitals.getBool() && !CustomOptionHolder.moveColdTemp.getBool()) MoveTempCold();
                 if (CustomOptionHolder.moveColdTemp.getBool()) MoveTempColdDV();
             }
             else
@@ -120,7 +120,7 @@ namespace TheOtherRoles.Patches
 
             IsAdjustmentsDone = true;
         }
-        
+
         // --------------------
         // - Objects Fetching -
         // --------------------
@@ -128,22 +128,22 @@ namespace TheOtherRoles.Patches
         public static void FindVents()
         {
             var ventsList = Object.FindObjectsOfType<Vent>().ToList();
-            
+
             if (ElectricBuildingVent == null)
             {
                 ElectricBuildingVent = ventsList.Find(vent => vent.gameObject.name == "ElectricBuildingVent");
             }
-            
+
             if (ElectricalVent == null)
             {
                 ElectricalVent = ventsList.Find(vent => vent.gameObject.name == "ElectricalVent");
             }
-            
+
             if (ScienceBuildingVent == null)
             {
                 ScienceBuildingVent = ventsList.Find(vent => vent.gameObject.name == "ScienceBuildingVent");
             }
-            
+
             if (StorageVent == null)
             {
                 StorageVent = ventsList.Find(vent => vent.gameObject.name == "StorageVent");
@@ -159,7 +159,7 @@ namespace TheOtherRoles.Patches
             {
                 Comms = Object.FindObjectsOfType<GameObject>().ToList().Find(o => o.name == "Comms");
             }
-            
+
             if (DropShip == null)
             {
                 DropShip = Object.FindObjectsOfType<GameObject>().ToList().Find(o => o.name == "Dropship");
@@ -169,7 +169,7 @@ namespace TheOtherRoles.Patches
             {
                 Outside = Object.FindObjectsOfType<GameObject>().ToList().Find(o => o.name == "Outside");
             }
-            
+
             if (Science == null)
             {
                 Science = Object.FindObjectsOfType<GameObject>().ToList().Find(o => o.name == "Science");
@@ -197,7 +197,7 @@ namespace TheOtherRoles.Patches
                 Vitals = Object.FindObjectsOfType<SystemConsole>().ToList()
                     .Find(console => console.name == "panel_vitals");
             }
-                
+
             if (DvdScreenOffice == null)
             {
                 GameObject DvdScreenAdmin = Object.FindObjectsOfType<GameObject>().ToList()
@@ -214,7 +214,7 @@ namespace TheOtherRoles.Patches
                 TempCold = Object.FindObjectsOfType<Console>().ToList()
                     .Find(console => console.name == "panel_tempcold");
             }
-            
+
             IsObjectsFetched = WifiConsole != null && NavConsole != null && Vitals != null &&
                                DvdScreenOffice != null && TempCold != null;
         }
@@ -222,7 +222,7 @@ namespace TheOtherRoles.Patches
         // -------------------
         // - Map Adjustments -
         // -------------------
-        
+
         public static void AdjustVents()
         {
             if (IsVentsFetched)
@@ -239,7 +239,7 @@ namespace TheOtherRoles.Patches
             }
         }
 
-		public static void MoveTempCold()
+        public static void MoveTempCold()
         {
             if (TempCold.transform.position != TempColdNewPos)
             {
@@ -267,7 +267,7 @@ namespace TheOtherRoles.Patches
                 collider.size += new Vector2(0f, -0.3f);
             }
         }
-        
+
         public static void SwitchNavWifi()
         {
             if (WifiConsole.transform.position != WifiNewPos)
@@ -282,12 +282,12 @@ namespace TheOtherRoles.Patches
                 Transform navTransform = NavConsole.transform;
                 navTransform.parent = Comms.transform;
                 navTransform.position = NavNewPos;
-                
+
                 // Prevents crewmate being able to do the task from outside
                 NavConsole.checkWalls = true;
             }
         }
-        
+
         public static void MoveVitals()
         {
             if (Vitals.transform.position != VitalsNewPos)
@@ -303,7 +303,7 @@ namespace TheOtherRoles.Patches
                 // DvdScreen
                 Transform dvdScreenTransform = DvdScreenOffice.transform;
                 dvdScreenTransform.position = DvdScreenNewPos;
-                
+
                 var localScale = dvdScreenTransform.localScale;
                 localScale =
                     new Vector3(DvdScreenNewScale, localScale.y,

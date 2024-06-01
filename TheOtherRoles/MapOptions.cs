@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace TheOtherRoles
 {
-    static class TORMapOptions {
+    static class TORMapOptions
+    {
         // Set values
         public static int maxNumberOfMeetings = 10;
         public static bool blockSkippingInEmergencyMeetings = false;
@@ -28,7 +29,7 @@ namespace TheOtherRoles
         public static bool ShowVentsOnMap = true;
         public static bool disableMedscanWalking = false;
         public static int restrictDevices = 0;
-       // public static float restrictAdminTime = 600f;
+        // public static float restrictAdminTime = 600f;
         //public static float restrictAdminTimeMax = 600f;
         public static float restrictCamerasTime = 600f;
         public static float restrictCamerasTimeMax = 600f;
@@ -49,7 +50,8 @@ namespace TheOtherRoles
         public static string firstKillName;
         public static PlayerControl firstKillPlayer;
 
-        public static void clearAndReloadMapOptions() {
+        public static void clearAndReloadMapOptions()
+        {
             meetingsCount = 0;
             camerasToAdd = new List<SurvCamera>();
             ventsToSeal = new List<Vent>();
@@ -75,10 +77,11 @@ namespace TheOtherRoles
             randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
             allowModGuess = CustomOptionHolder.allowModGuess.getBool();
             firstKillPlayer = null;
-            isRoundOne = true; 
+            isRoundOne = true;
         }
 
-        public static void reloadPluginOptions() {
+        public static void reloadPluginOptions()
+        {
             ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
             ghostsSeeModifier = TheOtherRolesPlugin.GhostsSeeModifier.Value;
             ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value;
@@ -89,26 +92,27 @@ namespace TheOtherRoles
             enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
             enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
             ShowVentsOnMap = TheOtherRolesPlugin.ShowVentsOnMap.Value;
-            
+
             //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
         }
-    public static void resetDeviceTimes() {
+        public static void resetDeviceTimes()
+        {
             //restrictAdminTime = restrictAdminTimeMax;
             restrictCamerasTime = restrictCamerasTimeMax;
             restrictVitalsTime = restrictVitalsTimeMax;
         }
 
-       // public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+        // public static bool canUseAdmin  { get { return restrictDevices == 0 || restrictAdminTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
 
         //public static bool couldUseAdmin { get { return restrictDevices == 0 || restrictAdminTimeMax > 0f  || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
 
-        public static bool canUseCameras {get { return restrictDevices == 0 || restrictCamerasTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+        public static bool canUseCameras => restrictDevices == 0 || restrictCamerasTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead;
 
-        public static bool couldUseCameras { get { return restrictDevices == 0 || restrictCamerasTimeMax > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+        public static bool couldUseCameras => restrictDevices == 0 || restrictCamerasTimeMax > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead;
 
-        public static bool canUseVitals { get { return restrictDevices == 0 || restrictVitalsTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+        public static bool canUseVitals => restrictDevices == 0 || restrictVitalsTime > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead;
 
-        public static bool couldUseVitals { get { return restrictDevices == 0 || restrictVitalsTimeMax > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead; }}
+        public static bool couldUseVitals => restrictDevices == 0 || restrictVitalsTimeMax > 0f || CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker || CachedPlayer.LocalPlayer.Data.IsDead;
 
     }
 }

@@ -107,10 +107,10 @@ public class MapData
         new Vector3(5f, -9f, 0.0f), //elec window
         new Vector3(4f, -11.2f, 0.0f), //elec tapes
         new Vector3(5.5f, -16f, 0.0f), //elec-O2 hall
-        new Vector3(1f, -17.5f, 0.0f), //O2 tree hayball
+        new Vector3(1.2f, -17.5f, 0.0f), //O2 tree hayball
         new Vector3(3f, -21f, 0.0f), //O2 middle
         new Vector3(2f, -19f, 0.0f), //O2 gas
-        new Vector3(1f, -24f, 0.0f), //O2 water
+        new Vector3(1.4f, -24f, 0.0f), //O2 water
         new Vector3(7f, -24f, 0.0f), //under O2
         new Vector3(9f, -20f, 0.0f), //right outside of O2
         new Vector3(7f, -15.8f, 0.0f), //snowman under elec
@@ -118,7 +118,7 @@ public class MapData
         new Vector3(12.7f, -15.5f, 0.0f), //coms antenna pult
         new Vector3(13f, -24.5f, 0.0f), //weapons window
         new Vector3(15f, -17f, 0.0f), //between coms-office
-        new Vector3(17.5f, -25.7f, 0.0f)
+        new Vector3(17.5f, -25.7f, 0.0f), //snowman under office
     ];
 
     public static readonly List<Vector3> DleksSpawnPosition = // No Dleks
@@ -199,22 +199,16 @@ public class MapData
         new Vector3(-20.8897f, 2.7606f, 0.002f)
     ];
 
-
-    private static List<Vector3>? VentSpawnPositions;
-
     public static List<Vector3> FindVentSpawnPositions()
     {
-        if (VentSpawnPositions != null) return VentSpawnPositions;
-
         var poss = new List<Vector3>();
         foreach (var vent in DestroyableSingleton<ShipStatus>.Instance.AllVents)
         {
             var Transform = vent.transform;
             var position = Transform.position;
-            poss.Add(new Vector3(position.x, position.y + 0.2f, position.z - 50));
+            poss.Add(new Vector3(position.x, position.y + 0.3f, position.z = 0.0f));
         }
 
-        VentSpawnPositions = poss;
         return poss;
     }
 }

@@ -1,13 +1,16 @@
-﻿using Il2CppSystem.Collections.Generic;
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq.Expressions;
+using Il2CppSystem.Collections.Generic;
 
 namespace TheOtherRoles.Helper;
 
 public static class EnumerationHelpers
 {
-    public static System.Collections.Generic.IEnumerable<T> GetFastEnumerator<T>(this List<T> list) where T : Il2CppSystem.Object => new Il2CppListEnumerable<T>(list);
+    public static System.Collections.Generic.IEnumerable<T> GetFastEnumerator<T>(this List<T> list) where T : Il2CppSystem.Object
+    {
+        return new Il2CppListEnumerable<T>(list);
+    }
 }
 
 public unsafe class Il2CppListEnumerable<T> : System.Collections.Generic.IEnumerable<T>, System.Collections.Generic.IEnumerator<T> where T : Il2CppSystem.Object

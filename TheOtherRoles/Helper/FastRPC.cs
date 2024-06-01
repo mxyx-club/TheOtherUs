@@ -6,7 +6,7 @@ namespace TheOtherRoles.Helper;
 
 internal class FastRpcWriter(MessageWriter writer)
 {
-     private byte CallId;
+    private byte CallId;
 
     private int msgCount;
 
@@ -17,7 +17,7 @@ internal class FastRpcWriter(MessageWriter writer)
     private int SendTargetId;
 
     private uint targetObjectId;
-    
+
     private FastRpcWriter(SendOption option, RPCSendMode mode = RPCSendMode.SendToAll, int TargetId = -1, uint ObjectId = 255) : this(MessageWriter.Get(option))
     {
         Option = option;
@@ -30,18 +30,18 @@ internal class FastRpcWriter(MessageWriter writer)
     {
         return new FastRpcWriter(option, mode, TargetId, targetObjectId);
     }
-    
+
     internal static FastRpcWriter StartNewRpcWriter(CustomRPC rpc, SendOption option = SendOption.Reliable, RPCSendMode mode = RPCSendMode.SendToAll, int TargetId = -1, uint targetObjectId = 255)
     {
         var writer = StartNew(option, mode, TargetId, targetObjectId);
         writer.SetRpcCallId(rpc);
-        
+
         if (mode == RPCSendMode.SendToAll)
             writer.StartDataAllMessage();
 
         if (mode == RPCSendMode.SendToPlayer)
             writer.StartDataToPlayerMessage();
-        
+
         writer.StartRPCMessage();
         return writer;
     }
@@ -81,7 +81,7 @@ internal class FastRpcWriter(MessageWriter writer)
         targetObjectId = id;
         return this;
     }
-    
+
     public FastRpcWriter SetRpcCallId(CustomRPC id)
     {
         CallId = (byte)id;
@@ -98,7 +98,7 @@ internal class FastRpcWriter(MessageWriter writer)
     {
         if (id == -1)
             return this;
-        
+
         SendTargetId = id;
         return this;
     }
@@ -171,7 +171,7 @@ internal class FastRpcWriter(MessageWriter writer)
     public FastRpcWriter Write(params object[] objects)
     {
         if (objects == null) return this;
-        
+
         foreach (var obj in objects)
         {
             switch (obj)
@@ -247,7 +247,7 @@ internal class FastRpcWriter(MessageWriter writer)
 
     public void EndAllMessage()
     {
-        while (msgCount > 0) 
+        while (msgCount > 0)
             EndMessage();
     }
 

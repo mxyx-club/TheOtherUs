@@ -1,5 +1,5 @@
-﻿using BepInEx.Logging;
-using System;
+﻿using System;
+using BepInEx.Logging;
 
 namespace TheOtherRoles.Helper;
 
@@ -7,7 +7,10 @@ internal static class LogHelper
 {
     private static ManualLogSource logSource { get; set; }
 
-    internal static void SetLogSource(ManualLogSource Source) => logSource = Source;
+    internal static void SetLogSource(ManualLogSource Source)
+    {
+        logSource = Source;
+    }
 
     /// <summary>
     ///     一般信息

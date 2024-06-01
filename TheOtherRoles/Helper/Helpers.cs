@@ -1,6 +1,3 @@
-using AmongUs.GameOptions;
-using Hazel;
-using Reactor.Utilities.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AmongUs.GameOptions;
+using Hazel;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -93,12 +93,7 @@ namespace TheOtherRoles.Helper
             */
 
         public static bool gameStarted //new
-        {
-            get
-            {
-                return AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started;
-            }
-        }
+=> AmongUsClient.Instance != null && AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started;
 
         public static bool flipBitwise(bool bit)
         {
@@ -304,15 +299,9 @@ namespace TheOtherRoles.Helper
             }
         }
 
-        public static bool ShowButtons
-        {
-            get
-            {
-                return !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
+        public static bool ShowButtons => !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) &&
                       !MeetingHud.Instance &&
                       !ExileController.Instance;
-            }
-        }
 
         public static void showTargetNameOnButton(PlayerControl target, CustomButton button, string defaultText)
         {
@@ -470,6 +459,29 @@ namespace TheOtherRoles.Helper
             return null;
         }
 
+        public static bool sabotageActive()
+        {
+            var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+            return sabSystem.AnyActive;
+        }
+
+        public static float sabotageTimer()
+        {
+            var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+            return sabSystem.Timer;
+        }
+        public static bool canUseSabotage()
+        {
+            var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+            ISystemType systemType;
+            IActivatable doors = null;
+            if (ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out systemType))
+            {
+                doors = systemType.CastFast<IActivatable>();
+            }
+            return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
+        }
+
         public static Dictionary<byte, PlayerControl> allPlayersById()
         {
             Dictionary<byte, PlayerControl> res = new Dictionary<byte, PlayerControl>();
@@ -607,7 +619,7 @@ namespace TheOtherRoles.Helper
 
         public static bool shouldShowGhostInfo()
         {
-            return CachedPlayer.LocalPlayer.PlayerControl != null && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && TORMapOptions.ghostsSeeInformation || AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Ended;
+            return (CachedPlayer.LocalPlayer.PlayerControl != null && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && TORMapOptions.ghostsSeeInformation) || AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Ended;
         }
 
         public static void clearAllTasks(this PlayerControl player)
@@ -655,6 +667,20 @@ namespace TheOtherRoles.Helper
         public static bool isFungle()
         {
             return GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
+        }
+
+        public static bool IsCN()
+        {
+            return (int)AmongUs.Data.DataManager.Settings.Language.CurrentLanguage == 13;
+        }
+
+        public static string GithubUrl(this string url)
+        {
+            if (IsCN() && !url.Contains("github.moeyy.xyz"))
+            {
+                return "https://github.moeyy.xyz/" + url;
+            }
+            return url;
         }
 
         public static bool MushroomSabotageActive()
@@ -731,7 +757,7 @@ namespace TheOtherRoles.Helper
             else if (!TORMapOptions.hidePlayerNames) return false; // All names are visible
             else if (source == null || target == null) return true;
             else if (source == target) return false; // Player sees his own name
-            else if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target == Spy.spy || target == Sidekick.sidekick && Sidekick.wasTeamRed || target == Jackal.jackal && Jackal.wasTeamRed)) return false; // Members of team Impostors see the names of Impostors/Spies
+            else if (source.Data.Role.IsImpostor && (target.Data.Role.IsImpostor || target == Spy.spy || (target == Sidekick.sidekick && Sidekick.wasTeamRed) || (target == Jackal.jackal && Jackal.wasTeamRed))) return false; // Members of team Impostors see the names of Impostors/Spies
             else if ((source == Lovers.lover1 || source == Lovers.lover2) && (target == Lovers.lover1 || target == Lovers.lover2)) return false; // Members of team Lovers see the names of each other
             else if ((source == Jackal.jackal || source == Sidekick.sidekick) && (target == Jackal.jackal || target == Sidekick.sidekick || target == Jackal.fakeSidekick)) return false; // Members of team Jackal see the names of each other
             else if (Deputy.knowsSheriff && (source == Sheriff.sheriff || source == Deputy.deputy) && (target == Sheriff.sheriff || target == Deputy.deputy)) return false; // Sheriff & Deputy see the names of each other
@@ -878,7 +904,7 @@ namespace TheOtherRoles.Helper
 
             // Modified vanilla checks
             if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
-            if (killer == null || killer.Data == null || killer.Data.IsDead && !ignoreIfKillerIsDead || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
+            if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
             if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || PropHunt.isPropHuntGM) return MurderAttemptResult.PerformKill;
 
@@ -1099,10 +1125,10 @@ namespace TheOtherRoles.Helper
 
         public static bool checkAndDoVetKill(PlayerControl target)
         {
-            bool shouldVetKill = (Veteren.veteren == target && Veteren.alertActive);
+            bool shouldVetKill = Veteren.veteren == target && Veteren.alertActive;
             if (shouldVetKill)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VeterenKill, Hazel.SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VeterenKill, SendOption.Reliable, -1);
                 writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.veterenKill(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
@@ -1254,7 +1280,7 @@ namespace TheOtherRoles.Helper
 
         public static bool isNeutral(PlayerControl player)
         {
-            RoleInfo roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
+            var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
             if (roleInfo != null)
                 return roleInfo.isNeutral;
             return false;
@@ -1262,8 +1288,8 @@ namespace TheOtherRoles.Helper
 
         public static bool isKiller(PlayerControl player)
         {
-            return isNeutral(player) && 
-                    (player == Werewolf.werewolf ||
+            return isNeutral(player) && (
+                    player == Werewolf.werewolf ||
                     player == Swooper.swooper ||
                     player == Arsonist.arsonist ||
                     player == Jackal.jackal ||
@@ -1349,12 +1375,12 @@ namespace TheOtherRoles.Helper
         public static bool hasImpVision(GameData.PlayerInfo player)
         {
             return player.Role.IsImpostor
-                || (Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision
-                || Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision
-                || Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision
-                || Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision
-                || Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision
-                || Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision;
+                || (((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
+                || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
+                || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+                || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
+                || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
+                || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);
         }
 
         public static object TryCast(this Il2CppObjectBase self, Type type)

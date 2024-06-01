@@ -1,13 +1,13 @@
-﻿using AmongUs.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using AmongUs.Data;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using Hazel;
 using Reactor.Networking.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Modules.CustomHats;
 using TheOtherRoles.Utilities;
@@ -15,11 +15,11 @@ using UnityEngine;
 
 namespace TheOtherRoles
 {
-    [BepInPlugin(Id, ModName, MyPluginInfo.PLUGIN_VERSION)]
+    [BepInPlugin(Id, ModName, VersionString)]
     [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInProcess("Among Us.exe")]
     [ReactorModFlags(Reactor.Networking.ModFlags.RequireOnAllClients)]
-    
+
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "Spex.TheOtherUs.Options";
@@ -38,7 +38,7 @@ namespace TheOtherRoles
         public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
         public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
         public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
-        public static ConfigEntry<bool> GhostsSeeVotes{ get; set; }
+        public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
         public static ConfigEntry<bool> ShowRoleSummary { get; set; }
         public static ConfigEntry<bool> ShowLighterDarker { get; set; }
         public static ConfigEntry<bool> EnableSoundEffects { get; set; }
@@ -56,7 +56,8 @@ namespace TheOtherRoles
 
         // This is part of the Mini.RegionInstaller, Licensed under GPLv3
         // file="RegionInstallPlugin.cs" company="miniduikboot">
-        public static void UpdateRegions() {
+        public static void UpdateRegions()
+        {
             var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
             var regions = new[] {
                 new StaticHttpRegionInfo("Custom", StringNames.NoTranslation, Ip.Value, new Il2CppReferenceArray<ServerInfo>(new ServerInfo[1] { new ServerInfo("Custom", Ip.Value, Port.Value, false) })).CastFast<IRegionInfo>()
@@ -64,12 +65,14 @@ namespace TheOtherRoles
 
             var currentRegion = serverManager.CurrentRegion;
             Info($"Adding {regions.Length} regions");
-            foreach (IRegionInfo region in regions) {
+            foreach (IRegionInfo region in regions)
+            {
                 if (region == null)
                     Error("Could not add region");
-                else {
-                    if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase)) 
-                        currentRegion = region;               
+                else
+                {
+                    if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
+                        currentRegion = region;
                     serverManager.AddOrUpdateRegion(region);
                 }
             }
@@ -80,13 +83,14 @@ namespace TheOtherRoles
             serverManager.SetRegion(currentRegion);
         }
 
-        public override void Load() {
+        public override void Load()
+        {
 
             if (ConsoleManager.ConsoleEnabled) System.Console.OutputEncoding = Encoding.UTF8;
             SetLogSource(Log);
             Instance = this;
-  
-            _ = Helpers.checkBeta(); // Exit if running an expired beta
+
+            _ = checkBeta(); // Exit if running an expired beta
             _ = Patches.CredentialsPatch.MOTD.loadMOTDs();
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
@@ -101,7 +105,7 @@ namespace TheOtherRoles
             EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
             ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
             ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
-            
+
             Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
             Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
             defaultRegions = ServerManager.DefaultRegions;
@@ -110,12 +114,13 @@ namespace TheOtherRoles
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
             Harmony.PatchAll();
-            
+
             CustomOptionHolder.Load();
             CustomColors.Load();
             CustomHatManager.LoadHats();
-            if (ToggleCursor.Value) {
-                Helpers.enableCursor(true);
+            if (ToggleCursor.Value)
+            {
+                enableCursor(true);
             }
             if (BepInExUpdater.UpdateRequired)
             {
@@ -144,14 +149,17 @@ namespace TheOtherRoles
         }
     }
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
-    public static class ChatControllerAwakePatch {
-        private static void Prefix() {
-            if (!EOSManager.Instance.isKWSMinor) {
+    public static class ChatControllerAwakePatch
+    {
+        private static void Prefix()
+        {
+            if (!EOSManager.Instance.isKWSMinor)
+            {
                 DataManager.Settings.Multiplayer.ChatMode = InnerNet.QuickChatModes.FreeChatOrQuickChat;
             }
         }
     }
-    
+
     // Debugging tools
     [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
     public static class DebugManager
@@ -163,25 +171,27 @@ namespace TheOtherRoles
         public static void Postfix(KeyboardJoystick __instance)
         {
             // Spawn dummys
-            if (AmongUsClient.Instance.AmHost && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.RightShift)) {
+            if (AmongUsClient.Instance.AmHost && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.RightShift))
+            {
                 var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
-                var i = playerControl.PlayerId = (byte) GameData.Instance.GetAvailableId();
+                var i = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();
 
                 bots.Add(playerControl);
                 GameData.Instance.AddPlayer(playerControl);
                 AmongUsClient.Instance.Spawn(playerControl, -2, InnerNet.SpawnFlags.None);
-                
+
                 playerControl.transform.position = CachedPlayer.LocalPlayer.transform.position;
                 playerControl.GetComponent<DummyBehaviour>().enabled = true;
                 playerControl.NetTransform.enabled = false;
                 playerControl.SetName(RandomString(10));
-                playerControl.SetColor((byte) random.Next(Palette.PlayerColors.Length));
+                playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
                 GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
             }
 
             // Terminate round
-            if(AmongUsClient.Instance.AmHost && Helpers.gameStarted && Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift)) {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ForceEnd, Hazel.SendOption.Reliable, -1);
+            if (AmongUsClient.Instance.AmHost && gameStarted && Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift))
+            {
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ForceEnd, SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.forceEnd();
             }

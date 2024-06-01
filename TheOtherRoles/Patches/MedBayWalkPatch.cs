@@ -26,7 +26,7 @@ namespace TheOtherRoles.Patches
                         return true;
                     case 2:
                         __instance.__1__state = -1;
-                        medScanMinigame.walking = (Coroutine)null;
+                        medScanMinigame.walking = null;
                         return false;
                     default:
                         return false;
@@ -58,7 +58,7 @@ namespace TheOtherRoles.Patches
                         return true;
                     case 2:
                         __instance.__1__state = -1;
-                        medScanMinigame.walking = (Coroutine)null;
+                        medScanMinigame.walking = null;
                         return false;
                     default:
                         return false;
