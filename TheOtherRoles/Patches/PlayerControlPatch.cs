@@ -78,14 +78,8 @@ public static class PlayerControlFixedUpdatePatch
             bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
             bool hasVisibleShield = false;
             Color color = Medic.shieldedColor;
-            if (!isCamoComms() && Camouflager.camouflageTimer <= 0f && !MushroomSabotageActive() && Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
-            {
-                hasVisibleShield = Medic.showShielded == 0 || shouldShowGhostInfo() // Everyone or Ghost info
-                    || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
-                    || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
-                                                                                                           // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
-                hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic || shouldShowGhostInfo());
-            }
+            if (Camouflager.camouflageTimer <= 0f && !Helpers.MushroomSabotageActive() && Medic.shieldVisible(target))
+                hasVisibleShield = true;
 
             if (CachedPlayer.LocalPlayer.Data.IsDead && BodyGuard.guarded != null && target == BodyGuard.guarded)
             {

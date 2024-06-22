@@ -255,6 +255,15 @@ namespace TheOtherRoles.Patches
                     if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "L" : "D")})";
                 }
             }
+            // Add medic shield info:
+            if (MeetingHud.Instance != null && Medic.medic != null && Medic.shielded != null && Medic.shieldVisible(Medic.shielded))
+            {
+                foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+                    if (player.TargetPlayerId == Medic.shielded.PlayerId)
+                    {
+                        player.NameText.text = Helpers.cs(Medic.color, "[") + player.NameText.text + Helpers.cs(Medic.color, "]");
+                    }
+            }
         }
 
         static void updateShielded()

@@ -525,6 +525,11 @@ namespace TheOtherRoles
                             Bomber.bomber = player;
                             break;
                     }
+                    if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
+                    {
+                        player.RpcSetRole(RoleTypes.Engineer);
+                        player.SetRole(RoleTypes.Engineer);
+                    }
                 }
         }
 
@@ -2133,7 +2138,7 @@ namespace TheOtherRoles
             Arsonist.triggerArsonistWin = true;
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                if (p != Arsonist.arsonist)
+                if (p != Arsonist.arsonist && !p.Data.IsDead)
                 {
                     p.Exiled();
                     overrideDeathReasonAndKiller(p, DeadPlayer.CustomDeathReason.Arson, Arsonist.arsonist);
