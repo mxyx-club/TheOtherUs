@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
-namespace TheOtherRoles;
+namespace TheOtherRoles.Modules;
 public class ModTranslation
 {
     public static int defaultLanguage = (int)SupportedLangs.English;

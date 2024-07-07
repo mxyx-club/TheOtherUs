@@ -24,13 +24,13 @@ namespace TheOtherRoles
         private static CustomButton amnisiacRememberButton;
         public static CustomButton veterenAlertButton;
         public static CustomButton medicShieldButton;
-        private static CustomButton bomber2BombButton;
-        private static CustomButton bomber2KillButton;
+        public static CustomButton bomberBombButton;
+        public static CustomButton bomberGiveButton;
         private static CustomButton cultistTurnButton;
         private static CustomButton shifterShiftButton;
         private static CustomButton disperserDisperseButton;
-        private static CustomButton morphlingButton;
-        private static CustomButton camouflagerButton;
+        public static CustomButton morphlingButton;
+        public static CustomButton camouflagerButton;
         public static CustomButton portalmakerPlacePortalButton;
         private static CustomButton usePortalButton;
         private static CustomButton portalmakerMoveToPortalButton;
@@ -48,9 +48,9 @@ namespace TheOtherRoles
         public static CustomButton sidekickKillButton;
         public static CustomButton swooperSwoopButton;
         private static CustomButton jackalSidekickButton;
-        private static CustomButton eraserButton;
-        private static CustomButton placeJackInTheBoxButton;
-        private static CustomButton lightsOutButton;
+        public static CustomButton eraserButton;
+        public static CustomButton placeJackInTheBoxButton;
+        public static CustomButton lightsOutButton;
         public static CustomButton cleanerCleanButton;
         public static CustomButton undertakerDragButton;
         public static CustomButton warlockCurseButton;
@@ -73,7 +73,7 @@ namespace TheOtherRoles
         public static CustomButton blackmailerButton;
         public static CustomButton thiefKillButton;
         public static CustomButton trapperButton;
-        public static CustomButton bomberButton;
+        public static CustomButton terroristButton;
         public static CustomButton defuseButton;
         public static CustomButton zoomOutButton;
         private static CustomButton hunterLighterButton;
@@ -129,7 +129,7 @@ namespace TheOtherRoles
             shifterShiftButton.MaxTimer = 0f;
             disperserDisperseButton.MaxTimer = 0f;
             morphlingButton.MaxTimer = Morphling.cooldown;
-            bomber2BombButton.MaxTimer = Bomber2.cooldown;
+            bomberBombButton.MaxTimer = Bomber2.cooldown;
             camouflagerButton.MaxTimer = Camouflager.cooldown;
             portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
             usePortalButton.MaxTimer = Portalmaker.usePortalCooldown;
@@ -162,8 +162,8 @@ namespace TheOtherRoles
             arsonistButton.MaxTimer = Arsonist.cooldown;
             vultureEatButton.MaxTimer = Vulture.cooldown;
             amnisiacRememberButton.MaxTimer = 0f;
-            bomber2KillButton.MaxTimer = 0f;
-            bomber2KillButton.Timer = 0f;
+            bomberGiveButton.MaxTimer = 0f;
+            bomberGiveButton.Timer = 0f;
             mediumButton.MaxTimer = Medium.cooldown;
             pursuerButton.MaxTimer = Pursuer.cooldown;
             trackerTrackCorpsesButton.MaxTimer = Tracker.corpsesTrackingCooldown;
@@ -175,7 +175,7 @@ namespace TheOtherRoles
             thiefKillButton.MaxTimer = Thief.cooldown;
             mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
             trapperButton.MaxTimer = Trapper.cooldown;
-            bomberButton.MaxTimer = Bomber.bombCooldown;
+            terroristButton.MaxTimer = Terrorist.bombCooldown;
             hunterLighterButton.MaxTimer = Hunter.lightCooldown;
             hunterAdminTableButton.MaxTimer = Hunter.AdminCooldown;
             hunterArrowButton.MaxTimer = Hunter.ArrowCooldown;
@@ -202,7 +202,7 @@ namespace TheOtherRoles
             minerMineButton.EffectDuration = Jackal.duration; // Jackal?
             camouflagerButton.EffectDuration = Camouflager.duration;
             morphlingButton.EffectDuration = Morphling.duration;
-            bomber2BombButton.EffectDuration = Bomber2.bombDelay + Bomber2.bombTimer;
+            bomberBombButton.EffectDuration = Bomber2.bombDelay + Bomber2.bombTimer;
             lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
             arsonistButton.EffectDuration = Arsonist.duration;
             mediumButton.EffectDuration = Medium.duration;
@@ -212,8 +212,8 @@ namespace TheOtherRoles
             hunterLighterButton.EffectDuration = Hunter.lightDuration;
             hunterArrowButton.EffectDuration = Hunter.ArrowDuration;
             huntedShieldButton.EffectDuration = Hunted.shieldDuration;
-            defuseButton.EffectDuration = Bomber.defuseDuration;
-            bomberButton.EffectDuration = Bomber.destructionTime + Bomber.bombActiveAfter;
+            defuseButton.EffectDuration = Terrorist.defuseDuration;
+            terroristButton.EffectDuration = Terrorist.destructionTime + Terrorist.bombActiveAfter;
             propHuntUnstuckButton.EffectDuration = PropHunt.unstuckDuration;
             propHuntRevealButton.EffectDuration = PropHunt.revealDuration;
             propHuntInvisButton.EffectDuration = PropHunt.invisDuration;
@@ -1560,7 +1560,7 @@ namespace TheOtherRoles
                 buttonText: "Mine"
             );
 
-            bomber2BombButton = new CustomButton(
+            bomberBombButton = new CustomButton(
                 () =>
                 { /* On Use */
                     if (checkAndDoVetKill(Bomber2.currentTarget)) return;
@@ -1570,15 +1570,15 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
                     RPCProcedure.giveBomb(Bomber2.currentTarget.PlayerId);
                     Bomber2.bomber2.killTimer = Bomber2.bombTimer + Bomber2.bombDelay;
-                    bomber2BombButton.Timer = bomber2BombButton.MaxTimer;
+                    bomberBombButton.Timer = bomberBombButton.MaxTimer;
                 },
                 () => { /* Can See */ return Bomber2.bomber2 != null && Bomber2.bomber2 == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => {  /* On Click */ return Bomber2.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () =>
                 {  /* On Meeting End */
-                    bomber2BombButton.Timer = bomber2BombButton.MaxTimer;
-                    bomber2BombButton.isEffectActive = false;
-                    bomber2BombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    bomberBombButton.Timer = bomberBombButton.MaxTimer;
+                    bomberBombButton.isEffectActive = false;
+                    bomberBombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                     Bomber2.hasBomb = null;
                 },
                 Bomber2.getButtonSprite(),
@@ -1587,7 +1587,7 @@ namespace TheOtherRoles
                 KeyCode.V
             );
 
-            bomber2KillButton = new CustomButton(
+            bomberGiveButton = new CustomButton(
                 () =>
                 { /* On Use */
                     if (Bomber2.currentBombTarget == Bomber2.bomber2)
@@ -2904,10 +2904,10 @@ namespace TheOtherRoles
             );
 
             // Bomber button
-            bomberButton = new CustomButton(
+            terroristButton = new CustomButton(
                 () =>
                 {
-                    if (checkMuderAttempt(Bomber.bomber, Bomber.bomber) != MurderAttemptResult.BlankKill)
+                    if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
                     {
                         var pos = CachedPlayer.LocalPlayer.transform.position;
                         byte[] buff = new byte[sizeof(float) * 2];
@@ -2922,23 +2922,35 @@ namespace TheOtherRoles
                         SoundEffectsManager.play("trapperTrap");
                     }
 
-                    bomberButton.Timer = bomberButton.MaxTimer;
-                    Bomber.isPlanted = true;
+                    if (Terrorist.selfExplosion)
+                    {
+                        var loacl = Terrorist.terrorist.PlayerId;
+                        var writer1 = AmongUsClient.Instance.StartRpcImmediately(Terrorist.terrorist.NetId,
+                            (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+                        writer1.Write(loacl);
+                        writer1.Write(loacl);
+                        writer1.Write(byte.MaxValue);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer1);
+                        RPCProcedure.uncheckedMurderPlayer(loacl, loacl, byte.MaxValue);
+                    }
+
+                    terroristButton.Timer = terroristButton.MaxTimer;
+                    Terrorist.isPlanted = true;
                 },
-                () => { return Bomber.bomber != null && Bomber.bomber == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Bomber.isPlanted; },
-                () => { bomberButton.Timer = bomberButton.MaxTimer; },
-                Bomber.getButtonSprite(),
+                () => { return Terrorist.terrorist != null && Terrorist.terrorist == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Terrorist.isPlanted; },
+                () => { terroristButton.Timer = terroristButton.MaxTimer; },
+                Terrorist.getButtonSprite(),
                 CustomButton.ButtonPositions.upperRowLeft,
                 __instance,
                 KeyCode.F,
                 true,
-                Bomber.destructionTime,
+                Terrorist.destructionTime,
                 () =>
                 {
-                    bomberButton.Timer = bomberButton.MaxTimer;
-                    bomberButton.isEffectActive = false;
-                    bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    terroristButton.Timer = terroristButton.MaxTimer;
+                    terroristButton.isEffectActive = false;
+                    terroristButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                 }
             );
 
@@ -2953,7 +2965,7 @@ namespace TheOtherRoles
                         defuseButton.PositionOffset = new Vector3(0f, 2f, 0f);
                     else
                         defuseButton.PositionOffset = new Vector3(0f, 1f, 0f);
-                    return Bomber.bomb != null && Bomb.canDefuse && !CachedPlayer.LocalPlayer.Data.IsDead;
+                    return Terrorist.bomb != null && Bomb.canDefuse && !CachedPlayer.LocalPlayer.Data.IsDead;
                 },
                 () =>
                 {
@@ -2974,7 +2986,7 @@ namespace TheOtherRoles
                 __instance,
                 null,
                 true,
-                Bomber.defuseDuration,
+                Terrorist.defuseDuration,
                 () =>
                 {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DefuseBomb, SendOption.Reliable, -1);

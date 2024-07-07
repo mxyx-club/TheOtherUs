@@ -350,12 +350,12 @@ public class CustomOptionHolder
     public static CustomOption trapperTrapDuration;
 
     public static CustomOption bomberSpawnRate;
-    public static CustomOption bomberBombDestructionTime;
-    public static CustomOption bomberBombDestructionRange;
-    public static CustomOption bomberBombHearRange;
-    public static CustomOption bomberDefuseDuration;
-    public static CustomOption bomberBombCooldown;
-    public static CustomOption bomberBombActiveAfter;
+    public static CustomOption terroristBombDestructionTime;
+    public static CustomOption terroristBombDestructionRange;
+    public static CustomOption terroristBombHearRange;
+    public static CustomOption terroristDefuseDuration;
+    public static CustomOption terroristBombCooldown;
+    public static CustomOption terroristBombActiveAfter;
 
     public static CustomOption modifiersAreHidden;
 
@@ -371,6 +371,8 @@ public class CustomOptionHolder
     public static CustomOption modifierBaitReportDelayMin;
     public static CustomOption modifierBaitReportDelayMax;
     public static CustomOption modifierBaitShowKillFlash;
+
+    public static CustomOption modifierAftermath;
 
     public static CustomOption modifierLover;
     public static CustomOption modifierLoverImpLoverRate;
@@ -462,7 +464,7 @@ public class CustomOptionHolder
     public static CustomOption randomGameStartToVents;
     public static CustomOption ShowVentsOnMap;
     public static CustomOption ShowVentsOnMeetingMap;
-    //public static CustomOption allowModGuess;
+    public static CustomOption allowModGuess;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
     public static CustomOption camsNightVision;
     public static CustomOption camsNoNightVisionIfImpVision;
@@ -629,7 +631,7 @@ public class CustomOptionHolder
         showButtonTarget = CustomOption.Create(28, Types.General, "Show Button Target", true);
         impostorSeeRoles = CustomOption.Create(29, Types.General, "Impostors Can See The Roles Of Their Team", false);
         blockGameEnd = CustomOption.Create(30, Types.General, "Block Game End If Power Crew Is Alive", false);
-        //allowModGuess = CustomOption.Create(31, Types.General, "Allow Guessing Some Modifiers", false);
+        allowModGuess = CustomOption.Create(31, Types.General, "Allow Guessing Some Modifiers", false);
 
         transparentTasks = CustomOption.Create(32, Types.General, "Tasks Are Transparent", false, null, true);
         disableMedbayWalk = CustomOption.Create(33, Types.General, "Disable MedBay Animations", false);
@@ -761,13 +763,13 @@ public class CustomOptionHolder
         blackmailerSpawnRate = CustomOption.Create(10170, Types.Impostor, cs(Blackmailer.color, "Blackmailer"), rates, null, true);
         blackmailerCooldown = CustomOption.Create(10171, Types.Impostor, "Blackmail Cooldown", 30f, 5f, 120f, 5f, blackmailerSpawnRate);
 
-        bomberSpawnRate = CustomOption.Create(10180, Types.Impostor, cs(Bomber.color, "Terrorist"), rates, null, true);
-        bomberBombDestructionTime = CustomOption.Create(10181, Types.Impostor, "Bomb Destruction Time", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
-        bomberBombDestructionRange = CustomOption.Create(10182, Types.Impostor, "Bomb Destruction Range", 50f, 5f, 150f, 5f, bomberSpawnRate);
-        bomberBombHearRange = CustomOption.Create(10183, Types.Impostor, "Bomb Hear Range", 60f, 5f, 150f, 5f, bomberSpawnRate);
-        bomberDefuseDuration = CustomOption.Create(10184, Types.Impostor, "Bomb Defuse Duration", 3f, 0.5f, 30f, 0.5f, bomberSpawnRate);
-        bomberBombCooldown = CustomOption.Create(10185, Types.Impostor, "Bomb Cooldown", 15f, 2.5f, 30f, 2.5f, bomberSpawnRate);
-        bomberBombActiveAfter = CustomOption.Create(10186, Types.Impostor, "Bomb Is Active After", 3f, 0.5f, 15f, 0.5f, bomberSpawnRate);
+        bomberSpawnRate = CustomOption.Create(10180, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
+        terroristBombDestructionTime = CustomOption.Create(10181, Types.Impostor, "Bomb Destruction Time", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
+        terroristBombDestructionRange = CustomOption.Create(10182, Types.Impostor, "Bomb Destruction Range", 50f, 5f, 150f, 5f, bomberSpawnRate);
+        terroristBombHearRange = CustomOption.Create(10183, Types.Impostor, "Bomb Hear Range", 60f, 5f, 150f, 5f, bomberSpawnRate);
+        terroristDefuseDuration = CustomOption.Create(10184, Types.Impostor, "Bomb Defuse Duration", 3f, 0.5f, 30f, 0.5f, bomberSpawnRate);
+        terroristBombCooldown = CustomOption.Create(10185, Types.Impostor, "Bomb Cooldown", 15f, 2.5f, 30f, 2.5f, bomberSpawnRate);
+        terroristBombActiveAfter = CustomOption.Create(10186, Types.Impostor, "Bomb Is Active After", 3f, 0.5f, 15f, 0.5f, bomberSpawnRate);
 
         minerSpawnRate = CustomOption.Create(10190, Types.Impostor, cs(Miner.color, "Miner"), rates, null, true);
         minerCooldown = CustomOption.Create(10191, Types.Impostor, "Mine Cooldown", 25f, 10f, 60f, 2.5f, minerSpawnRate);
@@ -1025,6 +1027,8 @@ public class CustomOptionHolder
         modifierBaitReportDelayMin = CustomOption.Create(1052, Types.Modifier, "Bait Report Delay Min", 0f, 0f, 10f, 1f, modifierBait);
         modifierBaitReportDelayMax = CustomOption.Create(1053, Types.Modifier, "Bait Report Delay Max", 0f, 0f, 10f, 1f, modifierBait);
         modifierBaitShowKillFlash = CustomOption.Create(1054, Types.Modifier, "Warn The Killer With A Flash", true, modifierBait);
+
+        modifierAftermath = CustomOption.Create(1230, Types.Modifier, cs(Color.yellow, "Aftermath"), rates, null, true);
 
         modifierLover = CustomOption.Create(1060, Types.Modifier, cs(Color.yellow, "Lovers"), rates, null, true);
         modifierLoverImpLoverRate = CustomOption.Create(1061, Types.Modifier, "Chance That One Lover Is Impostor", rates, modifierLover);

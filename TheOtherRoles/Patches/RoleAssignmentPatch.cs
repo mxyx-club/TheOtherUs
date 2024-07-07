@@ -530,7 +530,9 @@ namespace TheOtherRoles.Patches
             List<RoleId> impModifiers = new List<RoleId>();
             List<RoleId> ensuredImpModifiers = new List<RoleId>();
             List<RoleId> chanceImpModifiers = new List<RoleId>();
-            allModifiers.AddRange(new List<RoleId> {
+            allModifiers.AddRange(new List<RoleId>
+            {
+                RoleId.Aftermath,
                 RoleId.Tiebreaker,
                 RoleId.Mini,
                 RoleId.Bait,
@@ -805,6 +807,16 @@ namespace TheOtherRoles.Patches
                 modifiers.RemoveAll(x => x == RoleId.Sunglasses);
             }
 
+            if (modifiers.Contains(RoleId.Aftermath))
+            {
+                var Player = new List<PlayerControl>(playerList);
+                Player.RemoveAll(x => x.Data.Role.IsImpostor);
+                playerId = setModifierToRandomPlayer((byte)RoleId.Aftermath, Player);
+                Player.RemoveAll(x => x.PlayerId == playerId);
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                modifiers.RemoveAll(x => x == RoleId.Aftermath);
+            }
+
             if (modifiers.Contains(RoleId.Torch))
             {
                 int torchCount = 0;
@@ -860,6 +872,9 @@ namespace TheOtherRoles.Patches
                     selection = CustomOptionHolder.modifierWatcher.getSelection(); break;
                 case RoleId.Radar:
                     selection = CustomOptionHolder.modifierRadar.getSelection(); break;
+                case RoleId.Aftermath:
+                    selection = CustomOptionHolder.modifierAftermath.getSelection();
+                    break;
                 case RoleId.Disperser:
                     selection = CustomOptionHolder.modifierDisperser.getSelection(); break;
                 case RoleId.Mini:
