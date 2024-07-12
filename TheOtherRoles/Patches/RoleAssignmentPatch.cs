@@ -151,6 +151,7 @@ namespace TheOtherRoles.Patches
             neutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.getSelection());
+            neutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.getSelection());
 
             if (rnd.Next(1, 101) <= CustomOptionHolder.lawyerIsProsecutorChance.getSelection() * 10) // Lawyer or Prosecutor
                 neutralSettings.Add((byte)RoleId.Prosecutor, CustomOptionHolder.lawyerSpawnRate.getSelection());
@@ -470,7 +471,8 @@ namespace TheOtherRoles.Patches
                 { // Lawyer
                     foreach (PlayerControl p in CachedPlayer.AllPlayers)
                     {
-                        if (!p.Data.IsDead && !p.Data.Disconnected && p != Lovers.lover1 && p != Lovers.lover2 && (p.Data.Role.IsImpostor || p == Jackal.jackal || p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
+                        if (!p.Data.IsDead && !p.Data.Disconnected &&
+                            p != Lovers.lover1 && p != Lovers.lover2 && (p.Data.Role.IsImpostor || p == Jackal.jackal || p == Juggernaut.juggernaut || p == Werewolf.werewolf || (Lawyer.targetCanBeJester && p == Jester.jester)))
                             possibleTargets.Add(p);
                     }
                 }
@@ -535,6 +537,7 @@ namespace TheOtherRoles.Patches
                 RoleId.Aftermath,
                 RoleId.Tiebreaker,
                 RoleId.Mini,
+                RoleId.Giant,
                 RoleId.Bait,
                 RoleId.Bloody,
                 RoleId.AntiTeleport,
@@ -760,7 +763,7 @@ namespace TheOtherRoles.Patches
             if (modifiers.Contains(RoleId.Cursed))
             {
                 List<PlayerControl> crewPlayerC = new List<PlayerControl>(playerList);
-                crewPlayerC.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+                crewPlayerC.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
                 playerId = setModifierToRandomPlayer((byte)RoleId.Cursed, crewPlayerC);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Cursed);
@@ -769,22 +772,22 @@ namespace TheOtherRoles.Patches
             if (modifiers.Contains(RoleId.Tunneler))
             {
                 List<PlayerControl> crewPlayerT = new List<PlayerControl>(playerList);
-                crewPlayerT.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral) || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.roleId == RoleId.Engineer));
+                crewPlayerT.RemoveAll(x => x.Data.Role.IsImpostor ||isNeutral(x) || x == Engineer.engineer);
                 playerId = setModifierToRandomPlayer((byte)RoleId.Tunneler, crewPlayerT);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Tunneler);
             }
             /*
-                        if (modifiers.Contains(RoleId.Watcher)) {
-                            List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
-                            crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
-                            playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
-                            playerList.RemoveAll(x => x.PlayerId == playerId);
-                            modifiers.RemoveAll(x => x == RoleId.Watcher);
-                        }
+            if (modifiers.Contains(RoleId.Watcher)) {
+                List<PlayerControl> crewPlayerW = new List<PlayerControl>(playerList);
+                crewPlayerW.RemoveAll(x => x.Data.Role.IsImpostor);
+                playerId = setModifierToRandomPlayer((byte)RoleId.Watcher, crewPlayerW);
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                modifiers.RemoveAll(x => x == RoleId.Watcher);
+            }
             */
             List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
-            crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+            crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
             if (modifiers.Contains(RoleId.Shifter))
             {
                 var crewPlayerShifter = new List<PlayerControl>(crewPlayer);
@@ -908,6 +911,9 @@ namespace TheOtherRoles.Patches
                 case RoleId.Multitasker:
                     selection = CustomOptionHolder.modifierMultitasker.getSelection();
                     if (multiplyQuantity) selection *= CustomOptionHolder.modifierMultitaskerQuantity.getQuantity();
+                    break;
+                case RoleId.Giant:
+                    selection = CustomOptionHolder.modifierGiant.getSelection();
                     break;
                 case RoleId.Vip:
                     selection = CustomOptionHolder.modifierVip.getSelection();

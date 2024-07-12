@@ -8,6 +8,7 @@ using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles
 {
@@ -56,6 +57,7 @@ namespace TheOtherRoles
         public static CustomButton warlockCurseButton;
         public static CustomButton securityGuardButton;
         public static CustomButton securityGuardCamButton;
+        public static CustomButton juggernautKillButton;
         public static CustomButton arsonistButton;
         public static CustomButton vultureEatButton;
         public static CustomButton yoyoButton;
@@ -161,6 +163,7 @@ namespace TheOtherRoles
             securityGuardCamButton.MaxTimer = SecurityGuard.cooldown;
             arsonistButton.MaxTimer = Arsonist.cooldown;
             vultureEatButton.MaxTimer = Vulture.cooldown;
+            juggernautKillButton.MaxTimer = Juggernaut.cooldown;
             amnisiacRememberButton.MaxTimer = 0f;
             bomberGiveButton.MaxTimer = 0f;
             bomberGiveButton.Timer = 0f;
@@ -527,6 +530,7 @@ namespace TheOtherRoles
                         if ((Sheriff.currentTarget != Mini.mini || Mini.isGrownUp()) &&
                         (Sheriff.currentTarget.Data.Role.IsImpostor ||
                         Jackal.jackal == Sheriff.currentTarget ||
+                        Juggernaut.juggernaut == Sheriff.currentTarget ||
                         Sidekick.sidekick == Sheriff.currentTarget ||
                         Werewolf.werewolf == Sheriff.currentTarget ||
                             (Sheriff.spyCanDieToSheriff && Spy.spy == Sheriff.currentTarget) ||
@@ -2567,6 +2571,40 @@ namespace TheOtherRoles
                     }
                     Witch.spellCastingTarget = null;
                 }
+            );
+
+            // Juggernaut Kill
+            juggernautKillButton = new CustomButton(
+                () =>
+                {
+                    if (checkAndDoVetKill(Juggernaut.currentTarget)) return;
+                    if (checkMurderAttemptAndKill(Juggernaut.juggernaut, Juggernaut.currentTarget) ==
+                        MurderAttemptResult.SuppressKill) return;
+                    if (juggernautKillButton.MaxTimer >= 0f)
+                    {
+                        Juggernaut.setkill();
+                        juggernautKillButton.MaxTimer = Juggernaut.cooldown;
+                    }
+
+                    juggernautKillButton.Timer = juggernautKillButton.MaxTimer;
+                    Juggernaut.currentTarget = null;
+                },
+                () =>
+                {
+                    return Juggernaut.juggernaut != null &&
+                           Juggernaut.juggernaut == CachedPlayer.LocalPlayer.PlayerControl &&
+                           !CachedPlayer.LocalPlayer.Data.IsDead;
+                },
+                () =>
+                {
+                    showTargetNameOnButton(Juggernaut.currentTarget, juggernautKillButton, "KILL");
+                    return Juggernaut.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                },
+                () => { juggernautKillButton.Timer = juggernautKillButton.MaxTimer; },
+                __instance.KillButton.graphic.sprite,
+                new Vector3(0, 1f, 0),
+                __instance,
+                KeyCode.Q
             );
 
             // Jumper Jump

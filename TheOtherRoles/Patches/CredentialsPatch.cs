@@ -23,7 +23,7 @@ Based on TheOtherRoles";
 Design by <color=#FCCE03FF>Bavari</color>";
 
         public static string contributorsCredentials =
-$@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, Fangkuai, and mxyx-club</color></size>";
+$@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, Fangkuai, mxyx-club</color></size>";
 
         [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
         internal static class PingTrackerPatch

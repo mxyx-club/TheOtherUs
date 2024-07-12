@@ -77,6 +77,7 @@ public static class TheOtherRoles
         Ninja.clearAndReload();
         Blackmailer.clearAndReload();
         Thief.clearAndReload();
+        Juggernaut.clearAndReload();
         Miner.clearAndReload();
         Trapper.clearAndReload();
         Terrorist.clearAndReload();
@@ -101,6 +102,7 @@ public static class TheOtherRoles
         Disperser.clearAndReload();
         Mini.clearAndReload();
         Indomitable.clearAndReload();
+        Giant.clearAndReload();
         Slueth.clearAndReload();
         Vip.clearAndReload();
         Invert.clearAndReload();
@@ -881,6 +883,7 @@ public static class Lovers
     {
         return existing() && (lover1 == Jackal.jackal || lover2 == Jackal.jackal
                            || lover1 == Sidekick.sidekick || lover2 == Sidekick.sidekick
+                           || lover1 == Juggernaut.juggernaut || lover2 == Juggernaut.juggernaut
                            || lover1 == Werewolf.werewolf || lover2 == Werewolf.werewolf
                            || lover1.Data.Role.IsImpostor || lover2.Data.Role.IsImpostor);
     }
@@ -2093,6 +2096,34 @@ public static class BountyHunter
     }
 }
 
+public static class Juggernaut
+{
+    public static PlayerControl juggernaut;
+    public static Color color = new Color32(140, 0, 77, byte.MaxValue);
+    public static PlayerControl currentTarget;
+
+    public static float cooldown = 30f;
+    public static float reducedkill = 5f;
+    public static bool hasImpostorVision;
+    public static bool canVent;
+
+    public static void setkill()
+    {
+        cooldown -= reducedkill;
+        if (cooldown <= 0f) cooldown = 0f;
+    }
+
+    public static void clearAndReload()
+    {
+        juggernaut = null;
+        currentTarget = null;
+        hasImpostorVision = CustomOptionHolder.juggernautHasImpVision.getBool();
+        canVent = CustomOptionHolder.juggernautCanVent.getBool();
+        cooldown = CustomOptionHolder.juggernautCooldown.getFloat();
+        reducedkill = CustomOptionHolder.juggernautReducedkillEach.getFloat();
+    }
+}
+
 public static class Vulture
 {
     public static PlayerControl vulture;
@@ -3051,6 +3082,20 @@ public static class Mini
     }
 
 }
+
+public static class Giant
+{
+    public static PlayerControl giant;
+    public static float speed = 0.75f;
+    public static float size = 1.12f;
+
+    public static void clearAndReload()
+    {
+        giant = null;
+        speed = CustomOptionHolder.modifierGiantSpped.getFloat();
+    }
+}
+
 public static class Vip
 {
     public static List<PlayerControl> vip = new List<PlayerControl>();

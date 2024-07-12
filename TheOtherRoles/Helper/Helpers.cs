@@ -608,12 +608,24 @@ public static class Helpers
 
     public static bool hasFakeTasks(this PlayerControl player)
     {
-        return player == Werewolf.werewolf || player == Jester.jester || player == Amnisiac.amnisiac || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player);
+        return player == Werewolf.werewolf
+            || player == Jester.jester
+            || player == Amnisiac.amnisiac
+            || player == Jackal.jackal
+            || player == Sidekick.sidekick
+            || player == Arsonist.arsonist
+            || player == Vulture.vulture
+            || player == Juggernaut.juggernaut
+            || Jackal.formerJackals.Any(x => x == player);
     }
 
     public static bool canBeErased(this PlayerControl player)
     {
-        return player != Jackal.jackal && player != Sidekick.sidekick && !Jackal.formerJackals.Any(x => x == player) && player != Werewolf.werewolf;
+        return player != Jackal.jackal
+            && player != Juggernaut.juggernaut
+            && player != Sidekick.sidekick
+            && !Jackal.formerJackals.Any(x => x == player)
+            && player != Werewolf.werewolf;
     }
 
     public static bool shouldShowGhostInfo()
@@ -874,6 +886,8 @@ public static class Helpers
             roleCouldUse = true;
         else if (Undertaker.deadBodyDraged != null && !Undertaker.canDragAndVent && Undertaker.undertaker == player)
             roleCouldUse = false;
+        else if (Juggernaut.juggernaut != null && Juggernaut.juggernaut == player && Juggernaut.canVent)
+            roleCouldUse = true;
         else if (Thief.canUseVents && Thief.thief != null && Thief.thief == player)
             roleCouldUse = true;
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
@@ -1299,6 +1313,7 @@ public static class Helpers
         return isNeutral(player) && (
                 player == Werewolf.werewolf ||
                 player == Swooper.swooper ||
+                player == Juggernaut.juggernaut ||
                 player == Arsonist.arsonist ||
                 player == Jackal.jackal ||
                 player == Sidekick.sidekick);
@@ -1386,6 +1401,7 @@ public static class Helpers
             || (((Jackal.jackal != null && Jackal.jackal.PlayerId == player.PlayerId) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
             || (Sidekick.sidekick != null && Sidekick.sidekick.PlayerId == player.PlayerId && Sidekick.hasImpostorVision)
             || (Spy.spy != null && Spy.spy.PlayerId == player.PlayerId && Spy.hasImpostorVision)
+            || (Juggernaut.juggernaut != null && Juggernaut.juggernaut.PlayerId == player.PlayerId && Juggernaut.hasImpostorVision)
             || (Jester.jester != null && Jester.jester.PlayerId == player.PlayerId && Jester.hasImpostorVision)
             || (Thief.thief != null && Thief.thief.PlayerId == player.PlayerId && Thief.hasImpostorVision)
             || (Werewolf.werewolf != null && Werewolf.werewolf.PlayerId == player.PlayerId && Werewolf.hasImpostorVision);

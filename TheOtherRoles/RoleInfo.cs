@@ -49,6 +49,7 @@ public class RoleInfo
     public static RoleInfo swooper = new("Swooper", Swooper.color, "Turn Invisible and kill everyone", "Turn Invisible", RoleId.Swooper, false, true);
     public static RoleInfo arsonist = new("Arsonist", Arsonist.color, "Let them burn", "Let them burn", RoleId.Arsonist, true);
     public static RoleInfo werewolf = new("Werewolf", Werewolf.color, "Rampage and kill everyone", "Rampage and kill everyone", RoleId.Werewolf, true);
+    public static RoleInfo juggernaut = new("Juggernaut", Juggernaut.color, "Your Power Grows With Every Kill", "With each kill your kill cooldown decreases", RoleId.Juggernaut, true);
     public static RoleInfo thief = new("Thief", Thief.color, "Steal a killers role by killing them", "Steal a killers role", RoleId.Thief, true);
 
     //Crewmate
@@ -90,6 +91,7 @@ public class RoleInfo
     public static RoleInfo multitasker = new("Multitasker", Color.yellow, "Your task windows are transparent", "Your task windows are transparent", RoleId.Multitasker, false, true);
     public static RoleInfo lover = new("Lover", Lovers.color, $"You are in love", $"You are in love", RoleId.Lover, false, true);
     public static RoleInfo mini = new("Mini", Color.yellow, "No one will harm you until you grow up", "No one will harm you", RoleId.Mini, false, true);
+    public static RoleInfo giant = new("Giant", Color.yellow, "You are ginormous", "You are ginormous", RoleId.Giant, false, true);
     public static RoleInfo vip = new("VIP", Color.yellow, "You are the VIP", "Everyone is notified when you die", RoleId.Vip, false, true);
     public static RoleInfo indomitable = new("Indomitable", Color.yellow, "Your role cannot be guessed", "You are Indomitable!", RoleId.Indomitable, false, true);
     public static RoleInfo slueth = new("Sleuth", Color.yellow, "Learn the roles of bodies you report", "You know the roles of bodies you report", RoleId.Slueth, false, true);
@@ -147,6 +149,7 @@ public class RoleInfo
             sidekick,
             arsonist,
             werewolf,
+            juggernaut,
             thief,
             swooper,
 
@@ -189,6 +192,7 @@ public class RoleInfo
             multitasker,
             lover,
             mini,
+            giant,
             vip,
             indomitable,
             slueth,
@@ -257,6 +261,7 @@ public class RoleInfo
             if (p == Radar.radar) infos.Add(radar);
             if (p == Tunneler.tunneler) infos.Add(tunneler);
             if (p == Slueth.slueth) infos.Add(slueth);
+            if (p == Giant.giant) infos.Add(giant);
             if (p == Swooper.swooper) infos.Add(swooper);
             if (p == Disperser.disperser) infos.Add(disperser);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
@@ -302,6 +307,7 @@ public class RoleInfo
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Cultist.cultist) infos.Add(cultist);
         if (p == Amnisiac.amnisiac) infos.Add(amnisiac);
+        if (p == Juggernaut.juggernaut) infos.Add(juggernaut);
         if (p == Veteren.veteren) infos.Add(veteren);
         if (p == Medic.medic) infos.Add(medic);
         if (p == Swapper.swapper) infos.Add(swapper);

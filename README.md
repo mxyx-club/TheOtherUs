@@ -1,6 +1,8 @@
 ![mod banner](./Images/TOU_Logo.png)
-<p align="center"><a href="https://github.com/SpexGH/TheOtherUs/releases/"><img src="https://badgen.net/github/release/SpexGH/theotherus"></a></p>
 
+<p align="center">
+<a href="https://github.com/SpexGH/TheOtherUs/releases/"><img src="https://badgen.net/github/release/SpexGH/TheOtherUs"></a>    
+<a href="https://github.com/SpexGH/TheOtherUs/releases/"><img src="https://badgen.net/github/assets-dl/SpexGH/TheOtherUs"></a></p>
 
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.</p>
 <p align="center">
@@ -136,7 +138,7 @@ Even more roles are coming soon. :)
 | 2020.12.19s        | v1.0        | [Download](https://github.com/Eisbison/TheOtherRoles/files/6097191/TheOtherRoles.zip) |
 
  </details> 
- 
+
 # Changelog
 
 <details>

@@ -30,6 +30,7 @@ namespace TheOtherRoles
         Cultist,
         Lighter,
         Werewolf,
+        Juggernaut,
         Godfather,
         Mafioso,
         Crew,
@@ -99,6 +100,7 @@ namespace TheOtherRoles
         Flash,
         Multitasker,
         Mini,
+        Giant,
         Vip,
         Tunneler,
         Watcher,
@@ -456,6 +458,9 @@ namespace TheOtherRoles
                         case RoleId.Poucher:
                             Poucher.poucher = player;
                             break;
+                        case RoleId.Juggernaut:
+                            Juggernaut.juggernaut = player;
+                            break;
                         case RoleId.PrivateInvestigator:
                             PrivateInvestigator.privateInvestigator = player;
                             break;
@@ -601,6 +606,9 @@ namespace TheOtherRoles
                     break;
                 case RoleId.Mini:
                     Mini.mini = player;
+                    break;
+                case RoleId.Giant:
+                    Giant.giant = player;
                     break;
                 case RoleId.Vip:
                     Vip.vip.Add(player);
@@ -1724,6 +1732,7 @@ namespace TheOtherRoles
             // Other roles
             if (player == Jester.jester) Jester.clearAndReload();
             if (player == Werewolf.werewolf) Werewolf.clearAndReload();
+            if (player == Juggernaut.juggernaut) Juggernaut.clearAndReload();
             if (player == Miner.miner) Miner.clearAndReload();
             if (player == Arsonist.arsonist) Arsonist.clearAndReload();
             if (Guesser.isGuesser(player.PlayerId)) Guesser.clear(player.PlayerId);
@@ -1761,6 +1770,7 @@ namespace TheOtherRoles
                 if (player == Watcher.watcher) Watcher.clearAndReload();
                 if (player == Radar.radar) Radar.clearAndReload();
                 if (player == Aftermath.aftermath) Aftermath.clearAndReload();
+                if (player == Giant.giant) Giant.clearAndReload();
                 if (player == Disperser.disperser) Disperser.clearAndReload();
                 if (player == Indomitable.indomitable) Indomitable.clearAndReload();
                 if (player == Tunneler.tunneler) Tunneler.clearAndReload();

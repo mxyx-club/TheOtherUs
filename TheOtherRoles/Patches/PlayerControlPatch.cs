@@ -4,6 +4,7 @@ using System.Linq;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
+using InnerNet;
 using Reactor.Utilities.Extensions;
 using Sentry.Internal.Extensions;
 using TheOtherRoles.CustomGameModes;
@@ -360,6 +361,12 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
+    private static void juggernautSetTarget()
+    {
+        if (Juggernaut.juggernaut == null || Juggernaut.juggernaut != CachedPlayer.LocalPlayer.PlayerControl) return;
+        Juggernaut.currentTarget = setTarget();
+    }
+
     static void cultistSetFollower()
     {
         if (Cultist.cultist == null || Cultist.cultist != CachedPlayer.LocalPlayer.PlayerControl) return;
@@ -625,7 +632,21 @@ public static class PlayerControlFixedUpdatePatch
         }
     }
 
-    public static void playerSizeUpdate(PlayerControl p)
+    public static void GiantSizeUpdate(PlayerControl p)
+    {
+
+        var collider = p.Collider.CastFast<CircleCollider2D>();
+        collider.offset = Mini.defaultColliderOffset * Vector2.down;
+        if (MushroomSabotageActive()) return;
+        // Giant
+        if (p == Giant.giant)
+        {
+            p.transform.localScale = new Vector3(Giant.size, Giant.size, 1f);
+            collider.radius *= 0.85f;
+        }
+    }
+
+    public static void MiniSizeUpdate(PlayerControl p)
     {
         // Set default player size
         CircleCollider2D collider = p.Collider.CastFast<CircleCollider2D>();
@@ -1571,7 +1592,11 @@ public static class PlayerControlFixedUpdatePatch
         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
         // Mini and Morphling shrink
-        if (!PropHunt.isPropHuntGM) playerSizeUpdate(__instance);
+        if (!PropHunt.isPropHuntGM) 
+        {
+            MiniSizeUpdate(__instance);
+            GiantSizeUpdate(__instance);
+        }
 
         // set position of colorblind text
         foreach (var pc in PlayerControl.AllPlayerControls)
@@ -1667,6 +1692,8 @@ public static class PlayerControlFixedUpdatePatch
             pursuerSetTarget();
             // Blackmailer
             blackMailerSetTarget();
+            // Juggernaut
+            juggernautSetTarget();
             // Witch
             witchSetTarget();
             // Cultist
@@ -2112,17 +2139,17 @@ public static class PlayerPhysicsFixedUpdate
             !CachedPlayer.LocalPlayer.Data.IsDead &&
             shouldInvert &&
             GameData.Instance &&
-            __instance.myPlayer.CanMove)
-            __instance.body.velocity *= -1;
+            __instance.myPlayer.CanMove) __instance.body.velocity *= -1;
+
         if (__instance.AmOwner &&
-            AmongUsClient.Instance &&
-            AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
-            !CachedPlayer.LocalPlayer.Data.IsDead &&
-            GameData.Instance &&
-            __instance.myPlayer.CanMove &&
-            Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId))
+                AmongUsClient.Instance &&
+                AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started &&
+                !CachedPlayer.LocalPlayer.Data.IsDead &&
+                GameData.Instance &&
+                __instance.myPlayer.CanMove)
         {
-            __instance.body.velocity *= Flash.speed;
+            if (Flash.flash != null && Flash.flash.Any(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId)) __instance.body.velocity *= Flash.speed;
+            if (Giant.giant != null && Giant.giant == CachedPlayer.LocalPlayer.PlayerControl) __instance.body.velocity *= Giant.speed;
         }
     }
 }
