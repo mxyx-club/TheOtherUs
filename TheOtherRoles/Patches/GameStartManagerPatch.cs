@@ -1,15 +1,11 @@
-using HarmonyLib;
-using UnityEngine;
-using System.Reflection;
-using System.Collections.Generic;
-using Hazel;
 using System;
-using TheOtherRoles.Utilities;
+using System.Collections.Generic;
 using System.Linq;
+using Hazel;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Modules;
+using TheOtherRoles.Utilities;
+using UnityEngine;
 using static TheOtherRoles.Helper.HandshakeHelper;
-using System.Drawing;
 
 namespace TheOtherRoles.Patches;
 

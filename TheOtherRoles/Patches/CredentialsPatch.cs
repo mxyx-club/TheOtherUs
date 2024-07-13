@@ -34,7 +34,7 @@ $@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, 
             {
                 DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
                 var fps = Mathf.Ceil(1f / DeltaTime);
-                var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms FPS: {fps}</size>";
+                var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms {(TORMapOptions.showFPS ? $"FPS: {fps}" : "")}</size>";
                 var host = $"<size=80%>{"Host"}: {GameData.Instance?.GetHost()?.PlayerName}</size>";
 
                 __instance.text.alignment = TextAlignmentOptions.TopRight;

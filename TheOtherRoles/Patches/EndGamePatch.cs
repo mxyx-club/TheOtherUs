@@ -577,6 +577,7 @@ namespace TheOtherRoles.Patches
 
         private static bool CheckAndEndGameForTaskWin(ShipStatus __instance)
         {
+            if (TORMapOptions.preventTaskEnd) return false;
             if ((HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible) || PropHunt.isPropHuntGM) return false;
             if (GameData.Instance.TotalTasks > 0
                 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks

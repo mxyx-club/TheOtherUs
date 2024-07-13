@@ -28,6 +28,7 @@ static class TORMapOptions
     public static bool hideOutOfSightNametags = false;
     public static bool ShowVentsOnMap = false;
     public static bool ShowVentsOnMeetingMap = true;
+    public static bool showFPS = true;
     public static bool disableMedscanWalking = false;
     public static int restrictDevices = 0;
     // public static float restrictAdminTime = 600f;
@@ -39,6 +40,7 @@ static class TORMapOptions
     public static bool disableCamsRoundOne = false;
     public static bool isRoundOne = true;
     public static bool camoComms = false;
+    public static bool preventTaskEnd = false;
     public static bool randomGameStartPosition = false;
     public static bool allowModGuess = false;
     public static CustomGamemodes gameMode = CustomGamemodes.Classic;
@@ -78,6 +80,7 @@ static class TORMapOptions
         randomGameStartPosition = CustomOptionHolder.randomGameStartPosition.getBool();
         ShowVentsOnMap = CustomOptionHolder.ShowVentsOnMap.getBool();
         ShowVentsOnMeetingMap = CustomOptionHolder.ShowVentsOnMeetingMap.getBool();
+        preventTaskEnd = CustomOptionHolder.preventTaskEnd.getBool();
         //allowModGuess = false;
         allowModGuess = CustomOptionHolder.allowModGuess.getBool();
         firstKillPlayer = null;
@@ -86,17 +89,18 @@ static class TORMapOptions
 
     public static void reloadPluginOptions()
     {
-        ghostsSeeRoles = TheOtherRolesPlugin.GhostsSeeRoles.Value;
-        ghostsSeeModifier = TheOtherRolesPlugin.GhostsSeeModifier.Value;
-        ghostsSeeInformation = TheOtherRolesPlugin.GhostsSeeInformation.Value;
-        ghostsSeeVotes = TheOtherRolesPlugin.GhostsSeeVotes.Value;
-        showRoleSummary = TheOtherRolesPlugin.ShowRoleSummary.Value;
-        showLighterDarker = TheOtherRolesPlugin.ShowLighterDarker.Value;
-        toggleCursor = TheOtherRolesPlugin.ToggleCursor.Value;
-        enableSoundEffects = TheOtherRolesPlugin.EnableSoundEffects.Value;
-        enableHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
+        ghostsSeeRoles = Main.GhostsSeeRoles.Value;
+        ghostsSeeModifier = Main.GhostsSeeModifier.Value;
+        ghostsSeeInformation = Main.GhostsSeeInformation.Value;
+        ghostsSeeVotes = Main.GhostsSeeVotes.Value;
+        showRoleSummary = Main.ShowRoleSummary.Value;
+        showLighterDarker = Main.ShowLighterDarker.Value;
+        toggleCursor = Main.ToggleCursor.Value;
+        enableSoundEffects = Main.EnableSoundEffects.Value;
+        enableHorseMode = Main.EnableHorseMode.Value;
+        showFPS = Main.ShowFPS.Value;
 
-        //Patches.ShouldAlwaysHorseAround.isHorseMode = TheOtherRolesPlugin.EnableHorseMode.Value;
+        //Patches.ShouldAlwaysHorseAround.isHorseMode = Main.EnableHorseMode.Value;
     }
     public static void resetDeviceTimes()
     {

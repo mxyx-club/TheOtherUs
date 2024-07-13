@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static TheOtherRoles.TheOtherRoles;
 using static TheOtherRoles.CustomOption;
+using static TheOtherRoles.TheOtherRoles;
 using Types = TheOtherRoles.CustomOption.CustomOptionType;
 
 namespace TheOtherRoles;
@@ -108,7 +108,6 @@ public class CustomOptionHolder
     public static CustomOption swooperDuration;
     public static CustomOption jackalCreateSidekickCooldown;
     public static CustomOption jackalImpostorCanFindSidekick;
-    public static CustomOption jackalKillFakeImpostor;
     public static CustomOption jackalCanUseVents;
     public static CustomOption jackalCanUseSabo;
     public static CustomOption jackalCanCreateSidekick;
@@ -116,8 +115,9 @@ public class CustomOptionHolder
     public static CustomOption sidekickCanKill;
     public static CustomOption sidekickCanUseVents;
     public static CustomOption jackalPromotedFromSidekickCanCreateSidekick;
-    public static CustomOption jackalCanCreateSidekickFromImpostor;
     public static CustomOption jackalAndSidekickHaveImpostorVision;
+    public static CustomOption jackalCanCreateSidekickFromImpostor;
+    public static CustomOption jackalKillFakeImpostor;
 
     public static CustomOption juggernautSpawnRate;
     public static CustomOption juggernautCooldown;
@@ -262,7 +262,7 @@ public class CustomOptionHolder
     public static CustomOption snitchSpawnRate;
     public static CustomOption snitchLeftTasksForReveal;
     public static CustomOption snitchSeeMeeting;
-    public static CustomOption snitchCanSeeRoles;
+    //public static CustomOption snitchCanSeeRoles;
     public static CustomOption snitchIncludeNeutralTeam;
     public static CustomOption snitchTeamNeutraUseDifferentArrowColor;
 
@@ -454,7 +454,6 @@ public class CustomOptionHolder
 
     public static CustomOption modifierShifter;
 
-    //public static CustomOption preventTaskEnd; 
     public static CustomOption resteButtonCooldown;
 
     public static CustomOption maxNumberOfMeetings;
@@ -476,6 +475,7 @@ public class CustomOptionHolder
     public static CustomOption ShowVentsOnMeetingMap;
     public static CustomOption allowModGuess;
     public static CustomOption finishTasksBeforeHauntingOrZoomingOut;
+    public static CustomOption preventTaskEnd;
     public static CustomOption camsNightVision;
     public static CustomOption camsNoNightVisionIfImpVision;
     public static CustomOption deadImpsBlockSabotage;
@@ -647,7 +647,7 @@ public class CustomOptionHolder
         disableMedbayWalk = Create(33, Types.General, "Disable MedBay Animations", false);
         allowParallelMedBayScans = Create(34, Types.General, "Allow Parallel MedBay Scans", false);
         finishTasksBeforeHauntingOrZoomingOut = Create(35, Types.General, "Finish Tasks Before Haunting Or Zooming Out", true);
-        //preventTaskEnd = CustomOption.Create(36, Types.General, "Prevent Task End Game", false);
+        preventTaskEnd = Create(36, Types.General, "Prevent Task End Game", false);
 
         //Map options
         randomGameStartPosition = Create(50, Types.General, "Random Spawn Location", false, null, true);
@@ -853,6 +853,13 @@ public class CustomOptionHolder
         juggernautCanVent = Create(20113, Types.Neutral, "Can Use Vents", true, juggernautSpawnRate);
         juggernautReducedkillEach = Create(20114, Types.Neutral, "Reduced Kill Cooldown Per Kill", 5f, 1f, 15f, 0.5f, juggernautSpawnRate);
 
+        thiefSpawnRate = Create(20120, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
+        thiefCooldown = Create(20121, Types.Neutral, "Thief Cooldown", 30f, 5f, 120f, 5f, thiefSpawnRate);
+        thiefCanKillSheriff = Create(20122, Types.Neutral, "Thief Can Kill Sheriff", true, thiefSpawnRate);
+        thiefHasImpVision = Create(20123, Types.Neutral, "Thief Has Impostor Vision", true, thiefSpawnRate);
+        thiefCanUseVents = Create(20124, Types.Neutral, "Thief Can Use Vents", true, thiefSpawnRate);
+        thiefCanStealWithGuess = Create(20125, Types.Neutral, "Thief Can Guess To Steal A Role (If Guesser)", false, thiefSpawnRate);
+
         //-------------------------- Crewmate Options 30000-39999 -------------------------- //
 
         guesserSpawnRate = Create(30000, Types.Crewmate, cs(Guesser.color, "Vigilante"), rates, null, true);
@@ -959,8 +966,8 @@ public class CustomOptionHolder
 
         snitchSpawnRate = Create(30170, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(30171, Types.Crewmate, "Task Count Where The Snitch Will Be Revealed", 1f, 0f, 10f, 1f, snitchSpawnRate);
-        snitchSeeMeeting = Create(30172, Types.Crewmate, "Show Roles Color", true, snitchSpawnRate);
-        snitchCanSeeRoles = Create(30173, Types.Crewmate, "Can See Roles Info", false, snitchSeeMeeting);
+        snitchSeeMeeting = Create(30172, Types.Crewmate, "Show Roles Color In Meeting", true, snitchSpawnRate);
+        //snitchCanSeeRoles = Create(30173, Types.Crewmate, "Can See Roles Info", false, snitchSeeMeeting);
         snitchIncludeNeutralTeam = Create(30174, Types.Crewmate, "Include Team Neutral", ["Off", "Killer", "Evil", "All"], snitchSpawnRate);
         snitchTeamNeutraUseDifferentArrowColor = Create(30175, Types.Crewmate, "Use Different Color For Neutra Team", true, snitchIncludeNeutralTeam);
 
@@ -1003,13 +1010,6 @@ public class CustomOptionHolder
         bodyGuardSpawnRate = Create(30230, Types.Crewmate, cs(BodyGuard.color, "Bodyguard"), rates, null, true);
         bodyGuardResetTargetAfterMeeting = Create(30231, Types.Crewmate, "Reset Target After Meeting", true, bodyGuardSpawnRate);
         bodyGuardFlash = Create(30232, Types.Crewmate, "Show Flash On Death", true, bodyGuardSpawnRate);
-
-        thiefSpawnRate = Create(30240, Types.Neutral, cs(Thief.color, "Thief"), rates, null, true);
-        thiefCooldown = Create(30241, Types.Neutral, "Thief Cooldown", 30f, 5f, 120f, 5f, thiefSpawnRate);
-        thiefCanKillSheriff = Create(30242, Types.Neutral, "Thief Can Kill Sheriff", true, thiefSpawnRate);
-        thiefHasImpVision = Create(30243, Types.Neutral, "Thief Has Impostor Vision", true, thiefSpawnRate);
-        thiefCanUseVents = Create(30244, Types.Neutral, "Thief Can Use Vents", true, thiefSpawnRate);
-        thiefCanStealWithGuess = Create(30245, Types.Neutral, "Thief Can Guess To Steal A Role (If Guesser)", false, thiefSpawnRate);
 
         trapperSpawnRate = Create(30250, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
         trapperCooldown = Create(30251, Types.Crewmate, "Trapper Cooldown", 30f, 5f, 120f, 5f, trapperSpawnRate);

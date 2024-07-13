@@ -1303,8 +1303,7 @@ public static class Helpers
     public static bool isNeutral(PlayerControl player)
     {
         var roleInfo = RoleInfo.getRoleInfoForPlayer(player, false).FirstOrDefault();
-        if (roleInfo != null)
-            return roleInfo.isNeutral;
+        if (roleInfo != null) return roleInfo.isNeutral;
         return false;
     }
 

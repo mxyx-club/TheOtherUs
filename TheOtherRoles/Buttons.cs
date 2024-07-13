@@ -8,7 +8,6 @@ using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
-using static UnityEngine.GraphicsBuffer;
 
 namespace TheOtherRoles
 {

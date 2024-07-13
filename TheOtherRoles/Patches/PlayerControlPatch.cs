@@ -697,21 +697,7 @@ public static class PlayerControlFixedUpdatePatch
             p.cosmetics.nameText.transform.parent
                 .SetLocalZ(-0.0001f); // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
 
-            //Snitch See Roles
-            bool snitchFlag = false;
-            if (Snitch.snitch != null && Snitch.seeInMeeting && Snitch.canSeeRoles && !Snitch.snitch.Data.IsDead)
-            {
-                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
-                int numberOfTasks = playerTotal - playerCompleted;
-                bool completedSnitch = CachedPlayer.LocalPlayer.PlayerControl == Snitch.snitch && numberOfTasks == 0;
-                bool forImpTeam = p.Data.Role.IsImpostor;
-                bool forKillerTeam = Snitch.Team == Snitch.includeNeutralTeam.KillNeutral && isKiller(p);
-                bool forEvilTeam = Snitch.Team == Snitch.includeNeutralTeam.EvilNeutral && isEvil(p);
-                bool forNeutraTeam = Snitch.Team == Snitch.includeNeutralTeam.AllNeutral && isNeutral(p);
-                snitchFlag = completedSnitch && (forImpTeam || forKillerTeam || forEvilTeam || forNeutraTeam);
-            }
-
-            if (snitchFlag || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
+            if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) ||
                    p == CachedPlayer.LocalPlayer.PlayerControl ||
                 CachedPlayer.LocalPlayer.Data.IsDead ||
                 (CachedPlayer.LocalPlayer.PlayerControl == Slueth.slueth &&

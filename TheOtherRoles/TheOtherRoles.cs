@@ -1242,7 +1242,7 @@ public static class Snitch
     public static List<Arrow> localArrows = new List<Arrow>();
     public static int taskCountForReveal = 1;
     public static bool seeInMeeting = false;
-    public static bool canSeeRoles = false;
+    //public static bool canSeeRoles = false;
     //public static bool includeTeamJackal = false;
     //public static bool includeNeutralTeam = false;
     public static bool teamNeutraUseDifferentArrowColor = true;
@@ -1272,7 +1272,7 @@ public static class Snitch
         if (text != null) Object.Destroy(text);
         text = null;
 
-        canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
+        //canSeeRoles = CustomOptionHolder.snitchCanSeeRoles.getBool();
         //includeNeutralTeam = CustomOptionHolder.snitchIncludeNeutralTeam.getBool();
         Team = (includeNeutralTeam)CustomOptionHolder.snitchIncludeNeutralTeam.getSelection();
         teamNeutraUseDifferentArrowColor = CustomOptionHolder.snitchTeamNeutraUseDifferentArrowColor.getBool();
@@ -1373,8 +1373,8 @@ public static class Jackal
     public static Sprite buttonSprite2;
     public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
     public static bool canCreateSidekickFromImpostor = true;
-    public static bool hasImpostorVision = false;
     public static bool killFakeImpostor = false;
+    public static bool hasImpostorVision = false;
     public static bool wasTeamRed;
     public static bool ImpostorCanFindSidekick;
     public static bool canSabotage = false;
@@ -1424,11 +1424,11 @@ public static class Jackal
         canSabotage = CustomOptionHolder.jackalCanUseSabo.getBool();
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
         jackalPromotedFromSidekickCanCreateSidekick = CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
-        canCreateSidekickFromImpostor = CustomOptionHolder.jackalCanCreateSidekickFromImpostor.getBool();
-        killFakeImpostor = CustomOptionHolder.jackalKillFakeImpostor.getBool();
         swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
         ImpostorCanFindSidekick = CustomOptionHolder.jackalImpostorCanFindSidekick.getBool();
         duration = CustomOptionHolder.swooperDuration.getFloat();
+        canCreateSidekickFromImpostor = CustomOptionHolder.jackalCanCreateSidekickFromImpostor.getBool();
+        killFakeImpostor = CustomOptionHolder.jackalKillFakeImpostor.getBool();
         formerJackals.Clear();
         hasImpostorVision = CustomOptionHolder.jackalAndSidekickHaveImpostorVision.getBool();
         wasTeamRed = wasImpostor = wasSpy = false;
