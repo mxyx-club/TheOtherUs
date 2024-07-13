@@ -1631,7 +1631,8 @@ namespace TheOtherRoles
 
             if (!Jackal.canCreateSidekickFromImpostor && player.Data.Role.IsImpostor)
             {
-                Jackal.fakeSidekick = player;
+                if (Jackal.killFakeImpostor) uncheckedMurderPlayer(Jackal.jackal.PlayerId, player.PlayerId, 1);
+                else Jackal.fakeSidekick = player;
             }
             else
             {
