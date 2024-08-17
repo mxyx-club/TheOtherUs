@@ -28,7 +28,7 @@ static class TORMapOptions
     public static bool hideOutOfSightNametags = false;
     public static bool ShowVentsOnMap = false;
     public static bool ShowVentsOnMeetingMap = true;
-    public static bool showFPS = true;
+    public static bool showFPS;
     public static bool disableMedscanWalking = false;
     public static int restrictDevices = 0;
     // public static float restrictAdminTime = 600f;

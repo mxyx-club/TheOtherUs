@@ -75,6 +75,7 @@ namespace TheOtherRoles
         Lawyer,
         Prosecutor,
         Pursuer,
+        Doomsayer,
         Witch,
         Jumper,
         Escapist,
@@ -214,6 +215,7 @@ namespace TheOtherRoles
         SetTrap,
         TriggerTrap,
         MayorSetVoteTwice,
+        DoomsayerMeeting,
         PlaceBomb,
         DefuseBomb,
         //ShareRoom,
@@ -505,6 +507,9 @@ namespace TheOtherRoles
                             break;
                         case RoleId.Pursuer:
                             Pursuer.pursuer = player;
+                            break;
+                        case RoleId.Doomsayer:
+                            Doomsayer.doomsayer = player;
                             break;
                         case RoleId.Witch:
                             Witch.witch = player;
@@ -1177,6 +1182,13 @@ namespace TheOtherRoles
                     Amnisiac.amnisiac = target;
                     break;
 
+                case RoleId.Doomsayer:
+                    if (Amnisiac.resetRole) Doomsayer.clearAndReload();
+                    Doomsayer.doomsayer = amnisiac;
+                    Amnisiac.clearAndReload();
+                    Amnisiac.amnisiac = target;
+                    break;
+
                 case RoleId.Medium:
                     if (Amnisiac.resetRole) Medium.clearAndReload();
                     Medium.medium = amnisiac;
@@ -1728,7 +1740,7 @@ namespace TheOtherRoles
             if (player == Follower.follower) Follower.clearAndReload();
             if (player == Terrorist.terrorist) Terrorist.clearAndReload();
             if (player == Yoyo.yoyo) Yoyo.clearAndReload();
-
+            if (player == Doomsayer.doomsayer) Doomsayer.clearAndReload();
 
             // Other roles
             if (player == Jester.jester) Jester.clearAndReload();
@@ -2476,8 +2488,8 @@ namespace TheOtherRoles
 
         public static void lawyerPromotesToPursuer()
         {
-            PlayerControl player = Lawyer.lawyer;
-            PlayerControl client = Lawyer.target;
+            var player = Lawyer.lawyer;
+            var client = Lawyer.target;
             Lawyer.clearAndReload(false);
 
             Pursuer.pursuer = player;
@@ -2492,19 +2504,40 @@ namespace TheOtherRoles
 
         public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleId)
         {
-            PlayerControl dyingTarget = playerById(dyingTargetId);
+            var dyingTarget = playerById(dyingTargetId);
             if (dyingTarget == null) return;
-            if (Lawyer.target != null && dyingTarget == Lawyer.target) Lawyer.targetWasGuessed = true;  // Lawyer shouldn't be exiled with the client for guesses
-            PlayerControl dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
-            if (Lawyer.target != null && dyingLoverPartner == Lawyer.target) Lawyer.targetWasGuessed = true;  // Lawyer shouldn't be exiled with the client for guesses
+            var guesser = playerById(killerId);
+            var guessedTarget = playerById(guessedTargetId);
+            // Lawyer shouldn't be exiled with the client for guesses
+            if (Lawyer.target != null && dyingTarget == Lawyer.target) Lawyer.targetWasGuessed = true;
+            // Lover check
+            var dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null;
+            // Lawyer shouldn't be exiled with the client for guesses
+            if (Lawyer.target != null && dyingLoverPartner == Lawyer.target) Lawyer.targetWasGuessed = true;
 
-            PlayerControl guesser = playerById(killerId);
             if (Thief.thief != null && Thief.thief.PlayerId == killerId && Thief.canStealWithGuess)
             {
                 RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
                 if (!Thief.thief.Data.IsDead && !Thief.isFailedThiefKill(dyingTarget, guesser, roleInfo))
                 {
                     thiefStealsRole(dyingTarget.PlayerId);
+                }
+            }
+
+            //Ä©ÈÕ²Â²â
+            if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser && Doomsayer.canGuess)
+            {
+                var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
+                if (!Doomsayer.doomsayer.Data.IsDead && guessedTargetId == dyingTargetId)
+                {
+                    Doomsayer.killedToWin++;
+                    if (Doomsayer.killedToWin >= Doomsayer.killToWin) Doomsayer.triggerDoomsayerrWin = true;
+                    if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
+                }
+                else
+                {
+                    seedGuessChat(guesser, guessedTarget, guessedRoleId);
+                    return;
                 }
             }
 
@@ -2574,16 +2607,18 @@ namespace TheOtherRoles
                         MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
                 }
             }
+            if (guesser != null && guessedTarget != null) seedGuessChat(guesser, guessedTarget, guessedRoleId);
+        }
 
-
-            PlayerControl guessedTarget = playerById(guessedTargetId);
-            if (CachedPlayer.LocalPlayer.Data.IsDead && guessedTarget != null && guesser != null)
+        public static void seedGuessChat(PlayerControl guesser, PlayerControl guessedTarget, byte guessedRoleId)
+        {
+            if (CachedPlayer.LocalPlayer.Data.IsDead)
             {
-                RoleInfo roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
+                var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
                 string msg = $"{guesser.Data.PlayerName} guessed the role {roleInfo?.name ?? ""} for {guessedTarget.Data.PlayerName}!";
                 if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
-                if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
+                    FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg);
+                if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
                     FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
             }
         }
@@ -3198,6 +3233,15 @@ namespace TheOtherRoles
                     break;
                 case CustomRPC.MayorSetVoteTwice:
                     Mayor.voteTwice = reader.ReadBoolean();
+                    break;
+                case CustomRPC.DoomsayerMeeting:
+                    if (!shouldShowGhostInfo()) break;
+                    var index = reader.ReadPackedInt32();
+                    for (var i = 1; i < index; i++)
+                    {
+                        var message = reader.ReadString();
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Doomsayer.doomsayer, message);
+                    }
                     break;
                 case CustomRPC.MorphlingMorph:
                     RPCProcedure.morphlingMorph(reader.ReadByte());

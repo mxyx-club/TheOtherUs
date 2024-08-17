@@ -614,6 +614,7 @@ public static class Helpers
             || player == Jackal.jackal
             || player == Sidekick.sidekick
             || player == Arsonist.arsonist
+            || player == Doomsayer.doomsayer
             || player == Vulture.vulture
             || player == Juggernaut.juggernaut
             || Jackal.formerJackals.Any(x => x == player);
@@ -823,6 +824,25 @@ public static class Helpers
 
         if (enforceNightVisionUpdate) SurveillanceMinigamePatch.enforceNightVision(target);
         Chameleon.update();  // so that morphling and camo wont make the chameleons visible
+    }
+
+    public static List<RoleInfo> allRoleInfos()
+    {
+        var allRoleInfo = new List<RoleInfo>();
+        foreach (var role in RoleInfo.allRoleInfos)
+        {
+            if (role.isModifier) continue;
+            allRoleInfo.Add(role);
+        }
+        return allRoleInfo;
+    }
+
+    public static List<RoleInfo> onlineRoleInfos()
+    {
+        //if (CachedPlayer.AllPlayers.Count < Doomsayer.formationNum + 2) return allRoleInfos();
+        var role = new List<RoleInfo>();
+        role.AddRange(CachedPlayer.AllPlayers.Select(n => RoleInfo.getRoleInfoForPlayer(n, false)).SelectMany(n => n));
+        return role;
     }
 
     public static void showFlash(Color color, float duration = 1f, string message = "", bool fade = true, float opacity = 100f)

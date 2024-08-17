@@ -52,6 +52,8 @@ namespace TheOtherRoles.Patches
             }
             Eraser.futureErased = new List<PlayerControl>();
 
+            if (Doomsayer.doomsayer != null && AmongUsClient.Instance.AmHost && !Doomsayer.canGuess) Doomsayer.canGuess = true;
+
             // Trickster boxes
             if (Trickster.trickster != null && JackInTheBox.hasJackInTheBoxLimitReached())
             {

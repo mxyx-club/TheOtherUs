@@ -21,8 +21,8 @@ namespace TheOtherRoles.Utilities
 
         public static bool isGuesser(byte playerId)
         {
-            if (isGuesserGm) return GuesserGM.isGuesser(playerId);
-            return Guesser.isGuesser(playerId);
+            if (Doomsayer.doomsayer != null) return Doomsayer.doomsayer.PlayerId == playerId;
+            return isGuesserGm ? GuesserGM.isGuesser(playerId) : Guesser.isGuesser(playerId);
         }
 
         public static void clear(byte playerId)
@@ -31,10 +31,24 @@ namespace TheOtherRoles.Utilities
             else Guesser.clear(playerId);
         }
 
+        public static bool CanMultipleShots(PlayerControl dyingTarget)
+        {
+            if (dyingTarget == CachedPlayer.LocalPlayer.PlayerControl)
+                return false;
+
+            if (isGuesser(CachedPlayer.LocalPlayer.PlayerId)
+                && remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1
+                && hasMultipleShotsPerMeeting)
+                return true;
+
+            return CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && Doomsayer.hasMultipleShotsPerMeeting &&
+                   Doomsayer.CanShoot;
+        }
+
         public static int remainingShots(byte playerId, bool shoot = false)
         {
-            if (isGuesserGm) return GuesserGM.remainingShots(playerId, shoot);
-            return Guesser.remainingShots(playerId, shoot);
+            if (Doomsayer.doomsayer != null && Doomsayer.doomsayer.PlayerId == playerId) return 15;
+            return isGuesserGm ? GuesserGM.remainingShots(playerId, shoot) : Guesser.remainingShots(playerId, shoot);
         }
 
         public static void clearAndReload()

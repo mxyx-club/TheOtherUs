@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
 using static TheOtherRoles.TheOtherRoles;
@@ -319,6 +320,15 @@ public class CustomOptionHolder
     public static CustomOption lawyerCanCallEmergency;
     public static CustomOption pursuerCooldown;
     public static CustomOption pursuerBlanksNumber;
+
+    public static CustomOption doomsayerSpawnRate;
+    public static CustomOption doomsayerCooldown;
+    //public static CustomOption doomsayerHasMultipleShotsPerMeeting;
+    public static CustomOption doomsayerCanGuessImpostor;
+    public static CustomOption doomsayerCanGuessNeutral;
+    public static CustomOption doomsayerOnlineTarger;
+    public static CustomOption doomsayerKillToWin;
+    public static CustomOption doomsayerDormationNum;
 
     public static CustomOption jumperSpawnRate;
     public static CustomOption jumperJumpTime;
@@ -841,6 +851,15 @@ public class CustomOptionHolder
         lawyerTargetCanBeJester = Create(20076, Types.Neutral, "Lawyer Target Can Be The Jester", false, lawyerSpawnRate);
         pursuerCooldown = Create(20077, Types.Neutral, "Pursuer Blank Cooldown", 30f, 5f, 60f, 2.5f, lawyerSpawnRate);
         pursuerBlanksNumber = Create(20078, Types.Neutral, "Pursuer Number Of Blanks", 5f, 1f, 20f, 1f, lawyerSpawnRate);
+
+        doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "Doomsayer"), rates, null, true);
+        doomsayerCooldown = Create(20222, Types.Neutral, "Reveal Cooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
+        //doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "", true, doomsayerSpawnRate);
+        //doomsayerCanGuessImpostor = Create(20226, Types.Neutral, $"Can Guess {cs(Palette.ImpostorRed, "Impostor")}", true, doomsayerSpawnRate);
+        doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"Can Guess {cs(Color.gray, "Neutral")}", true, doomsayerSpawnRate);
+        doomsayerOnlineTarger = Create(20227, Types.Neutral, "Revealed The Roles Of Online Players", false, doomsayerSpawnRate);
+        doomsayerKillToWin = Create(20228, Types.Neutral, "Number Of Doomsayer Kill To Win", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
+        doomsayerDormationNum = Create(20229, Types.Neutral, "Revealed Role Count", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
 
         werewolfSpawnRate = Create(20080, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);
         werewolfRampageCooldown = Create(20081, Types.Neutral, "Rampage Cooldown", 30f, 10f, 60f, 2.5f, werewolfSpawnRate);

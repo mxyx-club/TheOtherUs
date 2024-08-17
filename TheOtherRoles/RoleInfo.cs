@@ -44,6 +44,7 @@ public class RoleInfo
     public static RoleInfo lawyer = new("Lawyer", Lawyer.color, "Defend your client", "Defend your client", RoleId.Lawyer, true);
     public static RoleInfo prosecutor = new("Prosecutor", Lawyer.color, "Vote out your target", "Vote out your target", RoleId.Prosecutor, true);
     public static RoleInfo pursuer = new("Pursuer", Pursuer.color, "Blank the Impostors", "Blank the Impostors", RoleId.Pursuer);
+    public static RoleInfo doomsayer = new("Doomsayer", Doomsayer.color, "Guess People's Roles To Win!", "Win by guessing player's roles", RoleId.Doomsayer, true);
     public static RoleInfo jackal = new("Jackal", Jackal.color, "Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win", "Kill everyone", RoleId.Jackal, true);
     public static RoleInfo sidekick = new("Sidekick", Sidekick.color, "Help your Jackal to kill everyone", "Help your Jackal to kill everyone", RoleId.Sidekick, true);
     public static RoleInfo swooper = new("Swooper", Swooper.color, "Turn Invisible and kill everyone", "Turn Invisible", RoleId.Swooper, false, true);
@@ -150,6 +151,7 @@ public class RoleInfo
             arsonist,
             werewolf,
             juggernaut,
+            doomsayer,
             thief,
             swooper,
 
@@ -293,6 +295,7 @@ public class RoleInfo
         if (p == Eraser.eraser) infos.Add(eraser);
         if (p == Trickster.trickster) infos.Add(trickster);
         if (p == Cleaner.cleaner) infos.Add(cleaner);
+        if (p == Doomsayer.doomsayer) infos.Add(doomsayer);
         if (p == Yoyo.yoyo) infos.Add(yoyo);
         if (p == Undertaker.undertaker) infos.Add(undertaker);
         if (p == PrivateInvestigator.privateInvestigator) infos.Add(privateInvestigator);
@@ -346,7 +349,7 @@ public class RoleInfo
         return infos;
     }
 
-    public static String GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool suppressGhostInfo = false)
+    public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, bool suppressGhostInfo = false)
     {
         string roleName;
         roleName = String.Join(" ", getRoleInfoForPlayer(p, showModifier).Select(x => useColors ? cs(x.color, x.name) : x.name).ToArray());

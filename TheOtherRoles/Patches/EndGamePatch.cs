@@ -19,12 +19,14 @@ namespace TheOtherRoles.Patches
         JuggernautWin,
         VultureWin,
         ProsecutorWin,
+        DoomsayerWin,
         WerewolfWin
     }
 
     enum WinCondition
     {
         Default,
+        EveryoneDied,
         LoversTeamWin,
         LoversSoloWin,
         JesterWin,
@@ -35,9 +37,9 @@ namespace TheOtherRoles.Patches
         AdditionalLawyerBonusWin,
         AdditionalAlivePursuerWin,
         ProsecutorWin,
+        DoomsayerWin,
         WerewolfWin,
         JuggernautWin,
-        EveryoneDied
     }
 
     static class AdditionalTempData
@@ -119,6 +121,7 @@ namespace TheOtherRoles.Patches
             if (Lawyer.lawyer != null) notWinners.Add(Lawyer.lawyer);
             if (Pursuer.pursuer != null) notWinners.Add(Pursuer.pursuer);
             if (Thief.thief != null) notWinners.Add(Thief.thief);
+            if (Doomsayer.doomsayer != null) notWinners.Add(Doomsayer.doomsayer);
 
             notWinners.AddRange(Jackal.formerJackals);
 
@@ -139,6 +142,7 @@ namespace TheOtherRoles.Patches
             bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin && ((Jackal.jackal != null && !Jackal.jackal.Data.IsDead) || (Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead));
             bool vultureWin = Vulture.vulture != null && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
             bool prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
+            bool doomsayerWin = Doomsayer.doomsayer != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
 
             bool isPursurerLose = jesterWin || arsonistWin || miniLose || vultureWin || teamJackalWin;
 
@@ -150,6 +154,13 @@ namespace TheOtherRoles.Patches
                 wpd.IsYou = false; // If "no one is the Mini", it will display the Mini, but also show defeat to everyone
                 TempData.winners.Add(wpd);
                 AdditionalTempData.winCondition = WinCondition.MiniLose;
+            }
+
+            // Everyone Died
+            else if (everyoneDead)
+            {
+                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.EveryoneDied;
             }
 
             // Jester win
@@ -188,11 +199,14 @@ namespace TheOtherRoles.Patches
                 AdditionalTempData.winCondition = WinCondition.ProsecutorWin;
             }
 
-            // Everyone Died
-            else if (everyoneDead)
+            else if (doomsayerWin)
             {
+                // DoomsayerWin wins if nobody except jackal is alive
+                AdditionalTempData.winCondition = WinCondition.DoomsayerWin;
                 TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                AdditionalTempData.winCondition = WinCondition.EveryoneDied;
+                var wpd = new WinningPlayerData(Doomsayer.doomsayer.Data);
+                TempData.winners.Add(wpd);
+                AdditionalTempData.winCondition = WinCondition.DoomsayerWin;
             }
 
             // Lovers win conditions
@@ -213,6 +227,7 @@ namespace TheOtherRoles.Patches
                         else if (p != Jester.jester
                             && p != Jackal.jackal
                             && p != Werewolf.werewolf
+                            && p != Doomsayer.doomsayer
                             && p != Juggernaut.juggernaut
                             && p != Sidekick.sidekick
                             && p != Arsonist.arsonist
@@ -413,6 +428,11 @@ namespace TheOtherRoles.Patches
                     textRenderer.text = "Prosecutor Wins";
                     textRenderer.color = Lawyer.color;
                     break;
+                case WinCondition.DoomsayerWin:
+                    textRenderer.text = "Doomsayer Win";
+                    textRenderer.color = Doomsayer.color;
+                    __instance.BackgroundBar.material.SetColor("_Color", Doomsayer.color);
+                    break;
                 case WinCondition.WerewolfWin:
                     textRenderer.text = "Werewolf Wins";
                     textRenderer.color = Werewolf.color;
@@ -487,6 +507,7 @@ namespace TheOtherRoles.Patches
             if (CheckAndEndGameForJesterWin(__instance)) return false;
             if (CheckAndEndGameForArsonistWin(__instance)) return false;
             if (CheckAndEndGameForVultureWin(__instance)) return false;
+            if (CheckAndEndGameForDoomsayerWin(__instance)) return false;
             if (CheckAndEndGameForSabotageWin(__instance)) return false;
             if (CheckAndEndGameForTaskWin(__instance)) return false;
             if (CheckAndEndGameForProsecutorWin(__instance)) return false;
@@ -586,6 +607,17 @@ namespace TheOtherRoles.Patches
             {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.HumansByTask, false);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool CheckAndEndGameForDoomsayerWin(ShipStatus __instance)
+        {
+            if (Doomsayer.triggerDoomsayerrWin)
+            {
+                //__instance.enabled = false;
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.DoomsayerWin, false);
                 return true;
             }
             return false;

@@ -29,7 +29,8 @@ namespace TheOtherRoles.Patches
                 TORMapOptions.toggleCursor = Main.ToggleCursor.Value = !Main.ToggleCursor.Value, Main.ToggleCursor.Value),
             new("Enable Sound Effects", () =>
                 TORMapOptions.enableSoundEffects = Main.EnableSoundEffects.Value = !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
-            new("ShowFPS", () => TORMapOptions.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
+            new("ShowFPS", () =>
+                TORMapOptions.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
         ];
 
         private static GameObject popUp;

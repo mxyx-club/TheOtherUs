@@ -378,6 +378,12 @@ public static class PlayerControlFixedUpdatePatch
         //        setPlayerOutline(Cultist.currentTarget, Palette.ImpostorRed);
     }
 
+    private static void doomsayerSetTarget()
+    {
+        if (Doomsayer.doomsayer == null || Doomsayer.doomsayer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        Doomsayer.currentTarget = setTarget();
+    }
+
     static void eraserSetTarget()
     {
         if (Eraser.eraser == null || Eraser.eraser != CachedPlayer.LocalPlayer.PlayerControl) return;
@@ -1641,6 +1647,8 @@ public static class PlayerControlFixedUpdatePatch
             jackalSetTarget();
             // Sidekick
             sidekickSetTarget();
+            // Doomsayer
+            doomsayerSetTarget();
             // Impostor
             impostorSetTarget();
             // Warlock

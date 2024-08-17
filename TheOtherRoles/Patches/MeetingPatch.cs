@@ -479,15 +479,14 @@ class MeetingHudPatch
 
         foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
         {
-            RoleId guesserRole = (Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? RoleId.NiceGuesser : RoleId.EvilGuesser;
             if (allowModGuess && roleInfo.isModifier)
             {
                 // Allow Guessing the following mods: Bait, TieBreaker, Bloody, and VIP
                 if (roleInfo.roleId != RoleId.Bait &&
                     roleInfo.roleId != RoleId.Tiebreaker &&
                     roleInfo.roleId != RoleId.Bloody &&
-                    //     roleInfo.roleId != RoleId.EvilGuesser &&
-                    //     roleInfo.roleId != RoleId.NiceGuesser &&
+                    //roleInfo.roleId != RoleId.EvilGuesser &&
+                    //roleInfo.roleId != RoleId.NiceGuesser &&
                     roleInfo.roleId != RoleId.Cursed &&
                     roleInfo.roleId != RoleId.Torch &&
                     roleInfo.roleId != RoleId.Slueth &&
@@ -495,16 +494,40 @@ class MeetingHudPatch
                     roleInfo.roleId != RoleId.Radar &&
                     roleInfo.roleId != RoleId.Tunneler &&
                     roleInfo.roleId != RoleId.Multitasker &&
-                    //    roleInfo.roleId != RoleId.Shifter &&
+                    //roleInfo.roleId != RoleId.Shifter &&
                     roleInfo.roleId != RoleId.Lover &&
-                    //     roleInfo.roleId != RoleId.LifeGuard &&
+                    //roleInfo.roleId != RoleId.LifeGuard &&
                     roleInfo.roleId != RoleId.Vip) continue;
             }
-            else
-                if (roleInfo.isModifier) continue;
-            if (roleInfo.roleId == guesserRole || (!HandleGuesser.evilGuesserCanGuessSpy && guesserRole == RoleId.EvilGuesser && roleInfo.roleId == RoleId.Spy && !HandleGuesser.isGuesserGm) || (!Guesser.evilGuesserCanGuessCrewmate && guesserRole == RoleId.EvilGuesser && roleInfo.roleId == RoleId.Crewmate)) continue; // Not guessable roles & modifier
-            if (HandleGuesser.isGuesserGm && (roleInfo.roleId == RoleId.NiceGuesser || roleInfo.roleId == RoleId.EvilGuesser)) continue; // remove Guesser for guesser game mode
-            if (HandleGuesser.isGuesserGm && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor && !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy) continue;
+            else if (roleInfo.isModifier) continue;
+
+            var guesserRole = Guesser.niceGuesser != null && CachedPlayer.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId
+                ? RoleId.NiceGuesser
+                : RoleId.EvilGuesser;
+
+            if (roleInfo.roleId == guesserRole ||
+                (!HandleGuesser.evilGuesserCanGuessSpy && guesserRole == RoleId.EvilGuesser &&
+                 roleInfo.roleId == RoleId.Spy && !HandleGuesser.isGuesserGm) ||
+                (!Guesser.evilGuesserCanGuessCrewmate && guesserRole == RoleId.EvilGuesser &&
+                 roleInfo.roleId == RoleId.Crewmate)) continue; // Not guessable roles & modifier
+
+            if (Doomsayer.doomsayer != null && CachedPlayer.LocalPlayer.PlayerId == Doomsayer.doomsayer.PlayerId) guesserRole = RoleId.Doomsayer;
+
+            switch (guesserRole)
+            {
+                //case RoleId.Doomsayer when !Doomsayer.canGuessImpostor && roleInfo.isImpostor:
+                case RoleId.Doomsayer when !Doomsayer.canGuessNeutral && roleInfo.isNeutral:
+                    continue;
+            }
+
+            switch (HandleGuesser.isGuesserGm)
+            {
+                case true when roleInfo.roleId is RoleId.NiceGuesser or RoleId.EvilGuesser:
+                case true when CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor &&
+                               !HandleGuesser.evilGuesserCanGuessSpy && roleInfo.roleId == RoleId.Spy:
+                    continue; // remove Guesser for guesser game mode
+            }
+
             // remove all roles that cannot spawn due to the settings from the ui.
             RoleManagerSelectRolesPatch.RoleAssignmentData roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
             
@@ -544,11 +567,19 @@ class MeetingHudPatch
                 }
                 else
                 {
-                    PlayerControl focusedTarget = playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
-                    if (!(__instance.state == MeetingHud.VoteStates.Voted || __instance.state == MeetingHud.VoteStates.NotVoted) || focusedTarget == null || HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0) return;
+                    var focusedTarget = playerById(__instance.playerStates[buttonTarget].TargetPlayerId);
+                    if
+                    (
+                        __instance.state is not (MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
+                        || focusedTarget == null
+                        || (HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) <= 0
+                            && HandleGuesser.isGuesser(CachedPlayer.LocalPlayer.PlayerId))
+                        || (CachedPlayer.LocalPlayer.PlayerControl == Doomsayer.doomsayer && !Doomsayer.CanShoot))
+                        return;
 
+                    // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
                     if (!HandleGuesser.killsThroughShield && focusedTarget == Medic.shielded)
-                    { // Depending on the options, shooting the shielded player will not allow the guess, notifiy everyone about the kill attempt and close the window
+                    {
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         UnityEngine.Object.Destroy(container.gameObject);
 
@@ -590,10 +621,18 @@ class MeetingHudPatch
                     // Reset the GUI
                     __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                     UnityEngine.Object.Destroy(container.gameObject);
-                    if (HandleGuesser.hasMultipleShotsPerMeeting && HandleGuesser.remainingShots(CachedPlayer.LocalPlayer.PlayerId) > 1 && dyingTarget != CachedPlayer.LocalPlayer.PlayerControl)
-                        __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                    if (HandleGuesser.CanMultipleShots(dyingTarget))
+                        __instance.playerStates.ToList().ForEach(x =>
+                        {
+                            if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
+                                UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                        });
                     else
-                        __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                        __instance.playerStates.ToList().ForEach(x =>
+                        {
+                            if (x.transform.FindChild("ShootButton") != null)
+                                UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                        });
 
                     // Shoot player and send chat info if activated
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GuesserShoot, SendOption.Reliable, -1);
@@ -748,6 +787,7 @@ class MeetingHudPatch
 
         if (isGuesser && !CachedPlayer.LocalPlayer.Data.IsDead && remainingShots > 0)
         {
+            Doomsayer.CanShoot = true;
             for (int i = 0; i < __instance.playerStates.Length; i++)
             {
                 PlayerVoteArea playerVoteArea = __instance.playerStates[i];

@@ -151,6 +151,7 @@ namespace TheOtherRoles.Patches
             neutralSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Vulture, CustomOptionHolder.vultureSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Thief, CustomOptionHolder.thiefSpawnRate.getSelection());
+            neutralSettings.Add((byte)RoleId.Doomsayer, CustomOptionHolder.doomsayerSpawnRate.getSelection());
             neutralSettings.Add((byte)RoleId.Juggernaut, CustomOptionHolder.juggernautSpawnRate.getSelection());
 
             if (rnd.Next(1, 101) <= CustomOptionHolder.lawyerIsProsecutorChance.getSelection() * 10) // Lawyer or Prosecutor
@@ -652,15 +653,21 @@ namespace TheOtherRoles.Patches
 
         private static void assignGuesserGamemode()
         {
-            List<PlayerControl> impPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-            List<PlayerControl> neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-            List<PlayerControl> crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+            var impPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+            var neutralPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+            var crewPlayer = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
             impPlayer.RemoveAll(x => !x.Data.Role.IsImpostor);
             neutralPlayer.RemoveAll(x => !isNeutral(x));
+            neutralPlayer.RemoveAll(x => x == Doomsayer.doomsayer);
             crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x));
-            assignGuesserGamemodeToPlayers(crewPlayer, Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeCrewNumber.getFloat()));
-            assignGuesserGamemodeToPlayers(neutralPlayer, Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNeutralNumber.getFloat()), CustomOptionHolder.guesserForceJackalGuesser.getBool(), CustomOptionHolder.guesserForceThiefGuesser.getBool());
-            assignGuesserGamemodeToPlayers(impPlayer, Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeImpNumber.getFloat()));
+            assignGuesserGamemodeToPlayers(crewPlayer,
+                Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeCrewNumber.getFloat()));
+            assignGuesserGamemodeToPlayers(neutralPlayer,
+                Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeNeutralNumber.getFloat()),
+                CustomOptionHolder.guesserForceJackalGuesser.getBool(),
+                CustomOptionHolder.guesserForceThiefGuesser.getBool());
+            assignGuesserGamemodeToPlayers(impPlayer,
+                Mathf.RoundToInt(CustomOptionHolder.guesserGamemodeImpNumber.getFloat()));
         }
 
         private static void assignGuesserGamemodeToPlayers(List<PlayerControl> playerList, int count, bool forceJackal = false, bool forceThief = false)

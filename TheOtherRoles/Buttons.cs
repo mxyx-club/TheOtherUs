@@ -7,6 +7,8 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
+using static Logger;
+using static TheOtherRoles.Objects.CustomButton;
 using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles
@@ -48,6 +50,7 @@ namespace TheOtherRoles
         public static CustomButton sidekickKillButton;
         public static CustomButton swooperSwoopButton;
         private static CustomButton jackalSidekickButton;
+        public static CustomButton doomsayerButton;
         public static CustomButton eraserButton;
         public static CustomButton placeJackInTheBoxButton;
         public static CustomButton lightsOutButton;
@@ -143,6 +146,7 @@ namespace TheOtherRoles
             jumperButton.MaxTimer = Jumper.jumperJumpTime;
             disperserDisperseButton.MaxTimer = Disperser.cooldown;
             escapistButton.MaxTimer = Escapist.escapistEscapeTime;
+            doomsayerButton.MaxTimer = Doomsayer.cooldown;
             bodyGuardGuardButton.MaxTimer = 0f;
             garlicButton.MaxTimer = 0f;
             yoyoButton.MaxTimer = Yoyo.markCooldown;
@@ -2290,6 +2294,48 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                     Arsonist.douseTarget = null;
+                }
+            );
+
+            // doomsayer Shield
+            doomsayerButton = new CustomButton(
+                () =>
+                {
+                    if (checkAndDoVetKill(Doomsayer.currentTarget)) return;
+
+                    doomsayerButton.Timer = doomsayerButton.MaxTimer;
+                    SoundEffectsManager.play("knockKnock");
+                },
+                () =>
+                {
+                    return Doomsayer.doomsayer != null && Doomsayer.doomsayer == CachedPlayer.LocalPlayer.PlayerControl &&
+                           !CachedPlayer.LocalPlayer.Data.IsDead;
+                },
+                () =>
+                {
+                    showTargetNameOnButton(Doomsayer.currentTarget, doomsayerButton, "Reveal");
+                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Doomsayer.currentTarget != null;
+                },
+                () => { doomsayerButton.Timer = doomsayerButton.MaxTimer; },
+                Doomsayer.getButtonSprite(),
+                ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F,
+                true,
+                0f,
+                () =>
+                {
+                    doomsayerButton.Timer = doomsayerButton.MaxTimer;
+                    var msg = Doomsayer.GetInfo(Doomsayer.currentTarget);
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{msg}");
+
+                    // Ghost Info
+                    var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable);
+                    writer.Write(Doomsayer.currentTarget.PlayerId);
+                    writer.Write((byte)RPCProcedure.GhostInfoTypes.MediumInfo);
+                    writer.Write(msg);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
                 }
             );
 

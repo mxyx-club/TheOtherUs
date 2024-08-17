@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using AmongUs.Data;
 using Hazel;
 using Reactor.Utilities.Extensions;
@@ -84,6 +85,7 @@ public static class TheOtherRoles
         //Guesser.clearAndReload();
         //Swooper.clearAndReload();
         Yoyo.clearAndReload();
+        Doomsayer.clearAndReload();
 
         // Modifier
         Bait.clearAndReload();
@@ -1475,6 +1477,95 @@ public static class Sidekick
         promotesToJackal = CustomOptionHolder.sidekickPromotesToJackal.getBool();
         hasImpostorVision = CustomOptionHolder.jackalAndSidekickHaveImpostorVision.getBool();
         wasTeamRed = wasImpostor = wasSpy = false;
+    }
+}
+
+public static class Doomsayer
+{
+    public static PlayerControl doomsayer;
+
+    public static Color color = new Color32(0, 255, 128, byte.MaxValue);
+    public static PlayerControl currentTarget;
+    public static List<PlayerControl> playerTargetinformation = new();
+    public static float cooldown = 30f;
+    public static int formationNum = 5;
+    public static bool hasMultipleShotsPerMeeting = true;
+    public static bool canGuessNeutral;
+    //public static bool canGuessImpostor;
+    public static bool triggerDoomsayerrWin;
+    public static bool canGuess = true;
+    public static bool onlineTarger;
+    public static float killToWin = 3;
+    public static float killedToWin;
+    public static bool CanShoot = true;
+
+    public static Sprite buttonSprite;
+    public static Sprite getButtonSprite()
+    {
+        if (buttonSprite) return buttonSprite;
+        buttonSprite = loadSpriteFromResources("TheOtherRoles.Resources.SeerButton.png", 115f);
+        return buttonSprite;
+    }
+
+    public static string GetInfo(PlayerControl target)
+    {
+        try
+        {
+            var random = new System.Random();
+            var allRoleInfo = (onlineTarger ? onlineRoleInfos() : allRoleInfos()).OrderBy(_ => random.Next()).ToList();
+            var roleInfoTarget = RoleInfo.getRoleInfoForPlayer(target, false).FirstOrDefault();
+            var AllMessage = new List<string>();
+            allRoleInfo.Remove(RoleInfo.doomsayer);
+            allRoleInfo.Remove(roleInfoTarget);
+            if (allRoleInfo.Count < formationNum + 2) return $"There are fewer than {formationNum + 2} players.";
+
+            var formation = formationNum;
+            var x = random.Next(0, formation);
+            var message = new StringBuilder();
+            var tempNumList = Enumerable.Range(0, allRoleInfo.Count).ToList();
+            var temp = (tempNumList.Count > formation ? tempNumList.Take(formation) : tempNumList).OrderBy(_ => random.Next()).ToList();
+
+            message.AppendLine($"You reveald that {target.Data.PlayerName} role might be: \n");
+
+            for (int num = 0, tempNum = 0; num < formation; num++, tempNum++)
+            {
+                var info = allRoleInfo[temp[tempNum]];
+
+                message.Append(num == x ? roleInfoTarget.name : info.name);
+                message.Append(num < formation - 1 ? ", " : ';');
+            }
+
+            AllMessage.Add(message.ToString());
+
+            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                (byte)CustomRPC.DoomsayerMeeting, SendOption.Reliable);
+            writer.WritePacked(AllMessage.Count);
+            AllMessage.Do(writer.Write);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            playerTargetinformation.Clear();
+
+            return $"{message}";
+        }
+        catch
+        {
+            return "Doomsayer Error";
+        }
+    }
+
+    public static void clearAndReload()
+    {
+        doomsayer = null;
+        currentTarget = null;
+        killedToWin = 0;
+        canGuess = true;
+        triggerDoomsayerrWin = false;
+        cooldown = CustomOptionHolder.doomsayerCooldown.getFloat();
+        //hasMultipleShotsPerMeeting = CustomOptionHolder.doomsayerHasMultipleShotsPerMeeting.getBool();
+        canGuessNeutral = CustomOptionHolder.doomsayerCanGuessNeutral.getBool();
+        //canGuessImpostor = CustomOptionHolder.doomsayerCanGuessImpostor.getBool();
+        formationNum = (int)CustomOptionHolder.doomsayerDormationNum.getFloat();
+        killToWin = CustomOptionHolder.doomsayerKillToWin.getFloat();
+        onlineTarger = CustomOptionHolder.doomsayerOnlineTarger.getBool();
     }
 }
 
