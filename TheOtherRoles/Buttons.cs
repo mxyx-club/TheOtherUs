@@ -7,7 +7,6 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
-using static Logger;
 using static TheOtherRoles.Objects.CustomButton;
 using static TheOtherRoles.TheOtherRoles;
 

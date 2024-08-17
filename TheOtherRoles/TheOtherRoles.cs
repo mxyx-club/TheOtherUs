@@ -1328,7 +1328,7 @@ public static class Werewolf
 
 public class Miner
 {
-    public readonly static List<Vent> Vents = new List<Vent>();
+    public static readonly List<Vent> Vents = new List<Vent>();
     public static PlayerControl miner;
     public KillButton _mineButton;
     public static DateTime LastMined;

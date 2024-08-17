@@ -1584,7 +1584,7 @@ public static class PlayerControlFixedUpdatePatch
         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
         // Mini and Morphling shrink
-        if (!PropHunt.isPropHuntGM) 
+        if (!PropHunt.isPropHuntGM)
         {
             MiniSizeUpdate(__instance);
             GiantSizeUpdate(__instance);

@@ -280,7 +280,7 @@ namespace TheOtherRoles.Patches
         class SetUpRoleTextPatch
         {
             static int seed = 0;
-            static public void SetRoleTexts(IntroCutscene __instance)
+            public static void SetRoleTexts(IntroCutscene __instance)
             {
                 // Don't override the intro of the vanilla roles
                 List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);

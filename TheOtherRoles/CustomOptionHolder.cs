@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.CustomOption;
 using static TheOtherRoles.TheOtherRoles;
@@ -858,7 +857,7 @@ public class CustomOptionHolder
         //doomsayerCanGuessImpostor = Create(20226, Types.Neutral, $"Can Guess {cs(Palette.ImpostorRed, "Impostor")}", true, doomsayerSpawnRate);
         doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"Can Guess {cs(Color.gray, "Neutral")}", true, doomsayerSpawnRate);
         doomsayerOnlineTarger = Create(20227, Types.Neutral, "Revealed The Roles Of Online Players", false, doomsayerSpawnRate);
-        doomsayerKillToWin = Create(20228, Types.Neutral, "Number Of Doomsayer Kill To Win", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
+        doomsayerKillToWin = Create(20228, Types.Neutral, "Number of Doomsayer kill To Win", 3f, 1f, 10f, 1f, doomsayerSpawnRate);
         doomsayerDormationNum = Create(20229, Types.Neutral, "Revealed Role Count", 5f, 1f, 10f, 1f, doomsayerSpawnRate);
 
         werewolfSpawnRate = Create(20080, Types.Neutral, cs(Werewolf.color, "Werewolf"), rates, null, true);

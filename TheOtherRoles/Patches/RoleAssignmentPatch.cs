@@ -779,7 +779,7 @@ namespace TheOtherRoles.Patches
             if (modifiers.Contains(RoleId.Tunneler))
             {
                 List<PlayerControl> crewPlayerT = new List<PlayerControl>(playerList);
-                crewPlayerT.RemoveAll(x => x.Data.Role.IsImpostor ||isNeutral(x) || x == Engineer.engineer);
+                crewPlayerT.RemoveAll(x => x.Data.Role.IsImpostor || isNeutral(x) || x == Engineer.engineer);
                 playerId = setModifierToRandomPlayer((byte)RoleId.Tunneler, crewPlayerT);
                 playerList.RemoveAll(x => x.PlayerId == playerId);
                 modifiers.RemoveAll(x => x == RoleId.Tunneler);

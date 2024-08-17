@@ -530,10 +530,10 @@ class MeetingHudPatch
 
             // remove all roles that cannot spawn due to the settings from the ui.
             RoleManagerSelectRolesPatch.RoleAssignmentData roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
-            
+
             if (roleInfo.roleId == RoleId.Pursuer && CustomOptionHolder.lawyerSpawnRate.getSelection() == 0) continue;
             if (roleInfo.roleId == RoleId.Spy && roleData.impostors.Count <= 1) continue;
-            
+
             if (Snitch.snitch != null && HandleGuesser.guesserCantGuessSnitch)
             {
                 var (playerCompleted, playerTotal) = TasksHandler.taskInfo(Snitch.snitch.Data);
@@ -608,9 +608,9 @@ class MeetingHudPatch
 
                     if (mainRoleInfo == null) return;
 
-                    foreach(var role in mainRoleInfo)
+                    foreach (var role in mainRoleInfo)
                     {
-                        if(role.roleId == roleInfo.roleId)
+                        if (role.roleId == roleInfo.roleId)
                         {
                             dyingTarget = focusedTarget;
                             continue;
