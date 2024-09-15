@@ -503,7 +503,7 @@ public static class Helpers
     public static void handleBomber2ExplodeOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        checkMuderAttemptAndKill(Bomber2.bomber2, Bomber2.hasBomb, true, false);
+        checkMuderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, true, false);
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable, -1);
         writer.Write(byte.MaxValue);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -668,27 +668,25 @@ public static class Helpers
         shipStatus.RpcUpdateSystem(systemType, amount);
     }
 
-    public static bool isMira()
+    public static bool IsSkeld => GameOptionsManager.Instance.CurrentGameOptions.MapId == 0;
+    public static bool IsMira => GameOptionsManager.Instance.CurrentGameOptions.MapId == 1;
+    public static bool IsAirship => GameOptionsManager.Instance.CurrentGameOptions.MapId == 4;
+    public static bool IsPolus => GameOptionsManager.Instance.CurrentGameOptions.MapId == 2;
+    public static bool IsFungle => GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
+
+    public static bool Contains<T, TKey>(this IEnumerable<T> list, T item, Func<T, TKey> keySelector)
     {
-        return GameOptionsManager.Instance.CurrentGameOptions.MapId == 1;
+        return list.Any(x => keySelector(x).Equals(keySelector(item)));
     }
 
-    public static bool isAirship()
+    public static bool IsAlive(this PlayerControl player)
     {
-        return GameOptionsManager.Instance.CurrentGameOptions.MapId == 4;
-    }
-    public static bool isSkeld()
-    {
-        return GameOptionsManager.Instance.CurrentGameOptions.MapId == 0;
-    }
-    public static bool isPolus()
-    {
-        return GameOptionsManager.Instance.CurrentGameOptions.MapId == 2;
+        return player != null && !player.Data.Disconnected && !player.Data.IsDead;
     }
 
-    public static bool isFungle()
+    public static bool IsDead(this PlayerControl player)
     {
-        return GameOptionsManager.Instance.CurrentGameOptions.MapId == 5;
+        return player == null || player.Data.Disconnected || player.Data.IsDead;
     }
 
     public static bool IsCN()

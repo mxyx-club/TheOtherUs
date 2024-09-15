@@ -49,7 +49,7 @@ public static class TheOtherRoles
         Lovers.clearAndReload();
         Seer.clearAndReload();
         Morphling.clearAndReload();
-        Bomber2.clearAndReload();
+        Bomber.clearAndReload();
         Camouflager.clearAndReload();
         Cultist.clearAndReload();
         Hacker.clearAndReload();
@@ -1088,10 +1088,10 @@ public static class Hacker
     {
         byte mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
         UseButtonSettings button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.PolusAdminButton]; // Polus
-        if (isSkeld() || mapId == 3) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
-        else if (isMira()) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
-        else if (isAirship()) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
-        else if (isFungle()) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton];  // Hacker can Access the Admin panel on Fungle
+        if (IsSkeld || mapId == 3) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
+        else if (IsMira) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
+        else if (IsAirship) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
+        else if (IsFungle) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton];  // Hacker can Access the Admin panel on Fungle
         adminSprite = button.Image;
         return adminSprite;
     }
@@ -1685,9 +1685,9 @@ public static class Cleaner
     }
 }
 
-public static class Bomber2
+public static class Bomber
 {
-    public static PlayerControl bomber2;
+    public static PlayerControl bomber;
     public static Color color = Palette.ImpostorRed;
     public static Color alertColor = Palette.ImpostorRed;
 
@@ -1695,12 +1695,14 @@ public static class Bomber2
     public static float bombDelay = 10f;
     public static float bombTimer = 10f;
     public static bool bombActive;
-    // public static bool hotPotatoMode = false;
+    public static bool triggerBothCooldowns;
+    public static bool canGiveToBomber;
+    public static bool hotPotatoMode = false;
     public static PlayerControl currentBombTarget;
     public static bool hasAlerted;
     public static int timeLeft;
     public static PlayerControl currentTarget;
-    public static PlayerControl hasBomb;
+    public static PlayerControl hasBombPlayer;
 
 
     private static Sprite buttonSprite;
@@ -1713,12 +1715,15 @@ public static class Bomber2
 
     public static void clearAndReload()
     {
-        bomber2 = null;
+        bomber = null;
         bombActive = false;
-        cooldown = CustomOptionHolder.bomber2BombCooldown.getFloat();
-        bombDelay = CustomOptionHolder.bomber2Delay.getFloat();
-        bombTimer = CustomOptionHolder.bomber2Timer.getFloat();
-        //hotPotatoMode = CustomOptionHolder.bomber2HotPotatoMode.getBool();
+        hasBombPlayer = null;
+        cooldown = CustomOptionHolder.bomberBombCooldown.getFloat();
+        bombDelay = CustomOptionHolder.bomberDelay.getFloat();
+        bombTimer = CustomOptionHolder.bomberTimer.getFloat();
+        triggerBothCooldowns = CustomOptionHolder.bomberTriggerBothCooldowns.getBool();
+        canGiveToBomber = CustomOptionHolder.bomberCanGiveToBomber.getBool();
+        hotPotatoMode = CustomOptionHolder.bomberHotPotatoMode.getBool();
     }
 }
 

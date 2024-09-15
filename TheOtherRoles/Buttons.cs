@@ -132,7 +132,7 @@ static class HudManagerStartPatch
         shifterShiftButton.MaxTimer = 0f;
         disperserDisperseButton.MaxTimer = 0f;
         morphlingButton.MaxTimer = Morphling.cooldown;
-        bomberBombButton.MaxTimer = Bomber2.cooldown;
+        bomberBombButton.MaxTimer = Bomber.cooldown;
         camouflagerButton.MaxTimer = Camouflager.cooldown;
         portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
         usePortalButton.MaxTimer = Portalmaker.usePortalCooldown;
@@ -207,7 +207,7 @@ static class HudManagerStartPatch
         minerMineButton.EffectDuration = Jackal.duration; // Jackal?
         camouflagerButton.EffectDuration = Camouflager.duration;
         morphlingButton.EffectDuration = Morphling.duration;
-        bomberBombButton.EffectDuration = Bomber2.bombDelay + Bomber2.bombTimer;
+        bomberBombButton.EffectDuration = Bomber.bombDelay + Bomber.bombTimer;
         lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
         arsonistButton.EffectDuration = Arsonist.duration;
         mediumButton.EffectDuration = Medium.duration;
@@ -990,8 +990,8 @@ static class HudManagerStartPatch
            () =>
            {
                if (hackerVitalsChargesText != null) hackerVitalsChargesText.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
-               hackerVitalsButton.actionButton.graphic.sprite = isMira() ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
-               hackerVitalsButton.actionButton.OverrideText(isMira() ? "DOORLOG" : "VITALS");
+               hackerVitalsButton.actionButton.graphic.sprite = IsMira ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
+               hackerVitalsButton.actionButton.OverrideText(IsMira ? "DOORLOG" : "VITALS");
                return Hacker.chargesVitals > 0;
            },
            () =>
@@ -1012,12 +1012,12 @@ static class HudManagerStartPatch
                if (!hackerAdminTableButton.isEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                if (Minigame.Instance)
                {
-                   if (isMira()) Hacker.doorLog.ForceClose();
+                   if (IsMira) Hacker.doorLog.ForceClose();
                    else Hacker.vitals.ForceClose();
                }
            },
            false,
-          isMira() ? "DOORLOG" : "VITALS"
+          IsMira ? "DOORLOG" : "VITALS"
        );
 
         // Hacker Vitals Charges
@@ -1573,25 +1573,25 @@ static class HudManagerStartPatch
         bomberBombButton = new CustomButton(
             () =>
             { /* On Use */
-                if (checkAndDoVetKill(Bomber2.currentTarget)) return;
-                checkWatchFlash(Bomber2.currentTarget);
+                if (checkAndDoVetKill(Bomber.currentTarget)) return;
+                checkWatchFlash(Bomber.currentTarget);
                 MessageWriter bombWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable, -1);
-                bombWriter.Write(Bomber2.currentTarget.PlayerId);
+                bombWriter.Write(Bomber.currentTarget.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
-                RPCProcedure.giveBomb(Bomber2.currentTarget.PlayerId);
-                Bomber2.bomber2.killTimer = Bomber2.bombTimer + Bomber2.bombDelay;
+                RPCProcedure.giveBomb(Bomber.currentTarget.PlayerId);
+                Bomber.bomber.killTimer = Bomber.bombTimer + Bomber.bombDelay;
                 bomberBombButton.Timer = bomberBombButton.MaxTimer;
             },
-            () => { /* Can See */ return Bomber2.bomber2 != null && Bomber2.bomber2 == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-            () => {  /* On Click */ return Bomber2.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { /* Can See */ return Bomber.bomber != null && Bomber.bomber == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () => {  /* On Click */ return Bomber.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () =>
             {  /* On Meeting End */
                 bomberBombButton.Timer = bomberBombButton.MaxTimer;
                 bomberBombButton.isEffectActive = false;
                 bomberBombButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                Bomber2.hasBomb = null;
+                Bomber.hasBombPlayer = null;
             },
-            Bomber2.getButtonSprite(),
+            Bomber.getButtonSprite(),
             CustomButton.ButtonPositions.upperRowLeft, //brb
             __instance,
             KeyCode.V
@@ -1599,34 +1599,54 @@ static class HudManagerStartPatch
 
         bomberGiveButton = new CustomButton(
             () =>
-            { /* On Use */
-                if (Bomber2.currentBombTarget == Bomber2.bomber2)
+            {
+                /* On Use */
+
+                /* On Use */
+                if (!Bomber.canGiveToBomber && Bomber.currentBombTarget == Bomber.bomber)
                 {
-                    MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable, -1);
-                    killWriter.Write(Bomber2.bomber2.Data.PlayerId);
-                    killWriter.Write(Bomber2.hasBomb.Data.PlayerId);
+                    var killWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.UncheckedMurderPlayer, SendOption.Reliable);
+                    killWriter.Write(Bomber.bomber.Data.PlayerId);
+                    killWriter.Write(Bomber.hasBombPlayer.Data.PlayerId);
                     killWriter.Write(0);
                     AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                    RPCProcedure.uncheckedMurderPlayer(Bomber2.bomber2.Data.PlayerId, Bomber2.hasBomb.Data.PlayerId, 0);
+                    RPCProcedure.uncheckedMurderPlayer(Bomber.bomber.Data.PlayerId, Bomber.hasBombPlayer.Data.PlayerId, 0);
 
-                    MessageWriter bombWriter1 = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable, -1);
-                    bombWriter1.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter1);
+                    var clearWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                    clearWriter.Write(byte.MaxValue);
+                    clearWriter.Write(false);
+                    AmongUsClient.Instance.FinishRpcImmediately(clearWriter);
                     RPCProcedure.giveBomb(byte.MaxValue);
                     return;
                 }
-                if (checkAndDoVetKill(Bomber2.currentBombTarget)) return;
-                if (checkMuderAttemptAndKill(Bomber2.hasBomb, Bomber2.currentBombTarget) == MurderAttemptResult.SuppressKill) return;
-                MessageWriter bombWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GiveBomb, SendOption.Reliable, -1);
-                bombWriter.Write(byte.MaxValue);
-                AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
-                RPCProcedure.giveBomb(byte.MaxValue);
 
+                if (checkAndDoVetKill(Bomber.currentBombTarget)) return;
+                if (Bomber.hotPotatoMode)
+                {
+                    var bombWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                    bombWriter.Write(Bomber.currentBombTarget.PlayerId);
+                    bombWriter.Write(true);
+                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                    RPCProcedure.giveBomb(Bomber.currentBombTarget.PlayerId, true);
+                }
+                else
+                {
+                    if (checkMurderAttemptAndKill(Bomber.hasBombPlayer, Bomber.currentBombTarget) == MurderAttemptResult.SuppressKill) return;
+                    var bombWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                        (byte)CustomRPC.GiveBomb, SendOption.Reliable);
+                    bombWriter.Write(byte.MaxValue);
+                    bombWriter.Write(false);
+                    AmongUsClient.Instance.FinishRpcImmediately(bombWriter);
+                    RPCProcedure.giveBomb(byte.MaxValue);
+                }
             },
-            () => { /* Can See */ return Bomber2.bomber2 != null && Bomber2.hasBomb == CachedPlayer.LocalPlayer.PlayerControl && Bomber2.bombActive && !CachedPlayer.LocalPlayer.Data.IsDead; },
-            () => {  /* Can Click */ return Bomber2.currentBombTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { /* Can See */ return Bomber.bomber != null && Bomber.hasBombPlayer == CachedPlayer.LocalPlayer.PlayerControl && Bomber.bombActive && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () => {  /* Can Click */ return Bomber.currentBombTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => {  /* On Meeting End */ },
-            Bomber2.getButtonSprite(),
+            Bomber.getButtonSprite(),
             //          0, -0.06f, 0
             new Vector3(-4.5f, 1.5f, 0),
             __instance,
@@ -2107,7 +2127,7 @@ static class HudManagerStartPatch
                     SecurityGuard.ventTarget = null;
 
                 }
-                else if (!isMira() && !isFungle() && !SubmergedCompatibility.IsSubmerged)
+                else if (!IsMira && !IsFungle && !SubmergedCompatibility.IsSubmerged)
                 { // Place camera if there's no vent and it's not MiraHQ or Submerged
                     var pos = CachedPlayer.LocalPlayer.transform.position;
                     byte[] buff = new byte[sizeof(float) * 2];
@@ -2125,12 +2145,12 @@ static class HudManagerStartPatch
             () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
             () =>
             {
-                securityGuardButton.actionButton.graphic.sprite = (SecurityGuard.ventTarget == null && !isMira() && !isFungle() && !SubmergedCompatibility.IsSubmerged) ? SecurityGuard.getPlaceCameraButtonSprite() : SecurityGuard.getCloseVentButtonSprite();
+                securityGuardButton.actionButton.graphic.sprite = (SecurityGuard.ventTarget == null && !IsMira && !IsFungle && !SubmergedCompatibility.IsSubmerged) ? SecurityGuard.getPlaceCameraButtonSprite() : SecurityGuard.getCloseVentButtonSprite();
                 if (securityGuardButtonScrewsText != null) securityGuardButtonScrewsText.text = $"{SecurityGuard.remainingScrews}/{SecurityGuard.totalScrews}";
 
                 if (SecurityGuard.ventTarget != null)
                     return SecurityGuard.remainingScrews >= SecurityGuard.ventPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
-                return !isMira() && !isFungle() && !SubmergedCompatibility.IsSubmerged && SecurityGuard.remainingScrews >= SecurityGuard.camPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                return !IsMira && !IsFungle && !SubmergedCompatibility.IsSubmerged && SecurityGuard.remainingScrews >= SecurityGuard.camPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () => { securityGuardButton.Timer = securityGuardButton.MaxTimer; },
             SecurityGuard.getPlaceCameraButtonSprite(),
@@ -2149,14 +2169,14 @@ static class HudManagerStartPatch
         securityGuardCamButton = new CustomButton(
             () =>
             {
-                if (!isMira())
+                if (!IsMira)
                 {
                     if (SecurityGuard.minigame == null)
                     {
                         byte mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
                         var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("Surv_Panel") || x.name.Contains("Cam") || x.name.Contains("BinocularsSecurityConsole"));
-                        if (isSkeld() || mapId == 3) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
-                        else if (isAirship()) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
+                        if (IsSkeld || mapId == 3) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
+                        else if (IsAirship) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
                         if (e == null || Camera.main == null) return;
                         SecurityGuard.minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
@@ -2189,8 +2209,8 @@ static class HudManagerStartPatch
             () =>
             {
                 if (securityGuardChargesText != null) securityGuardChargesText.text = $"{SecurityGuard.charges} / {SecurityGuard.maxCharges}";
-                securityGuardCamButton.actionButton.graphic.sprite = isMira() ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
-                securityGuardCamButton.actionButton.OverrideText(isMira() ? "DOORLOG" : "SECURITY");
+                securityGuardCamButton.actionButton.graphic.sprite = IsMira ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
+                securityGuardCamButton.actionButton.OverrideText(IsMira ? "DOORLOG" : "SECURITY");
                 return CachedPlayer.LocalPlayer.PlayerControl.CanMove && SecurityGuard.charges > 0;
             },
             () =>
@@ -2215,7 +2235,7 @@ static class HudManagerStartPatch
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             },
             false,
-            isMira() ? "DOORLOG" : "SECURITY"
+            IsMira ? "DOORLOG" : "SECURITY"
         );
 
         // Security Guard cam button charges

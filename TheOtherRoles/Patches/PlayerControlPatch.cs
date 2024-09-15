@@ -180,15 +180,15 @@ public static class PlayerControlFixedUpdatePatch
     static void bomber2SetTarget()
     {
         setBomber2BombTarget();
-        if (Bomber2.bomber2 == null || Bomber2.bomber2 != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Bomber2.currentTarget = setTarget();
-        if (Bomber2.hasBomb == null) setPlayerOutline(Bomber2.currentTarget, Bomber2.color);
+        if (Bomber.bomber == null || Bomber.bomber != CachedPlayer.LocalPlayer.PlayerControl) return;
+        Bomber.currentTarget = setTarget();
+        if (Bomber.hasBombPlayer == null) setPlayerOutline(Bomber.currentTarget, Bomber.color);
     }
 
     static void setBomber2BombTarget()
     {
-        if (Bomber2.bomber2 == null || Bomber2.hasBomb != CachedPlayer.LocalPlayer.PlayerControl) return;
-        Bomber2.currentBombTarget = setTarget();
+        if (Bomber.bomber == null || Bomber.hasBombPlayer != CachedPlayer.LocalPlayer.PlayerControl) return;
+        Bomber.currentBombTarget = setTarget();
         //        if (Bomber2.hasBomb != null) setPlayerOutline(Bomber2.currentBombTarget, Bomber2.color);
     }
 

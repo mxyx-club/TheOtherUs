@@ -102,30 +102,12 @@ class IntroCutsceneOnDestroyPatch
         // Force Reload of SoundEffectHolder
         SoundEffectsManager.Load();
 
-        if (CustomOptionHolder.randomGameStartPosition.getBool())
+        // AntiTeleport set position
+        AntiTeleport.setPosition();
+
+        if (AmongUsClient.Instance.AmHost)
         {
-            // Random spawn on game start
-            if (CustomOptionHolder.randomGameStartToVents.getBool())
-            {
-                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
-                    (MapData.FindVentSpawnPositions()[rnd.Next(MapData.FindVentSpawnPositions().Count)]);
-            }
-            else
-            {
-                var SpawnPositions =
-                    GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
-                    {
-                        0 => MapData.SkeldSpawnPosition,
-                        1 => MapData.MiraSpawnPosition,
-                        2 => MapData.PolusSpawnPosition,
-                        3 => MapData.DleksSpawnPosition,
-                        4 => MapData.AirshipSpawnPosition,
-                        5 => MapData.FungleSpawnPosition,
-                        _ => MapData.FindVentSpawnPositions()
-                    };
-                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
-                    (SpawnPositions[rnd.Next(SpawnPositions.Count)]);
-            }
+            if (CustomOptionHolder.randomGameStartPosition.getBool()) MapData.RandomSpawnAllPlayers();
         }
 
         // First kill

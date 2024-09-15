@@ -17,7 +17,7 @@ public class RoleInfo
     public static RoleInfo mafioso = new("Mafioso", Mafioso.color, "Work with the <color=#FF1919FF>Mafia</color> to kill the Crewmates", "Kill all Crewmates", RoleId.Mafioso);
     public static RoleInfo janitor = new("Janitor", Janitor.color, "Work with the <color=#FF1919FF>Mafia</color> by hiding dead bodies", "Hide dead bodies", RoleId.Janitor);
     public static RoleInfo morphling = new("Morphling", Morphling.color, "Change your look to not get caught", "Change your look", RoleId.Morphling);
-    public static RoleInfo bomber2 = new("Bomber", Bomber2.color, "Give bombs to players", "Bomb Everyone", RoleId.Bomber2);
+    public static RoleInfo bomber = new("Bomber", Bomber.color, "Give bombs to players", "Bomb Everyone", RoleId.Bomber);
     public static RoleInfo mimic = new("Mimic", Mimic.color, "Pose as a crewmate by killing one", "Pose as a crewmate", RoleId.Mimic);
     public static RoleInfo camouflager = new("Camouflager", Camouflager.color, "Camouflage and kill the Crewmates", "Hide among others", RoleId.Camouflager);
     public static RoleInfo miner = new("Miner", Miner.color, "Make new Vents", "Create Vents", RoleId.Miner);
@@ -31,7 +31,7 @@ public class RoleInfo
     public static RoleInfo bountyHunter = new("Bounty Hunter", BountyHunter.color, "Hunt your bounty down", "Hunt your bounty down", RoleId.BountyHunter);
     public static RoleInfo cultist = new("Cultist", Cultist.color, "Recruit for your cause", "Recruit for your cause", RoleId.Cultist);
     public static RoleInfo follower = new("Follower", Cleaner.color, "Follow your leader", "Follow your leader", RoleId.Follower, true);
-    public static RoleInfo bomber = new("Terrorist", Terrorist.color, "Bomb all Crewmates", "Bomb all Crewmates", RoleId.Bomber);
+    public static RoleInfo terrorist = new("Terrorist", Terrorist.color, "Bomb all Crewmates", "Bomb all Crewmates", RoleId.Terrorist);
     public static RoleInfo blackmailer = new("Blackmailer", Blackmailer.color, "Blackmail those who seek to hurt you", "Blackmail those who seek to hurt you", RoleId.Blackmailer);
     public static RoleInfo witch = new("Witch", Witch.color, "Cast a spell upon your foes", "Cast a spell upon your foes", RoleId.Witch);
     public static RoleInfo ninja = new("Ninja", Ninja.color, "Surprise and assassinate your foes", "Surprise and assassinate your foes", RoleId.Ninja);
@@ -119,7 +119,7 @@ public class RoleInfo
             mafioso,
             janitor,
             morphling,
-            bomber2,
+            bomber,
             mimic,
             camouflager,
             miner,
@@ -132,7 +132,7 @@ public class RoleInfo
             bountyHunter,
             cultist,
             cleaner,
-            bomber,
+            terrorist,
             blackmailer,
             witch,
             ninja,
@@ -286,7 +286,7 @@ public class RoleInfo
         if (p == Mafioso.mafioso) infos.Add(mafioso);
         if (p == Janitor.janitor) infos.Add(janitor);
         if (p == Morphling.morphling) infos.Add(morphling);
-        if (p == Bomber2.bomber2) infos.Add(bomber2);
+        if (p == Bomber.bomber) infos.Add(bomber);
         if (p == Camouflager.camouflager) infos.Add(camouflager);
         if (p == Vampire.vampire) infos.Add(vampire);
         if (p == Eraser.eraser) infos.Add(eraser);
@@ -302,7 +302,7 @@ public class RoleInfo
         if (p == Escapist.escapist) infos.Add(escapist);
         if (p == Ninja.ninja) infos.Add(ninja);
         if (p == Blackmailer.blackmailer) infos.Add(blackmailer);
-        if (p == Terrorist.terrorist) infos.Add(bomber);
+        if (p == Terrorist.terrorist) infos.Add(terrorist);
         if (p == Detective.detective) infos.Add(detective);
         if (p == TimeMaster.timeMaster) infos.Add(timeMaster);
         if (p == Cultist.cultist) infos.Add(cultist);

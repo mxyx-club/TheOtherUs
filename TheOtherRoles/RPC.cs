@@ -45,7 +45,7 @@ public enum RoleId
     Swapper,
     Seer,
     Morphling,
-    Bomber2,
+    Bomber,
     Yoyo,
     Camouflager,
     Hacker,
@@ -83,7 +83,7 @@ public enum RoleId
     Blackmailer,
     Thief,
     Poucher,
-    Bomber,
+    Terrorist,
     Crewmate,
     Impostor,
     // Modifier ---
@@ -416,8 +416,8 @@ public static class RPCProcedure
                     case RoleId.Morphling:
                         Morphling.morphling = player;
                         break;
-                    case RoleId.Bomber2:
-                        Bomber2.bomber2 = player;
+                    case RoleId.Bomber:
+                        Bomber.bomber = player;
                         break;
                     case RoleId.Camouflager:
                         Camouflager.camouflager = player;
@@ -534,7 +534,7 @@ public static class RPCProcedure
                     case RoleId.Thief:
                         Thief.thief = player;
                         break;
-                    case RoleId.Bomber:
+                    case RoleId.Terrorist:
                         Terrorist.terrorist = player;
                         break;
                 }
@@ -972,14 +972,14 @@ public static class RPCProcedure
                 Morphling.morphling = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
-            case RoleId.Bomber2:
+            case RoleId.Bomber:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
-                if (Amnisiac.resetRole) Bomber2.clearAndReload();
-                Bomber2.bomber2 = amnisiac;
+                if (Amnisiac.resetRole) Bomber.clearAndReload();
+                Bomber.bomber = amnisiac;
                 Amnisiac.clearAndReload();
                 break;
 
-            case RoleId.Bomber:
+            case RoleId.Terrorist:
                 Helpers.turnToImpostor(Amnisiac.amnisiac);
                 if (Amnisiac.resetRole) Terrorist.clearAndReload();
                 Terrorist.terrorist = amnisiac;
@@ -1725,7 +1725,7 @@ public static class RPCProcedure
 
         // Impostor roles
         if (player == Morphling.morphling) Morphling.clearAndReload();
-        if (player == Bomber2.bomber2) Bomber2.clearAndReload();
+        if (player == Bomber.bomber) Bomber.clearAndReload();
         if (player == Camouflager.camouflager) Camouflager.clearAndReload();
         if (player == Godfather.godfather) Godfather.clearAndReload();
         if (player == Mafioso.mafioso) Mafioso.clearAndReload();
@@ -1845,8 +1845,7 @@ public static class RPCProcedure
                 }
                 else
                 {
-                    var SpawnPositions =
-                        GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
+                    var SpawnPositions = GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
                         {
                             0 => MapData.SkeldSpawnPosition,
                             1 => MapData.MiraSpawnPosition,
@@ -1870,59 +1869,73 @@ public static class RPCProcedure
         Medic.usedShield = true;
     }
 
-    public static void giveBomb(byte playerId)
+    public static void giveBomb(byte playerId, bool bomb = false)
     {
         if (playerId == byte.MaxValue)
         {
-            Bomber2.hasBomb = null;
-            Bomber2.bombActive = false;
-            Bomber2.hasAlerted = false;
-            Bomber2.timeLeft = 0;
-
+            Bomber.hasBombPlayer = null;
+            Bomber.bombActive = false;
+            Bomber.hasAlerted = false;
+            Bomber.timeLeft = 0;
             return;
         }
-        Bomber2.hasBomb = playerById(playerId);
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber2.bombDelay, new Action<float>((p) =>
+
+        if (bomb)
         {
-            if (p == 1f) Bomber2.bombActive = true;
-        })));
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber2.bombDelay + Bomber2.bombTimer, new Action<float>((p) =>
-        { // Delayed action
-            if (!Helpers.isAlive(Bomber2.hasBomb)) return;
-            if (p == 1f && Bomber2.bombActive)
+            Bomber.hasBombPlayer = playerById(playerId);
+            Bomber.timeLeft += (int)0.5;
+            return;
+        }
+
+        Bomber.hasBombPlayer = playerById(playerId);
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay,
+            new Action<float>(p =>
             {
-                // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                checkMuderAttemptAndKill(Bomber2.hasBomb, Bomber2.hasBomb);
-                Bomber2.hasBomb = null;
-                Bomber2.bombActive = false;
-                Bomber2.hasAlerted = false;
-                Bomber2.timeLeft = 0;
-            }
-            if (CachedPlayer.LocalPlayer.PlayerControl == Bomber2.hasBomb)
+                if (p == 1f) Bomber.bombActive = true;
+            })));
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Bomber.bombDelay + Bomber.bombTimer,
+            new Action<float>(p =>
             {
-                int totalTime = (int)(Bomber2.bombDelay + Bomber2.bombTimer);
-                int timeLeft = (int)(totalTime - (totalTime * p));
-                if (timeLeft <= Bomber2.bombTimer)
+                // Delayed action
+                if (Bomber.hasBombPlayer.IsDead()) return;
+                if (p == 1f && Bomber.bombActive)
                 {
-                    if (Bomber2.timeLeft != timeLeft)
-                    {
-                        new CustomMessage("Your Bomb will explode in " + timeLeft + " seconds!", 1f);
-                        Bomber2.timeLeft = timeLeft;
-                    }
-                    if (timeLeft % 5 == 0)
-                    {
-                        if (!Bomber2.hasAlerted)
-                        {
-                            showFlash(Bomber2.alertColor, 1f);
-                            Bomber2.hasAlerted = true;
-                        }
-                    }
-                    else Bomber2.hasAlerted = false;
+                    // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
+                    if (Bomber.bomber.IsAlive() && CachedPlayer.LocalPlayer.PlayerControl == Bomber.bomber)
+                        checkMurderAttemptAndKill(Bomber.bomber, Bomber.hasBombPlayer, false, false, true);
+                    Bomber.hasBombPlayer = null;
+                    Bomber.bombActive = false;
+                    Bomber.hasAlerted = false;
+                    Bomber.timeLeft = 0;
                 }
 
-            }
+                if (CachedPlayer.LocalPlayer.PlayerControl == Bomber.hasBombPlayer)
+                {
+                    var totalTime = (int)(Bomber.bombDelay + Bomber.bombTimer);
+                    var timeLeft = (int)(totalTime - (totalTime * p));
+                    if (timeLeft <= Bomber.bombTimer)
+                    {
+                        if (Bomber.timeLeft != timeLeft)
+                        {
+                            _ = new CustomMessage("Your Bomb will explode in " + timeLeft + " seconds!", 1f);
+                            Bomber.timeLeft = timeLeft;
+                        }
 
-        })));
+                        if (timeLeft % 5 == 0)
+                        {
+                            if (!Bomber.hasAlerted)
+                            {
+                                showFlash(Palette.ImpostorRed, 0.75f);
+                                Bomber.hasAlerted = true;
+                            }
+                        }
+                        else
+                        {
+                            Bomber.hasAlerted = false;
+                        }
+                    }
+                }
+            })));
     }
 
     public static void setFutureSpelled(byte playerId)
@@ -1961,7 +1974,7 @@ public static class RPCProcedure
             blackmailPlayer(killerId);
             blackmailerButton.Timer = blackmailerButton.MaxTimer;
         }
-        else if (Bomber2.bomber2 == killer)
+        else if (Bomber.bomber == killer)
         {
             var bombWriter = AmongUsClient.Instance.StartRpcImmediately(killer.NetId,
                 (byte)CustomRPC.GiveBomb, SendOption.Reliable);
@@ -2457,7 +2470,7 @@ public static class RPCProcedure
             vent.EnterVentAnim = vent.ExitVentAnim = null;
             Sprite newSprite = animator == null ? SecurityGuard.getStaticVentSealedSprite() : SecurityGuard.getAnimatedVentSealedSprite();
             SpriteRenderer rend = vent.myRend;
-            if (isFungle())
+            if (IsFungle)
             {
                 newSprite = SecurityGuard.getFungleVentSealedSprite();
                 rend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
@@ -2838,7 +2851,7 @@ public static class RPCProcedure
         if (target == Ninja.ninja) Ninja.ninja = thief;
         if (target == Escapist.escapist) Escapist.escapist = thief;
         if (target == Terrorist.terrorist) Terrorist.terrorist = thief;
-        if (target == Bomber2.bomber2) Bomber2.bomber2 = thief;
+        if (target == Bomber.bomber) Bomber.bomber = thief;
         if (target == Miner.miner) Miner.miner = thief;
         if (target == Undertaker.undertaker) Undertaker.undertaker = thief;
         if (target.Data.Role.IsImpostor)
@@ -3359,7 +3372,7 @@ internal class RPCHandlerPatch
                 RPCProcedure.setFutureSpelled(reader.ReadByte());
                 break;
             case CustomRPC.GiveBomb:
-                RPCProcedure.giveBomb(reader.ReadByte());
+                RPCProcedure.giveBomb(reader.ReadByte(), reader.ReadBoolean());
                 break;
             case CustomRPC.Bloody:
                 byte bloodyKiller = reader.ReadByte();

@@ -42,11 +42,13 @@ public class CustomOptionHolder
     public static CustomOption morphlingCooldown;
     public static CustomOption morphlingDuration;
 
-    public static CustomOption bomber2SpawnRate;
-    public static CustomOption bomber2BombCooldown;
-    public static CustomOption bomber2Delay;
-    public static CustomOption bomber2Timer;
-    //public static CustomOption bomber2HotPotatoMode;
+    public static CustomOption bomberSpawnRate;
+    public static CustomOption bomberBombCooldown;
+    public static CustomOption bomberDelay;
+    public static CustomOption bomberTimer;
+    public static CustomOption bomberTriggerBothCooldowns;
+    public static CustomOption bomberCanGiveToBomber;
+    public static CustomOption bomberHotPotatoMode;
 
     public static CustomOption undertakerSpawnRate;
     public static CustomOption undertakerDragingDelaiAfterKill;
@@ -359,7 +361,7 @@ public class CustomOptionHolder
     public static CustomOption trapperInfoType;
     public static CustomOption trapperTrapDuration;
 
-    public static CustomOption bomberSpawnRate;
+    public static CustomOption terroristSpawnRate;
     public static CustomOption terroristBombDestructionTime;
     public static CustomOption terroristBombDestructionRange;
     public static CustomOption terroristBombHearRange;
@@ -687,11 +689,13 @@ public class CustomOptionHolder
         morphlingCooldown = Create(10021, Types.Impostor, "Morphling Cooldown", 30f, 10f, 60f, 2.5f, morphlingSpawnRate);
         morphlingDuration = Create(10022, Types.Impostor, "Morph Duration", 10f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
-        bomber2SpawnRate = Create(10030, Types.Impostor, cs(Bomber2.color, "Bomber [BETA]"), rates, null, true);
-        bomber2BombCooldown = Create(10031, Types.Impostor, "Bomber2 Cooldown", 30f, 25f, 60f, 2.5f, bomber2SpawnRate);
-        bomber2Delay = Create(10032, Types.Impostor, "Bomb Delay", 10f, 1f, 20f, 0.5f, bomber2SpawnRate);
-        bomber2Timer = Create(10033, Types.Impostor, "Bomb Timer", 10f, 5f, 30f, 5f, bomber2SpawnRate);
-        //bomber2HotPotatoMode = CustomOption.Create(10034, Types.Impostor, "Hot Potato Mode", false, bomber2SpawnRate);
+        bomberSpawnRate = Create(10030, Types.Impostor, cs(Bomber.color, "Bomber"), rates, null, true);
+        bomberBombCooldown = Create(10031, Types.Impostor, "Bomber Bomb Cooldown", 25f, 10f, 60f, 2.5f, bomberSpawnRate);
+        bomberDelay = Create(10032, Types.Impostor, "Bomb Delay", 5f, 1f, 20f, 0.5f, bomberSpawnRate);
+        bomberTimer = Create(10033, Types.Impostor, "Bomb Timer", 12.5f, 5f, 30f, 0.5f, bomberSpawnRate);
+        bomberTriggerBothCooldowns = Create(10034, Types.Impostor, "Trigger Both Cooldowns", true, bomberSpawnRate);
+        bomberCanGiveToBomber = Create(10035, Types.Impostor, "bomb Can Give To Bomber", false, bomberSpawnRate);
+        bomberHotPotatoMode = Create(10036, Types.Impostor, "Hot Potato Mode", false, bomberSpawnRate);
 
         undertakerSpawnRate = Create(10040, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
         undertakerDragingDelaiAfterKill = Create(10041, Types.Impostor, "Draging Delay After Kill", 0f, 0f, 15, 1f, undertakerSpawnRate);
@@ -761,13 +765,13 @@ public class CustomOptionHolder
         blackmailerSpawnRate = Create(10170, Types.Impostor, cs(Blackmailer.color, "Blackmailer"), rates, null, true);
         blackmailerCooldown = Create(10171, Types.Impostor, "Blackmail Cooldown", 30f, 5f, 120f, 5f, blackmailerSpawnRate);
 
-        bomberSpawnRate = Create(10180, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
-        terroristBombDestructionTime = Create(10181, Types.Impostor, "Bomb Destruction Time", 20f, 2.5f, 120f, 2.5f, bomberSpawnRate);
-        terroristBombDestructionRange = Create(10182, Types.Impostor, "Bomb Destruction Range", 50f, 5f, 150f, 5f, bomberSpawnRate);
-        terroristBombHearRange = Create(10183, Types.Impostor, "Bomb Hear Range", 60f, 5f, 150f, 5f, bomberSpawnRate);
-        terroristDefuseDuration = Create(10184, Types.Impostor, "Bomb Defuse Duration", 3f, 0.5f, 30f, 0.5f, bomberSpawnRate);
-        terroristBombCooldown = Create(10185, Types.Impostor, "Bomb Cooldown", 15f, 2.5f, 30f, 2.5f, bomberSpawnRate);
-        terroristBombActiveAfter = Create(10186, Types.Impostor, "Bomb Is Active After", 3f, 0.5f, 15f, 0.5f, bomberSpawnRate);
+        terroristSpawnRate = Create(10180, Types.Impostor, cs(Terrorist.color, "Terrorist"), rates, null, true);
+        terroristBombDestructionTime = Create(10181, Types.Impostor, "Bomb Destruction Time", 20f, 2.5f, 120f, 2.5f, terroristSpawnRate);
+        terroristBombDestructionRange = Create(10182, Types.Impostor, "Bomb Destruction Range", 50f, 5f, 150f, 5f, terroristSpawnRate);
+        terroristBombHearRange = Create(10183, Types.Impostor, "Bomb Hear Range", 60f, 5f, 150f, 5f, terroristSpawnRate);
+        terroristDefuseDuration = Create(10184, Types.Impostor, "Bomb Defuse Duration", 3f, 0.5f, 30f, 0.5f, terroristSpawnRate);
+        terroristBombCooldown = Create(10185, Types.Impostor, "Bomb Cooldown", 15f, 2.5f, 30f, 2.5f, terroristSpawnRate);
+        terroristBombActiveAfter = Create(10186, Types.Impostor, "Bomb Is Active After", 3f, 0.5f, 15f, 0.5f, terroristSpawnRate);
 
         minerSpawnRate = Create(10190, Types.Impostor, cs(Miner.color, "Miner"), rates, null, true);
         minerCooldown = Create(10191, Types.Impostor, "Mine Cooldown", 25f, 10f, 60f, 2.5f, minerSpawnRate);

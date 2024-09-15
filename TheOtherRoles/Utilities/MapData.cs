@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
 namespace TheOtherRoles.Utilities;
@@ -199,6 +201,20 @@ public class MapData
         new Vector3(-20.8897f, 2.7606f, 0.002f)
     ];
 
+    public static List<Vector3> MapSpawnPosition()
+    {
+        return GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
+        {
+            0 => SkeldSpawnPosition,
+            1 => MiraSpawnPosition,
+            2 => PolusSpawnPosition,
+            3 => DleksSpawnPosition,
+            4 => AirshipSpawnPosition,
+            5 => FungleSpawnPosition,
+            _ => FindVentSpawnPositions()
+        };
+    }
+
     public static List<Vector3> FindVentSpawnPositions()
     {
         var poss = new List<Vector3>();
@@ -210,5 +226,62 @@ public class MapData
         }
 
         return poss;
+    }
+
+    public static void RandomSpawnAllPlayers() => RandomSpawnPlayers(PlayerControl.AllPlayerControls.ToArray());
+
+    public static void RandomSpawnAllPlayersToVent() => RandomSpawnToVent(PlayerControl.AllPlayerControls.ToArray().Where(n => n.IsAlive()));
+
+    public static void RandomSpawnAllPlayersToMap() => RandomSpawnToMap(PlayerControl.AllPlayerControls.ToArray().Where(n => n.IsAlive()));
+
+    public static void RandomSpawnPlayers(IEnumerable<PlayerControl> players)
+    {
+        if (CustomOptionHolder.randomGameStartToVents.getBool()) RandomSpawnToVent(players);
+        else RandomSpawnToMap(players);
+    }
+
+    public static void RandomSpawnToVent(IEnumerable<PlayerControl> spawnPlayer)
+    {
+        var players = spawnPlayer.Where(p => !AntiTeleport.antiTeleport.Contains(p, player => player.PlayerId));
+
+        foreach (var p in players)
+        {
+            var poss = FindVentSpawnPositions().Random();
+            p.NetTransform.RpcSnapTo(poss);
+            Message($"Spawn PLayer {p.Data.PlayerName} To {poss}");
+        }
+    }
+
+    public static void RandomSpawnToMap(IEnumerable<PlayerControl> spawnPlayer)
+    {
+        var players = spawnPlayer.Where(p => !AntiTeleport.antiTeleport.Contains(p, player => player.PlayerId));
+
+        foreach (var p in players)
+        {
+            var poss = MapSpawnPosition().Random();
+            p.NetTransform.RpcSnapTo(poss);
+            Message($"Spawn PLayer {p.Data.PlayerName} To {poss}");
+        }
+    }
+
+    public static readonly Dictionary<PlayerControl, Vent> PlayerVentDic = new();
+
+    [HarmonyPatch(typeof(Vent), nameof(Vent.EnterVent))]
+    [HarmonyPostfix]
+    public static void OnEnterVent(PlayerControl pc, Vent __instance)
+    {
+        PlayerVentDic[pc] = __instance;
+    }
+
+    [HarmonyPatch(typeof(Vent._ExitVent_d__40), nameof(Vent._ExitVent_d__40.MoveNext))]
+    [HarmonyPostfix]
+    public static void OnExitVent(Vent._ExitVent_d__40 __instance)
+    {
+        if (PlayerVentDic.ContainsKey(__instance.pc)) PlayerVentDic.Remove(__instance.pc);
+    }
+
+    public static void AllPlayerExitVent()
+    {
+        foreach (var (player, vent) in PlayerVentDic) player.MyPhysics.RpcExitVent(vent.Id);
     }
 }
