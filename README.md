@@ -29,7 +29,7 @@ Even more roles are coming soon. :)
 |     Vampire      |  Arsonist  |       Jumper        |     Mini     |
 |     Cleaner      |  Werewolf  |      Detective      |     Vip      |
 |    Undertaker    |   Thief    |     TimeMaster      | Indomitable  |
-|     Escapist     |            |       Veteren       |    Slueth    |
+|     Escapist     |  Doomsayer |       Veteren       |    Slueth    |
 |     Warlock      |            |        Medic        |    Cursed    |
 |    Trickster     |            |       Swapper       |    Invert    |
 |   BountyHunter   |            |        Seer         |    Blind     |
@@ -61,6 +61,7 @@ Even more roles are coming soon. :)
 
 <details>
   <summary>Click to show the Changelog</summary>
+
 **Version 1.3.6**
 
 - What's New

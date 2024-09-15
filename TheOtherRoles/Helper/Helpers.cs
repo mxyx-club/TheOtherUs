@@ -60,8 +60,8 @@ public static class Helpers
 {
 
     public static Dictionary<string, Sprite> CachedSprites = new();
-    public static Sprite teamCultistChat = null;
-    public static Sprite teamLoverChat = null;
+    public static Sprite teamCultistChat;
+    public static Sprite teamLoverChat;
 
     public static bool canAlwaysBeGuessed(RoleId roleId)
     {
@@ -361,7 +361,7 @@ public static class Helpers
     {
         try
         {
-            Texture2D texture = new Texture2D(2, 2, TextureFormat.ARGB32, true);
+            Texture2D texture = new(2, 2, TextureFormat.ARGB32, true);
             Assembly assembly = Assembly.GetExecutingAssembly();
             Stream stream = assembly.GetManifestResourceStream(path);
             var length = stream.Length;
@@ -387,7 +387,7 @@ public static class Helpers
         {
             if (File.Exists(path))
             {
-                Texture2D texture = new Texture2D(2, 2, TextureFormat.ARGB32, true);
+                Texture2D texture = new(2, 2, TextureFormat.ARGB32, true);
                 var byteTexture = Il2CppSystem.IO.File.ReadAllBytes(path);
                 ImageConversion.LoadImage(texture, byteTexture, false);
                 return texture;
@@ -439,14 +439,14 @@ public static class Helpers
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
         Stream stream = assembly.GetManifestResourceStream(path);
-        StreamReader textStreamReader = new StreamReader(stream);
+        StreamReader textStreamReader = new(stream);
         return textStreamReader.ReadToEnd();
     }
 
     public static string readTextFromFile(string path)
     {
         Stream stream = File.OpenRead(path);
-        StreamReader textStreamReader = new StreamReader(stream);
+        StreamReader textStreamReader = new(stream);
         return textStreamReader.ReadToEnd();
     }
 
@@ -483,7 +483,7 @@ public static class Helpers
 
     public static Dictionary<byte, PlayerControl> allPlayersById()
     {
-        Dictionary<byte, PlayerControl> res = new Dictionary<byte, PlayerControl>();
+        Dictionary<byte, PlayerControl> res = new();
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
             res.Add(player.PlayerId, player);
         return res;
@@ -608,7 +608,11 @@ public static class Helpers
 
     public static List<T> ToList<T>(this Il2CppSystem.Collections.Generic.List<T> list)
     {
-        List<T> newList = [.. list];
+        List<T> newList = new(list.Count);
+        foreach (T item in list)
+        {
+            newList.Add(item);
+        }
         return newList;
     }
 
@@ -738,7 +742,7 @@ public static class Helpers
     public static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
     {
         tie = true;
-        KeyValuePair<byte, int> result = new KeyValuePair<byte, int>(byte.MaxValue, int.MinValue);
+        KeyValuePair<byte, int> result = new(byte.MaxValue, int.MinValue);
         foreach (KeyValuePair<byte, int> keyValuePair in self)
         {
             if (keyValuePair.Value > result.Value)
@@ -1186,7 +1190,7 @@ public static class Helpers
 
     public static List<PlayerControl> getKillerTeamMembers(PlayerControl player)
     {
-        List<PlayerControl> team = new List<PlayerControl>();
+        List<PlayerControl> team = new();
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
             if (player.Data.Role.IsImpostor && p.Data.Role.IsImpostor && player.PlayerId != p.PlayerId && team.All(x => x.PlayerId != p.PlayerId)) team.Add(p);
@@ -1351,7 +1355,7 @@ public static class Helpers
                 player != Pursuer.pursuer;
     }
 
-    public static bool zoomOutStatus = false;
+    public static bool zoomOutStatus;
     public static void toggleZoom(bool reset = false)
     {
         float orthographicSize = reset || zoomOutStatus ? 3f : 12f;

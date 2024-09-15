@@ -388,7 +388,7 @@ public static class PlayerControlFixedUpdatePatch
     {
         if (Eraser.eraser == null || Eraser.eraser != CachedPlayer.LocalPlayer.PlayerControl) return;
 
-        List<PlayerControl> untargetables = new List<PlayerControl>();
+        List<PlayerControl> untargetables = new();
         if (Spy.spy != null) untargetables.Add(Spy.spy);
         if (Sidekick.wasTeamRed) untargetables.Add(Sidekick.sidekick);
         if (Jackal.wasTeamRed) untargetables.Add(Jackal.jackal);
@@ -1220,7 +1220,7 @@ public static class PlayerControlFixedUpdatePatch
         Medium.target = target;
     }
 
-    static bool mushroomSaboWasActive = false;
+    static bool mushroomSaboWasActive;
     static void morphlingAndCamouflagerUpdate()
     {
         bool mushRoomSaboIsActive = MushroomSabotageActive();
@@ -1344,7 +1344,7 @@ public static class PlayerControlFixedUpdatePatch
     static void ninjaSetTarget()
     {
         if (Ninja.ninja == null || Ninja.ninja != CachedPlayer.LocalPlayer.PlayerControl) return;
-        List<PlayerControl> untargetables = new List<PlayerControl>();
+        List<PlayerControl> untargetables = new();
         if (Spy.spy != null && !Spy.impostorsCanKillAnyone) untargetables.Add(Spy.spy);
         if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
         if (Sidekick.wasTeamRed && !Spy.impostorsCanKillAnyone) untargetables.Add(Sidekick.sidekick);
@@ -1356,7 +1356,7 @@ public static class PlayerControlFixedUpdatePatch
     static void thiefSetTarget()
     {
         if (Thief.thief == null || Thief.thief != CachedPlayer.LocalPlayer.PlayerControl) return;
-        List<PlayerControl> untargetables = new List<PlayerControl>();
+        List<PlayerControl> untargetables = new();
         if (Mini.mini != null && !Mini.isGrownUp()) untargetables.Add(Mini.mini);
         Thief.currentTarget = setTarget(onlyCrewmates: false, untargetablePlayers: untargetables);
         setPlayerOutline(Thief.currentTarget, Thief.color);
@@ -1828,8 +1828,8 @@ class BodyReportPatch
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
 public static class MurderPlayerPatch
 {
-    public static bool resetToCrewmate = false;
-    public static bool resetToDead = false;
+    public static bool resetToCrewmate;
+    public static bool resetToDead;
 
     public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
@@ -1843,7 +1843,7 @@ public static class MurderPlayerPatch
     public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
         // Collect dead player info
-        DeadPlayer deadPlayer = new DeadPlayer(target, DateTime.UtcNow, DeadPlayer.CustomDeathReason.Kill, __instance);
+        DeadPlayer deadPlayer = new(target, DateTime.UtcNow, DeadPlayer.CustomDeathReason.Kill, __instance);
         deadPlayers.Add(deadPlayer);
 
         // Reset killer to crewmate if resetToCrewmate
@@ -2029,7 +2029,7 @@ class PlayerControlSetCoolDownPatch
 [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.CoPerformKill))]
 class KillAnimationCoPerformKillPatch
 {
-    public static bool hideNextAnimation = false;
+    public static bool hideNextAnimation;
     public static void Prefix(KillAnimation __instance, [HarmonyArgument(0)] ref PlayerControl source, [HarmonyArgument(1)] ref PlayerControl target)
     {
         if (hideNextAnimation)
@@ -2041,7 +2041,7 @@ class KillAnimationCoPerformKillPatch
 [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement))]
 class KillAnimationSetMovementPatch
 {
-    private static int? colorId = null;
+    private static int? colorId;
     public static void Prefix(PlayerControl source, bool canMove)
     {
         Color color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
@@ -2065,7 +2065,7 @@ public static class ExilePlayerPatch
     public static void Postfix(PlayerControl __instance)
     {
         // Collect dead player info
-        DeadPlayer deadPlayer = new DeadPlayer(__instance, DateTime.UtcNow, DeadPlayer.CustomDeathReason.Exile, null);
+        DeadPlayer deadPlayer = new(__instance, DateTime.UtcNow, DeadPlayer.CustomDeathReason.Exile, null);
         deadPlayers.Add(deadPlayer);
 
 

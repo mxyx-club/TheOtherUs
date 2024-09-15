@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using TheOtherRoles.Modules;
 using UnityEngine;
-using static TheOtherRoles.CustomOption;
+using static TheOtherRoles.Modules.CustomOption;
 using static TheOtherRoles.TheOtherRoles;
-using Types = TheOtherRoles.CustomOption.CustomOptionType;
+using Types = TheOtherRoles.Modules.CustomOption.CustomOptionType;
 
 namespace TheOtherRoles;
 
@@ -20,8 +21,6 @@ public class CustomOptionHolder
 
     public static CustomOption anyPlayerCanStopStart;
 
-    //public static CustomOption enableCodenameHorsemode;
-    //public static CustomOption enableCodenameDisableHorses;
     public static CustomOption enableEventMode;
 
     public static CustomOption cultistSpawnRate;
@@ -579,7 +578,7 @@ public class CustomOptionHolder
     public static CustomOption propHuntFindCooldown;
     public static CustomOption propHuntFindDuration;
 
-    internal static Dictionary<byte, byte[]> blockedRolePairings = new Dictionary<byte, byte[]>();
+    internal static Dictionary<byte, byte[]> blockedRolePairings = new();
 
     public static string cs(Color c, string s)
     {
@@ -650,7 +649,7 @@ public class CustomOptionHolder
         moveColdTemp = Create(64, Types.General, "Move Cold Temp To Death Valley", false, enableBetterPolus, false);
 
         enableCamoComms = Create(101, Types.General, "Enable Camouflage Comms", false, null, false);
-        restrictDevices = Create(102, Types.General, "Restrict Map Information", new string[] { "Off", "Per Round", "Per Game" }, null, false);
+        restrictDevices = Create(102, Types.General, "Restrict Map Information", ["Off", "Per Round", "Per Game"], null, false);
         //restrictAdmin = CustomOption.Create(103, Types.General, "Restrict Admin Table", 30f, 0f, 600f, 5f, restrictDevices);
         restrictCameras = Create(104, Types.General, "Restrict Cameras", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = Create(105, Types.General, "Restrict Vitals", 30f, 0f, 600f, 5f, restrictDevices);
@@ -778,7 +777,7 @@ public class CustomOptionHolder
         yoyoMarkStaysOverMeeting = Create(10203, Types.Impostor, "Marked Location Stays After Meeting", true, yoyoSpawnRate);
         yoyoHasAdminTable = Create(10204, Types.Impostor, "Has Admin Table", true, yoyoSpawnRate);
         yoyoAdminTableCooldown = Create(10205, Types.Impostor, "Admin Table Cooldown", 20f, 2.5f, 120f, 2.5f, yoyoHasAdminTable);
-        yoyoSilhouetteVisibility = Create(10206, Types.Impostor, "Silhouette Visibility", new string[] { "0%", "10%", "20%", "30%", "40%", "50%" }, yoyoSpawnRate);
+        yoyoSilhouetteVisibility = Create(10206, Types.Impostor, "Silhouette Visibility", ["0%", "10%", "20%", "30%", "40%", "50%"], yoyoSpawnRate);
 
 
         //-------------------------- Neutral Options 20000-29999 -------------------------- //
@@ -870,7 +869,7 @@ public class CustomOptionHolder
         mayorTasksNeededToSeeVoteColors = Create(30012, Types.Crewmate, "Completed Tasks Needed To See Vote Colors", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = Create(30013, Types.Crewmate, "Mobile Emergency Button", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30014, Types.Crewmate, "Number Of Remote Meetings", 1f, 1f, 5f, 1f, mayorMeetingButton);
-        mayorChooseSingleVote = Create(30015, Types.Crewmate, "Mayor Can Choose Single Vote", new string[] { "Off", "On (Before Voting)", "On (Until Meeting Ends)" }, mayorSpawnRate);
+        mayorChooseSingleVote = Create(30015, Types.Crewmate, "Mayor Can Choose Single Vote", ["Off", "On (Before Voting)", "On (Until Meeting Ends)"], mayorSpawnRate);
 
         engineerSpawnRate = Create(30020, Types.Crewmate, cs(Engineer.color, "Engineer"), rates, null, true);
         engineerRemoteFix = Create(30021, Types.Crewmate, "Enable Remote Fix", true, engineerSpawnRate);
@@ -885,7 +884,7 @@ public class CustomOptionHolder
 
         sheriffSpawnRate = Create(30040, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
         sheriffCooldown = Create(30041, Types.Crewmate, "Sheriff Cooldown", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
-        sheriffMisfireKills = Create(30042, Types.Crewmate, "Misfire Kills", new string[] { "Self", "Target", "Both" }, sheriffSpawnRate);
+        sheriffMisfireKills = Create(30042, Types.Crewmate, "Misfire Kills", ["Self", "Target", "Both"], sheriffSpawnRate);
         sheriffCanKillNeutrals = Create(30043, Types.Crewmate, "Sheriff Can Kill Neutrals", false, sheriffSpawnRate);
         sheriffCanKillJester = Create(30044, Types.Crewmate, "Sheriff Can Kill " + cs(Jester.color, "Jester"), false, sheriffCanKillNeutrals);
         sheriffCanKillProsecutor = Create(30045, Types.Crewmate, "Sheriff Can Kill " + cs(Lawyer.color, "Prosecutor"), false, sheriffCanKillNeutrals);
@@ -901,7 +900,7 @@ public class CustomOptionHolder
         deputyHandcuffCooldown = Create(30062, Types.Crewmate, "Handcuff Cooldown", 30f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30063, Types.Crewmate, "Handcuff Duration", 15f, 5f, 60f, 2.5f, deputySpawnRate);
         deputyKnowsSheriff = Create(30064, Types.Crewmate, "Sheriff And Deputy Know Each Other ", true, deputySpawnRate);
-        deputyGetsPromoted = Create(30065, Types.Crewmate, "Deputy Gets Promoted To Sheriff", new string[] { "Off", "On (Immediately)", "On (After Meeting)" }, deputySpawnRate);
+        deputyGetsPromoted = Create(30065, Types.Crewmate, "Deputy Gets Promoted To Sheriff", ["Off", "On (Immediately)", "On (After Meeting)"], deputySpawnRate);
         deputyKeepsHandcuffs = Create(30066, Types.Crewmate, "Deputy Keeps Handcuffs When Promoted", true, deputyGetsPromoted);
 
         lighterSpawnRate = Create(30070, Types.Crewmate, cs(Lighter.color, "Lighter"), rates, null, true);
@@ -926,11 +925,11 @@ public class CustomOptionHolder
         veterenAlertDuration = Create(30102, Types.Crewmate, "Alert Duration", 3f, 1f, 20f, 1f, veterenSpawnRate);
 
         medicSpawnRate = Create(30110, Types.Crewmate, cs(Medic.color, "Medic"), rates, null, true);
-        medicShowShielded = Create(30111, Types.Crewmate, "Show Shielded Player", new string[] { "Everyone", "Shielded + Medic", "Medic" }, medicSpawnRate);
+        medicShowShielded = Create(30111, Types.Crewmate, "Show Shielded Player", ["Everyone", "Shielded + Medic", "Medic"], medicSpawnRate);
         medicBreakShield = Create(30112, Types.Crewmate, "Shield Is Unbreakable", true, medicSpawnRate);
         medicShowAttemptToShielded = Create(30113, Types.Crewmate, "Shielded Player Sees Murder Attempt", false, medicBreakShield);
         medicResetTargetAfterMeeting = Create(30114, Types.Crewmate, "Reset Target After Meeting", false, medicSpawnRate);
-        medicSetOrShowShieldAfterMeeting = Create(30115, Types.Crewmate, "Shield Will Be Activated", new string[] { "Instantly", "Instantly, Visible\nAfter Meeting", "After Meeting" }, medicSpawnRate);
+        medicSetOrShowShieldAfterMeeting = Create(30115, Types.Crewmate, "Shield Will Be Activated", ["Instantly", "Instantly, Visible\nAfter Meeting", "After Meeting"], medicSpawnRate);
         medicShowAttemptToMedic = Create(30116, Types.Crewmate, "Medic Sees Murder Attempt On Shielded Player", false, medicBreakShield);
 
         swapperSpawnRate = Create(30120, Types.Crewmate, cs(Swapper.color, "Swapper"), rates, null, true);
@@ -941,7 +940,7 @@ public class CustomOptionHolder
         swapperRechargeTasksNumber = Create(30125, Types.Crewmate, "Number Of Tasks Needed For Recharging", 2f, 1f, 10f, 1f, swapperSpawnRate);
 
         seerSpawnRate = Create(30140, Types.Crewmate, cs(Seer.color, "Seer"), rates, null, true);
-        seerMode = Create(30141, Types.Crewmate, "Seer Mode", new string[] { "Show Death Flash + Souls", "Show Death Flash", "Show Souls" }, seerSpawnRate);
+        seerMode = Create(30141, Types.Crewmate, "Seer Mode", ["Show Death Flash + Souls", "Show Death Flash", "Show Souls"], seerSpawnRate);
         seerLimitSoulDuration = Create(30142, Types.Crewmate, "Seer Limit Soul Duration", false, seerSpawnRate);
         seerSoulDuration = Create(30143, Types.Crewmate, "Seer Soul Duration", 15f, 0f, 120f, 5f, seerLimitSoulDuration);
 
@@ -959,7 +958,7 @@ public class CustomOptionHolder
         trackerCanTrackCorpses = Create(30163, Types.Crewmate, "Tracker Can Track Corpses", true, trackerSpawnRate);
         trackerCorpsesTrackingCooldown = Create(30164, Types.Crewmate, "Corpses Tracking Cooldown", 30f, 5f, 120f, 5f, trackerCanTrackCorpses);
         trackerCorpsesTrackingDuration = Create(30165, Types.Crewmate, "Corpses Tracking Duration", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
-        trackerTrackingMethod = Create(30166, Types.Crewmate, "How Tracker Gets Target Location", new string[] { "Arrow Only", "Proximity Dectector Only", "Arrow + Proximity" }, trackerSpawnRate);
+        trackerTrackingMethod = Create(30166, Types.Crewmate, "How Tracker Gets Target Location", ["Arrow Only", "Proximity Dectector Only", "Arrow + Proximity"], trackerSpawnRate);
 
         snitchSpawnRate = Create(30170, Types.Crewmate, cs(Snitch.color, "Snitch"), rates, null, true);
         snitchLeftTasksForReveal = Create(30171, Types.Crewmate, "Task Count Where The Snitch Will Be Revealed", 1f, 0f, 10f, 1f, snitchSpawnRate);
@@ -1014,7 +1013,7 @@ public class CustomOptionHolder
         trapperRechargeTasksNumber = Create(30253, Types.Crewmate, "Number Of Tasks Needed For Recharging", 2f, 1f, 15f, 1f, trapperSpawnRate);
         trapperTrapNeededTriggerToReveal = Create(30254, Types.Crewmate, "Trap Needed Trigger To Reveal", 3f, 2f, 10f, 1f, trapperSpawnRate);
         trapperAnonymousMap = Create(30255, Types.Crewmate, "Show Anonymous Map", false, trapperSpawnRate);
-        trapperInfoType = Create(30256, Types.Crewmate, "Trap Information Type", new string[] { "Role", "Good/Evil Role", "Name" }, trapperSpawnRate);
+        trapperInfoType = Create(30256, Types.Crewmate, "Trap Information Type", ["Role", "Good/Evil Role", "Name"], trapperSpawnRate);
         trapperTrapDuration = Create(30257, Types.Crewmate, "Trap Duration", 5f, 1f, 15f, 1f, trapperSpawnRate);
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
@@ -1050,7 +1049,7 @@ public class CustomOptionHolder
 
         modifierSunglasses = Create(1070, Types.Modifier, cs(Color.yellow, "Sunglasses"), rates, null, true);
         modifierSunglassesQuantity = Create(1071, Types.Modifier, cs(Color.yellow, "Sunglasses Quantity"), ratesModifier, modifierSunglasses);
-        modifierSunglassesVision = Create(1072, Types.Modifier, "Vision With Sunglasses", new string[] { "-10%", "-20%", "-30%", "-40%", "-50%" }, modifierSunglasses);
+        modifierSunglassesVision = Create(1072, Types.Modifier, "Vision With Sunglasses", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
 
         modifierTorch = Create(1080, Types.Modifier, cs(Color.yellow, "Torch"), rates, null, true);
         modifierTorchQuantity = Create(1081, Types.Modifier, cs(Color.yellow, "Torch Quantity"), ratesModifier, modifierTorch);
@@ -1096,7 +1095,7 @@ public class CustomOptionHolder
         modifierChameleonQuantity = Create(1211, Types.Modifier, cs(Color.yellow, "Chameleon Quantity"), ratesModifier, modifierChameleon);
         modifierChameleonHoldDuration = Create(1212, Types.Modifier, "Time Until Fading Starts", 3f, 1f, 10f, 0.5f, modifierChameleon);
         modifierChameleonFadeDuration = Create(1213, Types.Modifier, "Fade Duration", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
-        modifierChameleonMinVisibility = Create(1214, Types.Modifier, "Minimum Visibility", new string[] { "0%", "10%", "20%", "30%", "40%", "50%" }, modifierChameleon);
+        modifierChameleonMinVisibility = Create(1214, Types.Modifier, "Minimum Visibility", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
         modifierShifter = Create(1220, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
 
@@ -1117,7 +1116,7 @@ public class CustomOptionHolder
 
         //-------------------------- Hide N Seek 3000 - 3999 -------------------------- //
 
-        hideNSeekMap = Create(3020, Types.HideNSeekMain, cs(Color.yellow, "Map"), new string[] { "The Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LI Map" }, null, true, onChange: () => { int map = hideNSeekMap.selection; if (map >= 3) map++; GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map; });
+        hideNSeekMap = Create(3020, Types.HideNSeekMain, cs(Color.yellow, "Map"), ["The Skeld", "Mira", "Polus", "Airship", "Fungle", "Submerged", "LI Map"], null, true, onChange: () => { int map = hideNSeekMap.selection; if (map >= 3) map++; GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map; });
         hideNSeekHunterCount = Create(3000, Types.HideNSeekMain, cs(Color.yellow, "Number Of Hunters"), 1f, 1f, 3f, 1f);
         hideNSeekKillCooldown = Create(3021, Types.HideNSeekMain, cs(Color.yellow, "Kill Cooldown"), 10f, 2.5f, 60f, 2.5f);
         hideNSeekHunterVision = Create(3001, Types.HideNSeekMain, cs(Color.yellow, "Hunter Vision"), 0.5f, 0.25f, 2f, 0.25f);
@@ -1186,7 +1185,7 @@ public class CustomOptionHolder
         blockedRolePairings.Add((byte)RoleId.Witch, [(byte)RoleId.Warlock]);
         blockedRolePairings.Add((byte)RoleId.Warlock, [(byte)RoleId.Vampire]);
 
-        blockedRolePairings.Add((byte)RoleId.Vulture, new[] { (byte)RoleId.Cleaner });
-        blockedRolePairings.Add((byte)RoleId.Cleaner, new[] { (byte)RoleId.Vulture });
+        blockedRolePairings.Add((byte)RoleId.Vulture, [(byte)RoleId.Cleaner]);
+        blockedRolePairings.Add((byte)RoleId.Cleaner, [(byte)RoleId.Vulture]);
     }
 }

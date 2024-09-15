@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using Reactor.Utilities;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -17,21 +18,21 @@ class MeetingHudPatch
 {
     static bool[] selections;
     static SpriteRenderer[] renderers;
-    private static GameData.PlayerInfo target = null;
+    private static GameData.PlayerInfo target;
     private const float scale = 0.65f;
     private static TMPro.TextMeshPro meetingExtraButtonText;
     private static PassiveButton[] swapperButtonList;
     private static TMPro.TextMeshPro meetingExtraButtonLabel;
-    public static bool shookAlready = false;
-    private static PlayerVoteArea swapped1 = null;
-    private static PlayerVoteArea swapped2 = null;
+    public static bool shookAlready;
+    private static PlayerVoteArea swapped1;
+    private static PlayerVoteArea swapped2;
 
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
     class MeetingCalculateVotesPatch
     {
         private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
         {
-            Dictionary<byte, int> dictionary = new Dictionary<byte, int>();
+            Dictionary<byte, int> dictionary = new();
             for (int i = 0; i < __instance.playerStates.Length; i++)
             {
                 PlayerVoteArea playerVoteArea = __instance.playerStates[i];
@@ -94,7 +95,7 @@ class MeetingHudPatch
                 GameData.PlayerInfo exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
 
                 // TieBreaker 
-                List<GameData.PlayerInfo> potentialExiled = new List<GameData.PlayerInfo>();
+                List<GameData.PlayerInfo> potentialExiled = new();
                 bool skipIsTie = false;
                 if (self.Count > 0)
                 {
@@ -474,7 +475,7 @@ class MeetingHudPatch
             UnityEngine.Object.Destroy(container.gameObject);
         }));
 
-        List<Transform> buttons = new List<Transform>();
+        List<Transform> buttons = new();
         Transform selectedButton = null;
 
         foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos)
@@ -1042,7 +1043,7 @@ class MeetingHudPatch
     [HarmonyPatch]
     public class ShowHost
     {
-        private static TextMeshPro Text = null;
+        private static TextMeshPro Text;
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
         [HarmonyPostfix]
 

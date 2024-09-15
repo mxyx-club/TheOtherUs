@@ -20,7 +20,7 @@ public static class GameStartManagerUpdatePatch
 
 public class GameStartManagerPatch
 {
-    public static Dictionary<int, PlayerVersion> playerVersions = new Dictionary<int, PlayerVersion>();
+    public static Dictionary<int, PlayerVersion> playerVersions = new();
     public static float timer = 600f;
     private static float kickingTimer;
     private static bool versionSent;
@@ -60,8 +60,8 @@ public class GameStartManagerPatch
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     public class GameStartManagerUpdatePatch
     {
-        public static float startingTimer = 0;
-        private static bool update = false;
+        public static float startingTimer;
+        private static bool update;
         private static string currentText = "";
         private static GameObject copiedStartButton;
 
