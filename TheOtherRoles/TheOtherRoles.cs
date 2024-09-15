@@ -592,7 +592,7 @@ public static class TheOtherRoles
             if (playerId == CachedPlayer.LocalPlayer.PlayerId)
             {
                 HudManagerStartPatch.setAllButtonsHandcuffedStatus(active);
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.deputyHandcuff);
+                SoundEffectsManager.play("deputyHandcuff");
             }
 
         }
@@ -2851,7 +2851,7 @@ public static class Terrorist
         }
         isPlanted = false;
         isActive = false;
-        if (flag) SoundEffectsManager.stop(Modules.AssetLoader.customAssets.bombFuseBurning);
+        if (flag) SoundEffectsManager.stop("bombFuseBurning");
     }
 
     public static void clearAndReload()

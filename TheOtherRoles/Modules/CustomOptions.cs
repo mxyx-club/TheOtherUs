@@ -294,7 +294,7 @@ namespace TheOtherRoles
             {
                 Warn($"{e}: tried to paste invalid settings!");
                 SoundEffectsManager.Load();
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.fail);
+                SoundEffectsManager.play("fail");
                 return false;
             }
         }

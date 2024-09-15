@@ -27,9 +27,9 @@ namespace TheOtherRoles
         public const string VersionString = MyPluginInfo.PLUGIN_VERSION;
         public static uint betaDays = 0;  // amount of days for the build to be usable (0 for infinite!)
 
-		public static Version Version = Version.Parse(VersionString);
+        public static Version Version = Version.Parse(VersionString);
 
-		public Harmony Harmony { get; } = new(Id);
+        public Harmony Harmony { get; } = new(Id);
         public static Main Instance;
 
         public static int optionsPage = 2;
@@ -128,15 +128,14 @@ namespace TheOtherRoles
                 return;
             }
 
-			AddComponent<ModUpdater>();
+            AddComponent<ModUpdater>();
 
-			EventUtility.Load();
+            EventUtility.Load();
             SubmergedCompatibility.Initialize();
             MainMenuPatch.addSceneChangeCallbacks();
             _ = RoleInfo.loadReadme();
             AddToKillDistanceSetting.addKillDistance();
             Info("Loading TOR completed!");
-            AssetLoader.LoadAssets();
         }
     }
 

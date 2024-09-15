@@ -784,7 +784,7 @@ namespace TheOtherRoles
         public static void timeMasterRewindTime()
         {
             TimeMaster.shieldActive = false; // Shield is no longer active when rewinding
-            SoundEffectsManager.stop(Modules.AssetLoader.customAssets.timemasterShield);  // Shield sound stopped when rewinding
+            SoundEffectsManager.stop("timemasterShield");  // Shield sound stopped when rewinding
             if (TimeMaster.timeMaster != null && TimeMaster.timeMaster == CachedPlayer.LocalPlayer.PlayerControl)
             {
                 resetTimeMasterButton();
@@ -1663,7 +1663,7 @@ namespace TheOtherRoles
                 if ((wasSpy || wasImpostor) && !Jackal.ImpostorCanFindSidekick) Sidekick.wasTeamRed = true;
                 Sidekick.wasSpy = wasSpy;
                 Sidekick.wasImpostor = wasImpostor;
-                if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play(Modules.AssetLoader.customAssets.jackalSidekick);
+                if (player == CachedPlayer.LocalPlayer.PlayerControl) SoundEffectsManager.play("jackalSidekick");
                 if (HandleGuesser.isGuesserGm && CustomOptionHolder.guesserGamemodeSidekickIsAlwaysGuesser.getBool() && !HandleGuesser.isGuesser(targetId))
                     setGuesserGm(targetId);
             }
@@ -1976,7 +1976,7 @@ namespace TheOtherRoles
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     placeBomb(buff);
-                    SoundEffectsManager.play(Terrorist.selfExplosion ? Modules.AssetLoader.customAssets.bombExplosion : Modules.AssetLoader.customAssets.trapperTrap);
+                    SoundEffectsManager.play(Terrorist.selfExplosion ? "bombExplosion" : "trapperTrap");
 
                     if (Terrorist.selfExplosion)
                     {
@@ -2001,14 +2001,14 @@ namespace TheOtherRoles
                 morphlingMorph(player.PlayerId);
                 Morphling.sampledTarget = null;
                 morphlingButton.Timer = Morphling.duration;
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.morphlingMorph);
+                SoundEffectsManager.play("morphlingMorph");
             }
             else if (Witch.witch == killer)
             {
                 var target = killer;
                 if (Witch.currentTarget != null) target = Witch.currentTarget;
                 Witch.spellCastingTarget = target;
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.witchSpell);
+                SoundEffectsManager.play("witchSpell");
                 witchSpellButton.Timer = witchSpellButton.MaxTimer;
             }/*
         else if (Warlock.warlock == killer)
@@ -2064,7 +2064,7 @@ namespace TheOtherRoles
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     yoyoMarkLocation(buff);
-                    SoundEffectsManager.play(Modules.AssetLoader.customAssets.tricksterPlaceBox);
+                    SoundEffectsManager.play("tricksterPlaceBox");
                     yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = false;
@@ -2089,7 +2089,7 @@ namespace TheOtherRoles
                     yoyoButton.Timer = 10f;
                     yoyoButton.HasEffect = true;
                     yoyoButton.buttonText = "ReturningText".Translate();
-                    SoundEffectsManager.play(Modules.AssetLoader.customAssets.morphlingMorph);
+                    SoundEffectsManager.play("morphlingMorph");
                 }
             }
             else if (Trickster.trickster == killer)
@@ -2106,7 +2106,7 @@ namespace TheOtherRoles
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     placeJackInTheBox(buff);
-                    SoundEffectsManager.play(Modules.AssetLoader.customAssets.tricksterPlaceBox);
+                    SoundEffectsManager.play("tricksterPlaceBox");
                     placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;
                 }
                 else
@@ -2115,7 +2115,7 @@ namespace TheOtherRoles
                         (byte)CustomRPC.LightsOut, SendOption.Reliable);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     lightsOut();
-                    SoundEffectsManager.play(Modules.AssetLoader.customAssets.lighterLight);
+                    SoundEffectsManager.play("lighterLight");
                     lightsOutButton.Timer = lightsOutButton.MaxTimer;
                 }
             }
@@ -2194,7 +2194,7 @@ namespace TheOtherRoles
                                 cleanBody(playerInfo.PlayerId, Cleaner.cleaner.PlayerId);
 
                                 Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
-                                SoundEffectsManager.play(Modules.AssetLoader.customAssets.cleanerClean);
+                                SoundEffectsManager.play("cleanerClean");
                                 break;
                             }
                         }
@@ -2212,7 +2212,7 @@ namespace TheOtherRoles
                 writer.Write(target.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 setFutureErased(target.PlayerId);
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.eraserErase);
+                SoundEffectsManager.play("eraserErase");
                 eraserButton.Timer = eraserButton.MaxTimer;
             }
             else if (Camouflager.camouflager == killer)
@@ -2222,7 +2222,7 @@ namespace TheOtherRoles
                 writer.Write(1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 camouflagerCamouflage(1);
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.morphlingMorph);
+                SoundEffectsManager.play("morphlingMorph");
                 camouflagerButton.Timer = camouflagerButton.MaxTimer;
             }
             else if (Swooper.swooper == killer)
@@ -2903,7 +2903,7 @@ namespace TheOtherRoles
         public static void huntedRewindTime(byte playerId)
         {
             Hunted.timeshieldActive.Remove(playerId); // Shield is no longer active when rewinding
-            SoundEffectsManager.stop(Modules.AssetLoader.customAssets.timemasterShield);  // Shield sound stopped when rewinding
+            SoundEffectsManager.stop("timemasterShield");  // Shield sound stopped when rewinding
             if (playerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId)
             {
                 resetHuntedRewindButton();
@@ -2966,7 +2966,7 @@ namespace TheOtherRoles
 
         public static void propHuntSetRevealed(byte playerId)
         {
-            SoundEffectsManager.play(Modules.AssetLoader.customAssets.morphlingMorph);
+            SoundEffectsManager.play("morphlingMorph");
             PropHunt.isCurrentlyRevealed.Add(playerId, PropHunt.revealDuration);
             PropHunt.timer -= PropHunt.revealPunish;
         }
@@ -3054,7 +3054,7 @@ namespace TheOtherRoles
         {
             try
             {
-                SoundEffectsManager.playAtPosition(Modules.AssetLoader.customAssets.bombDefused, Terrorist.bomb.bomb.transform.position, range: Terrorist.hearRange);
+                SoundEffectsManager.playAtPosition("bombDefused", Terrorist.bomb.bomb.transform.position, range: Terrorist.hearRange);
             }
             catch { }
             Terrorist.clearBomb();

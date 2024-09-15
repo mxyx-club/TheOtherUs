@@ -420,7 +420,7 @@ class MeetingHudPatch
             var mayorPVA = __instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Mayor.mayor.PlayerId);
             if (mayorPVA != null && mayorPVA.DidVote)
             {
-                SoundEffectsManager.play(Modules.AssetLoader.customAssets.fail);
+                SoundEffectsManager.play("fail");
                 return;
             }
         }
@@ -586,7 +586,7 @@ class MeetingHudPatch
                         MessageWriter murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
                         RPCProcedure.shieldedMurderAttempt(0);
-                        SoundEffectsManager.play(Modules.AssetLoader.customAssets.fail);
+                        SoundEffectsManager.play("fail");
                         return;
                     }
 
@@ -599,7 +599,7 @@ class MeetingHudPatch
                         MessageWriter murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShieldedMurderAttempt, SendOption.Reliable, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
                         RPCProcedure.shieldedMurderAttempt(0);
-                        SoundEffectsManager.play(Modules.AssetLoader.customAssets.fail);
+                        SoundEffectsManager.play("fail");
                         return;
                     }
                     var dyingTarget = CachedPlayer.LocalPlayer.PlayerControl;

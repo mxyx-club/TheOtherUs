@@ -88,7 +88,7 @@ public static class CachedPlayerPatches
         {
             if (!cachedPlayer.PlayerControl || !cachedPlayer.PlayerPhysics || !cachedPlayer.NetTransform || !cachedPlayer.transform)
             {
-				Error($"CachedPlayer {cachedPlayer.PlayerControl.name} has null fields");
+                TheOtherRolesPlugin.Logger.LogError($"CachedPlayer {cachedPlayer.PlayerControl.name} has null fields");
             }
         }
 #endif

@@ -4,7 +4,6 @@ using System.Linq;
 using AmongUs.GameOptions;
 using Hazel;
 using Reactor.Utilities.Extensions;
-using TheOtherRoles.Modules;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -246,7 +245,7 @@ namespace TheOtherRoles.CustomGameModes
                         isCurrentlyRevealed.Remove(pc.PlayerId);
                         revealRenderer.Remove(pc.PlayerId);
                         poolablePlayer.gameObject.SetActive(true);
-                        SoundEffectsManager.play(AssetLoader.customAssets.morphlingMorph);
+                        SoundEffectsManager.play("morphlingMorph");
                     }
                 }
             }

@@ -16,23 +16,41 @@ namespace TheOtherRoles
         public static void Load()
         {
             soundEffects = new Dictionary<string, AudioClip>();
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string[] resourceNames = assembly.GetManifestResourceNames();
+            foreach (string resourceName in resourceNames)
+            {
+                if (resourceName.Contains("TheOtherRoles.Resources.SoundEffects.") && resourceName.Contains(".raw"))
+                {
+                    soundEffects.Add(resourceName, loadAudioClipFromResources(resourceName));
+                }
+            }
         }
 
-        public static void play(AudioClip audioClip, float volume = 0.8f, bool loop = false)
+        public static AudioClip get(string path)
+        {
+            // Convenience: As as SoundEffects are stored in the same folder, allow using just the name as well
+            if (!path.Contains(".")) path = "TheOtherRoles.Resources.SoundEffects." + path + ".raw";
+            AudioClip returnValue;
+            return soundEffects.TryGetValue(path, out returnValue) ? returnValue : null;
+        }
+
+
+        public static void play(string path, float volume = 0.8f, bool loop = false)
         {
             if (!TORMapOptions.enableSoundEffects) return;
-            AudioClip clipToPlay = audioClip;
-            stop(audioClip);
+            AudioClip clipToPlay = get(path);
+            stop(path);
             if (Constants.ShouldPlaySfx() && clipToPlay != null)
             {
                 AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, volume);
                 source.loop = loop;
             }
         }
-        public static void playAtPosition(AudioClip audioClip, Vector2 position, float maxDuration = 15f, float range = 5f, bool loop = false)
+        public static void playAtPosition(string path, Vector2 position, float maxDuration = 15f, float range = 5f, bool loop = false)
         {
             if (!TORMapOptions.enableSoundEffects || !Constants.ShouldPlaySfx()) return;
-            AudioClip clipToPlay = audioClip;
+            AudioClip clipToPlay = get(path);
 
             AudioSource source = SoundManager.Instance.PlaySound(clipToPlay, false, 1f);
             source.loop = loop;
@@ -55,16 +73,17 @@ namespace TheOtherRoles
             })));
         }
 
-        public static void stop(AudioClip audioClip)
+        public static void stop(string path)
         {
-            var soundToStop = audioClip;
+            var soundToStop = get(path);
             if (soundToStop != null)
                 if (Constants.ShouldPlaySfx()) SoundManager.Instance.StopSound(soundToStop);
         }
 
-		public static void stopAll()
-		{
-			SoundManager.Instance.StopAllSound();
-		}
-	}
+        public static void stopAll()
+        {
+            if (soundEffects == null) return;
+            foreach (var path in soundEffects.Keys) stop(path);
+        }
+    }
 }
