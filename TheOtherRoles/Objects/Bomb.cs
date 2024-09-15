@@ -68,7 +68,7 @@ public class Bomb
                 if ((int)x != 1) return;
                 bomb.SetActive(true);
                 background.SetActive(true);
-                SoundEffectsManager.playAtPosition("bombFuseBurning", p, Terrorist.destructionTime, Terrorist.hearRange,
+                SoundEffectsManager.playAtPosition(Modules.AssetLoader.customAssets.bombFuseBurning, p, Terrorist.destructionTime, Terrorist.hearRange,
                     true);
                 Terrorist.isActive = true;
 
@@ -114,7 +114,7 @@ public class Bomb
                     Terrorist.terrorist);
             }
 
-            SoundEffectsManager.playAtPosition("bombExplosion", position, range: Terrorist.hearRange);
+            SoundEffectsManager.playAtPosition(Modules.AssetLoader.customAssets.bombExplosion, position, range: Terrorist.hearRange);
         }
 
         Terrorist.clearBomb();

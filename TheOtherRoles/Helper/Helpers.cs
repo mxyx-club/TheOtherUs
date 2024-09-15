@@ -1000,7 +1000,7 @@ public static class Helpers
             writer.Write(killer.PlayerId);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.shieldedMurderAttempt(killer.PlayerId);
-            SoundEffectsManager.play("fail");
+            SoundEffectsManager.play(AssetLoader.customAssets.fail);
             return MurderAttemptResult.SuppressKill;
         }
 

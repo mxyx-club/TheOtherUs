@@ -9,6 +9,7 @@ using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.Objects.CustomButton;
 using static TheOtherRoles.TheOtherRoles;
+using static TheOtherRoles.Modules.AssetLoader;
 
 namespace TheOtherRoles
 {
@@ -247,7 +248,7 @@ namespace TheOtherRoles
             timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
             timeMasterShieldButton.isEffectActive = false;
             timeMasterShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-            SoundEffectsManager.stop("timemasterShield");
+            SoundEffectsManager.stop(customAssets.timemasterShield);
         }
 
         public static void resetHuntedRewindButton()
@@ -255,7 +256,7 @@ namespace TheOtherRoles
             huntedShieldButton.Timer = huntedShieldButton.MaxTimer;
             huntedShieldButton.isEffectActive = false;
             huntedShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-            SoundEffectsManager.stop("timemasterShield");
+            SoundEffectsManager.stop(customAssets.timemasterShield);
         }
 
         private static void addReplacementHandcuffedButton(CustomButton button, Vector3? positionOffset = null, Func<bool> couldUse = null)
@@ -376,7 +377,7 @@ namespace TheOtherRoles
                     MessageWriter usedRepairWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.EngineerUsedRepair, SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(usedRepairWriter);
                     RPCProcedure.engineerUsedRepair();
-                    SoundEffectsManager.play("engineerRepair");
+                    SoundEffectsManager.play(customAssets.engineerRepair);
                     foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                     {
                         if (task.TaskType == TaskTypes.FixLights)
@@ -457,7 +458,7 @@ namespace TheOtherRoles
                                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                                     RPCProcedure.cleanBody(playerInfo.PlayerId, Janitor.janitor.PlayerId);
                                     janitorCleanButton.Timer = janitorCleanButton.MaxTimer;
-                                    SoundEffectsManager.play("cleanerClean");
+                                    SoundEffectsManager.play(customAssets.cleanerClean);
 
                                     break;
                                 }
@@ -611,7 +612,7 @@ namespace TheOtherRoles
                     Deputy.currentTarget = null;
                     deputyHandcuffButton.Timer = deputyHandcuffButton.MaxTimer;
 
-                    SoundEffectsManager.play("deputyHandcuff");
+                    SoundEffectsManager.play(customAssets.deputyHandcuff);
                 },
                 () => { return ((Deputy.deputy != null && Deputy.deputy == CachedPlayer.LocalPlayer.PlayerControl) || (Sheriff.sheriff != null && Sheriff.sheriff == CachedPlayer.LocalPlayer.PlayerControl && Sheriff.sheriff == Sheriff.formerDeputy && Deputy.keepsHandcuffsOnPromotion)) && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -640,7 +641,7 @@ namespace TheOtherRoles
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TimeMasterShield, SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.timeMasterShield();
-                    SoundEffectsManager.play("timemasterShield");
+                    SoundEffectsManager.play(customAssets.timemasterShield);
                 },
                 () => { return TimeMaster.timeMaster != null && TimeMaster.timeMaster == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
@@ -659,7 +660,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-                    SoundEffectsManager.stop("timemasterShield");
+                    SoundEffectsManager.stop(customAssets.timemasterShield);
 
                 }
             );
@@ -707,7 +708,7 @@ namespace TheOtherRoles
                         RPCProcedure.medicSetShielded(Medic.currentTarget.PlayerId);
                     Medic.meetingAfterShielding = false;
 
-                    SoundEffectsManager.play("medicShield");
+                    SoundEffectsManager.play(customAssets.medicShield);
                 },
                 () => { return Medic.medic != null && Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -734,7 +735,7 @@ namespace TheOtherRoles
                     writer.Write(Shifter.currentTarget.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setFutureShifted(Shifter.currentTarget.PlayerId);
-                    SoundEffectsManager.play("shifterShift");
+                    SoundEffectsManager.play(customAssets.shifterShift);
                 },
                 () => { return Shifter.shifter != null && Shifter.shifter == CachedPlayer.LocalPlayer.PlayerControl && Shifter.futureShift == null && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -757,7 +758,7 @@ namespace TheOtherRoles
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.Disperse, SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.disperse();
-                    SoundEffectsManager.play("disperserDisperse");
+                    SoundEffectsManager.play(customAssets.disperserDisperse);
 
                     disperserDisperseButton.Timer = disperserDisperseButton.MaxTimer;
                 },
@@ -799,14 +800,14 @@ namespace TheOtherRoles
                         RPCProcedure.morphlingMorph(Morphling.sampledTarget.PlayerId);
                         Morphling.sampledTarget = null;
                         morphlingButton.EffectDuration = Morphling.duration;
-                        SoundEffectsManager.play("morphlingMorph");
+                        SoundEffectsManager.play(customAssets.morphlingMorph);
                     }
                     else if (Morphling.currentTarget != null)
                     {
                         Morphling.sampledTarget = Morphling.currentTarget;
                         morphlingButton.Sprite = Morphling.getMorphSprite();
                         morphlingButton.EffectDuration = 1f;
-                        SoundEffectsManager.play("morphlingSample");
+                        SoundEffectsManager.play(customAssets.morphlingSample);
 
                         // Add poolable player to the button so that the target outfit is shown
                         setButtonTargetDisplay(Morphling.sampledTarget, morphlingButton);
@@ -840,7 +841,7 @@ namespace TheOtherRoles
                     {
                         morphlingButton.Timer = morphlingButton.MaxTimer;
                         morphlingButton.Sprite = Morphling.getSampleSprite();
-                        SoundEffectsManager.play("morphlingMorph");
+                        SoundEffectsManager.play(customAssets.morphlingMorph);
 
                         // Reset the poolable player
                         setButtonTargetDisplay(null);
@@ -856,7 +857,7 @@ namespace TheOtherRoles
                     writer.Write(1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.camouflagerCamouflage(1);
-                    SoundEffectsManager.play("morphlingMorph");
+                    SoundEffectsManager.play(customAssets.morphlingMorph);
 
                 },
                 () => { return Camouflager.camouflager != null && Camouflager.camouflager == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
@@ -876,7 +877,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     camouflagerButton.Timer = camouflagerButton.MaxTimer;
-                    SoundEffectsManager.play("morphlingMorph");
+                    SoundEffectsManager.play(customAssets.morphlingMorph);
                 }
             );
 
@@ -885,7 +886,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     Hacker.hackerTimer = Hacker.duration;
-                    SoundEffectsManager.play("hackerHack");
+                    SoundEffectsManager.play(customAssets.hackerHack);
                 },
                 () => { return Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => { return true; },
@@ -1037,7 +1038,7 @@ namespace TheOtherRoles
                     writer.Write(Tracker.currentTarget.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.trackerUsedTracker(Tracker.currentTarget.PlayerId);
-                    SoundEffectsManager.play("trackerTrackPlayer");
+                    SoundEffectsManager.play(customAssets.trackerTrackPlayer);
                 },
                 () => { return Tracker.tracker != null && Tracker.tracker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -1057,7 +1058,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     Tracker.corpsesTrackingTimer = Tracker.corpsesTrackingDuration;
-                    SoundEffectsManager.play("trackerTrackCorpses");
+                    SoundEffectsManager.play(customAssets.trackerTrackCorpses);
                 },
                 () => { return Tracker.tracker != null && Tracker.tracker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && Tracker.canTrackCorpses; },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
@@ -1187,7 +1188,7 @@ namespace TheOtherRoles
                                     }
                                 }
                             })));
-                            SoundEffectsManager.play("vampireBite");
+                            SoundEffectsManager.play(customAssets.vampireBite);
 
                             vampireKillButton.HasEffect = true; // Trigger effect on this click
                         }
@@ -1260,7 +1261,7 @@ namespace TheOtherRoles
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     RPCProcedure.placeGarlic(buff);
-                    SoundEffectsManager.play("garlic");
+                    SoundEffectsManager.play(customAssets.garlic);
                 },
                 () => { return Vampire.garlicButton && !Vampire.localPlacedGarlic && !CachedPlayer.LocalPlayer.Data.IsDead && Vampire.garlicsActive && !HideNSeek.isHideNSeekGM && !PropHunt.isPropHuntGM; },
                 () => { return Vampire.garlicButton && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Vampire.localPlacedGarlic; },
@@ -1286,7 +1287,7 @@ namespace TheOtherRoles
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     RPCProcedure.placePortal(buff);
-                    SoundEffectsManager.play("tricksterPlaceBox");
+                    SoundEffectsManager.play(customAssets.tricksterPlaceBox);
                 },
                 () => { return Portalmaker.portalmaker != null && Portalmaker.portalmaker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && Portal.secondPortal == null; },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Portal.secondPortal == null; },
@@ -1323,7 +1324,7 @@ namespace TheOtherRoles
                     RPCProcedure.usePortal(CachedPlayer.LocalPlayer.PlayerId, portalMakerSoloTeleport ? (byte)1 : (byte)0);
                     usePortalButton.Timer = usePortalButton.MaxTimer;
                     portalmakerMoveToPortalButton.Timer = usePortalButton.MaxTimer;
-                    SoundEffectsManager.play("portalUse");
+                    SoundEffectsManager.play(customAssets.portalUse);
                     FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Portal.teleportDuration, new Action<float>((p) =>
                     { // Delayed action
                         CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
@@ -1374,7 +1375,7 @@ namespace TheOtherRoles
                     RPCProcedure.usePortal(CachedPlayer.LocalPlayer.PlayerId, 2);
                     usePortalButton.Timer = usePortalButton.MaxTimer;
                     portalmakerMoveToPortalButton.Timer = usePortalButton.MaxTimer;
-                    SoundEffectsManager.play("portalUse");
+                    SoundEffectsManager.play(customAssets.portalUse);
                     FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Portal.teleportDuration, new Action<float>((p) =>
                     { // Delayed action
                         CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
@@ -1429,7 +1430,7 @@ namespace TheOtherRoles
                     writer.Write(Jackal.currentTarget.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.jackalCreatesSidekick(Jackal.currentTarget.PlayerId);
-                    SoundEffectsManager.play("jackalSidekick");
+                    SoundEffectsManager.play(customAssets.jackalSidekick);
                 },
                 () => { return Jackal.canCreateSidekick && Jackal.jackal != null && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -1684,7 +1685,7 @@ namespace TheOtherRoles
                     writer.Write(Eraser.currentTarget.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.setFutureErased(Eraser.currentTarget.PlayerId);
-                    SoundEffectsManager.play("eraserErase");
+                    SoundEffectsManager.play(customAssets.eraserErase);
                 },
                 () => { return Eraser.eraser != null && Eraser.eraser == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -1713,7 +1714,7 @@ namespace TheOtherRoles
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
                     RPCProcedure.placeJackInTheBox(buff);
-                    SoundEffectsManager.play("tricksterPlaceBox");
+                    SoundEffectsManager.play(customAssets.tricksterPlaceBox);
                 },
                 () => { return Trickster.trickster != null && Trickster.trickster == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && !JackInTheBox.hasJackInTheBoxLimitReached(); },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !JackInTheBox.hasJackInTheBoxLimitReached(); },
@@ -1730,7 +1731,7 @@ namespace TheOtherRoles
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.LightsOut, SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.lightsOut();
-                    SoundEffectsManager.play("lighterLight");
+                    SoundEffectsManager.play(customAssets.lighterLight);
                 },
                 () =>
                 {
@@ -1753,7 +1754,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     lightsOutButton.Timer = lightsOutButton.MaxTimer;
-                    SoundEffectsManager.play("lighterLight");
+                    SoundEffectsManager.play(customAssets.lighterLight);
                 }
             );
 
@@ -1781,7 +1782,7 @@ namespace TheOtherRoles
                                     RPCProcedure.cleanBody(playerInfo.PlayerId, Cleaner.cleaner.PlayerId);
 
                                     Cleaner.cleaner.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
-                                    SoundEffectsManager.play("cleanerClean");
+                                    SoundEffectsManager.play(customAssets.cleanerClean);
                                     break;
                                 }
                             }
@@ -1813,7 +1814,7 @@ namespace TheOtherRoles
                         writer.WriteBytesAndSize(buff);
                         writer.EndMessage();
                         RPCProcedure.yoyoMarkLocation(buff);
-                        SoundEffectsManager.play("tricksterPlaceBox");
+                        SoundEffectsManager.play(customAssets.tricksterPlaceBox);
                         yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
                         yoyoButton.Timer = 10f;
                         yoyoButton.HasEffect = false;
@@ -1838,7 +1839,7 @@ namespace TheOtherRoles
                         yoyoButton.Timer = 10f;
                         yoyoButton.HasEffect = true;
                         yoyoButton.buttonText = "Returning...";
-                        SoundEffectsManager.play("morphlingMorph");
+                        SoundEffectsManager.play(customAssets.morphlingMorph);
                     }
                 },
                 () => { return Yoyo.yoyo != null && Yoyo.yoyo == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
@@ -1898,7 +1899,7 @@ namespace TheOtherRoles
                     yoyoButton.HasEffect = false;
                     yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
                     yoyoButton.buttonText = "Mark Location";
-                    SoundEffectsManager.play("morphlingMorph");
+                    SoundEffectsManager.play(customAssets.morphlingMorph);
                     if (Minigame.Instance)
                     {
                         Minigame.Instance.Close();
@@ -2025,7 +2026,7 @@ namespace TheOtherRoles
                         Warlock.curseVictim = Warlock.currentTarget;
                         warlockCurseButton.Sprite = Warlock.getCurseKillButtonSprite();
                         warlockCurseButton.Timer = 1f;
-                        SoundEffectsManager.play("warlockCurse");
+                        SoundEffectsManager.play(customAssets.warlockCurse);
 
                         // Ghost Info
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable, -1);
@@ -2115,7 +2116,7 @@ namespace TheOtherRoles
                         writer.EndMessage();
                         RPCProcedure.placeCamera(buff);
                     }
-                    SoundEffectsManager.play("securityGuardPlaceCam");  // Same sound used for both types (cam or vent)!
+                    SoundEffectsManager.play(customAssets.securityGuardPlaceCam);  // Same sound used for both types (cam or vent)!
                     securityGuardButton.Timer = securityGuardButton.MaxTimer;
                 },
                 () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
@@ -2239,7 +2240,7 @@ namespace TheOtherRoles
                         checkWatchFlash(Arsonist.currentTarget);
                         Arsonist.douseTarget = Arsonist.currentTarget;
                         arsonistButton.HasEffect = true;
-                        SoundEffectsManager.play("arsonistDouse");
+                        SoundEffectsManager.play(customAssets.arsonistDouse);
                     }
                 },
                 () => { return Arsonist.arsonist != null && Arsonist.arsonist == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
@@ -2303,7 +2304,7 @@ namespace TheOtherRoles
                     if (checkAndDoVetKill(Doomsayer.currentTarget)) return;
 
                     doomsayerButton.Timer = doomsayerButton.MaxTimer;
-                    SoundEffectsManager.play("knockKnock");
+                    SoundEffectsManager.play(customAssets.knockKnock);
                 },
                 () =>
                 {
@@ -2362,7 +2363,7 @@ namespace TheOtherRoles
                                     RPCProcedure.cleanBody(playerInfo.PlayerId, Vulture.vulture.PlayerId);
 
                                     Vulture.cooldown = vultureEatButton.Timer = vultureEatButton.MaxTimer;
-                                    SoundEffectsManager.play("vultureEat");
+                                    SoundEffectsManager.play(customAssets.vultureEat);
                                     break;
                                 }
                             }
@@ -2421,7 +2422,7 @@ namespace TheOtherRoles
                     {
                         Medium.soulTarget = Medium.target;
                         mediumButton.HasEffect = true;
-                        SoundEffectsManager.play("mediumAsk");
+                        SoundEffectsManager.play(customAssets.mediumAsk);
                     }
                 },
                 () => { return Medium.medium != null && Medium.medium == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
@@ -2500,7 +2501,7 @@ namespace TheOtherRoles
 
                         Medium.souls.Remove(target);
                     }
-                    SoundEffectsManager.stop("mediumAsk");
+                    SoundEffectsManager.stop(customAssets.mediumAsk);
                 }
             );
 
@@ -2522,7 +2523,7 @@ namespace TheOtherRoles
 
                         Pursuer.blanks++;
                         pursuerButton.Timer = pursuerButton.MaxTimer;
-                        SoundEffectsManager.play("pursuerBlank");
+                        SoundEffectsManager.play(customAssets.pursuerBlank);
                     }
 
                 },
@@ -2558,7 +2559,7 @@ namespace TheOtherRoles
                         if (checkAndDoVetKill(Witch.currentTarget)) return;
                         checkWatchFlash(Witch.currentTarget);
                         Witch.spellCastingTarget = Witch.currentTarget;
-                        SoundEffectsManager.play("witchSpell");
+                        SoundEffectsManager.play(customAssets.witchSpell);
                     }
                 },
                 () => { return Witch.witch != null && Witch.witch == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
@@ -2828,7 +2829,7 @@ namespace TheOtherRoles
                         checkWatchFlash(Witch.currentTarget);
                         Ninja.ninjaMarked = Ninja.currentTarget;
                         ninjaButton.Timer = 5f;
-                        SoundEffectsManager.play("warlockCurse");
+                        SoundEffectsManager.play(customAssets.warlockCurse);
 
                         // Ghost Info
                         writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable, -1);
@@ -2938,7 +2939,7 @@ namespace TheOtherRoles
                     writer.Write(Cultist.currentTarget.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.cultistCreateImposter(Cultist.currentTarget.PlayerId);
-                    SoundEffectsManager.play("jackalSidekick");
+                    SoundEffectsManager.play(customAssets.jackalSidekick);
                 },
                 () => { return Cultist.needsFollower && Cultist.cultist != null && Cultist.cultist == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () =>
@@ -2969,7 +2970,7 @@ namespace TheOtherRoles
                     writer.EndMessage();
                     RPCProcedure.setTrap(buff);
 
-                    SoundEffectsManager.play("trapperTrap");
+                    SoundEffectsManager.play(customAssets.trapperTrap);
                     trapperButton.Timer = trapperButton.MaxTimer;
                 },
                 () => { return Trapper.trapper != null && Trapper.trapper == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
@@ -3001,7 +3002,7 @@ namespace TheOtherRoles
                         writer.EndMessage();
                         RPCProcedure.placeBomb(buff);
 
-                        SoundEffectsManager.play("trapperTrap");
+                        SoundEffectsManager.play(customAssets.trapperTrap);
                     }
 
                     if (Terrorist.selfExplosion)
@@ -3204,7 +3205,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     Hunter.lightActive.Add(CachedPlayer.LocalPlayer.PlayerId);
-                    SoundEffectsManager.play("lighterLight");
+                    SoundEffectsManager.play(customAssets.lighterLight);
 
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareTimer, SendOption.Reliable, -1);
                     writer.Write(Hunter.lightPunish);
@@ -3229,7 +3230,7 @@ namespace TheOtherRoles
                 {
                     Hunter.lightActive.Remove(CachedPlayer.LocalPlayer.PlayerId);
                     hunterLighterButton.Timer = hunterLighterButton.MaxTimer;
-                    SoundEffectsManager.play("lighterLight");
+                    SoundEffectsManager.play(customAssets.lighterLight);
                 }
             );
 
@@ -3277,7 +3278,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     Hunter.arrowActive = true;
-                    SoundEffectsManager.play("trackerTrackPlayer");
+                    SoundEffectsManager.play(customAssets.trackerTrackPlayer);
 
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareTimer, SendOption.Reliable, -1);
                     writer.Write(Hunter.ArrowPunish);
@@ -3302,7 +3303,7 @@ namespace TheOtherRoles
                 {
                     Hunter.arrowActive = false;
                     hunterArrowButton.Timer = hunterArrowButton.MaxTimer;
-                    SoundEffectsManager.play("trackerTrackPlayer");
+                    SoundEffectsManager.play(customAssets.trackerTrackPlayer);
                 }
             );
 
@@ -3313,7 +3314,7 @@ namespace TheOtherRoles
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.huntedShield(CachedPlayer.LocalPlayer.PlayerId);
-                    SoundEffectsManager.play("timemasterShield");
+                    SoundEffectsManager.play(customAssets.timemasterShield);
 
                     Hunted.shieldCount--;
                 },
@@ -3338,7 +3339,7 @@ namespace TheOtherRoles
                 () =>
                 {
                     huntedShieldButton.Timer = huntedShieldButton.MaxTimer;
-                    SoundEffectsManager.stop("timemasterShield");
+                    SoundEffectsManager.stop(customAssets.timemasterShield);
 
                 }
             );
@@ -3365,7 +3366,7 @@ namespace TheOtherRoles
                         writer.Write(disguiseTarget.gameObject.transform.position.x);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.propHuntSetProp(CachedPlayer.LocalPlayer.PlayerId, disguiseTarget.gameObject.name, disguiseTarget.gameObject.transform.position.x);
-                        SoundEffectsManager.play("morphlingMorph");
+                        SoundEffectsManager.play(customAssets.morphlingMorph);
                         propDisguiseButton.Timer = 1f;
                     }
                 },
@@ -3448,7 +3449,7 @@ namespace TheOtherRoles
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.propHuntSetInvis(CachedPlayer.LocalPlayer.PlayerId);
-                    SoundEffectsManager.play("morphlingMorph");
+                    SoundEffectsManager.play(customAssets.morphlingMorph);
                 },
                 () => { return PropHunt.isPropHuntGM && !PlayerControl.LocalPlayer.Data.IsDead && !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PropHunt.enableInvis; },
                 () => { return PropHunt.currentObject.ContainsKey(PlayerControl.LocalPlayer.PlayerId); },
@@ -3461,7 +3462,7 @@ namespace TheOtherRoles
                 5f,
                 () =>
                 {
-                    SoundEffectsManager.play("morphlingMorph");
+                    SoundEffectsManager.play(customAssets.morphlingMorph);
                     propHuntInvisButton.Timer = propHuntInvisButton.MaxTimer;
                 },
                 buttonText: "INVIS"
@@ -3474,7 +3475,7 @@ namespace TheOtherRoles
                     writer.Write(CachedPlayer.LocalPlayer.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     RPCProcedure.propHuntSetSpeedboost(CachedPlayer.LocalPlayer.PlayerId);
-                    SoundEffectsManager.play("timemasterShield");
+                    SoundEffectsManager.play(customAssets.timemasterShield);
                 },
                 () => { return PropHunt.isPropHuntGM && !PlayerControl.LocalPlayer.Data.IsDead && !PlayerControl.LocalPlayer.Data.Role.IsImpostor && PropHunt.enableSpeedboost; },
                 () => { return true; },
@@ -3487,7 +3488,7 @@ namespace TheOtherRoles
                 5f,
                 () =>
                 {
-                    SoundEffectsManager.stop("timemasterShield");
+                    SoundEffectsManager.stop(customAssets.timemasterShield);
                     propHuntSpeedboostButton.Timer = propHuntSpeedboostButton.MaxTimer;
                 },
                 buttonText: "BOOST"
@@ -3534,7 +3535,7 @@ namespace TheOtherRoles
             propHuntFindButton = new CustomButton(
                 () =>
                 {
-                    SoundEffectsManager.play("timemasterShield");
+                    SoundEffectsManager.play(customAssets.timemasterShield);
                 },
                 () => { return PropHunt.isPropHuntGM && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.Data.Role.IsImpostor; },
                 () => { return true; },
@@ -3547,7 +3548,7 @@ namespace TheOtherRoles
                 5f,
                 () =>
                 {
-                    SoundEffectsManager.stop("timemasterShield");
+                    SoundEffectsManager.stop(customAssets.timemasterShield);
                     propHuntFindButton.Timer = propHuntFindButton.MaxTimer;
                     propHuntFindButton.isEffectActive = false;
                 },

@@ -92,7 +92,7 @@ namespace TheOtherRoles.Objects
             if (playerId == CachedPlayer.LocalPlayer.PlayerId || playerId == Trapper.trapper.PlayerId)
             {
                 t.trap.SetActive(true);
-                SoundEffectsManager.play("trapperTrap");
+                SoundEffectsManager.play(Modules.AssetLoader.customAssets.trapperTrap);
             }
             player.moveable = false;
             player.NetTransform.Halt();
