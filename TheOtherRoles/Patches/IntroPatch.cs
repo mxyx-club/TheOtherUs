@@ -265,9 +265,9 @@ class IntroPatch
         public static void SetRoleTexts(IntroCutscene __instance)
         {
             // Don't override the intro of the vanilla roles
-            List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
-            RoleInfo roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
-            RoleInfo modifierInfo = infos.Where(info => info.isModifier).FirstOrDefault();
+            var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+            var roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
+            var modifierInfo = infos.Where(info => info.isModifier).FirstOrDefault();
 
             if (EventUtility.isEnabled)
             {
@@ -280,6 +280,7 @@ class IntroPatch
             }
 
             __instance.RoleBlurbText.text = "";
+
             if (roleInfo != null)
             {
                 __instance.RoleText.text = roleInfo.name;
@@ -287,6 +288,21 @@ class IntroPatch
                 __instance.RoleBlurbText.text = roleInfo.introDescription;
                 __instance.RoleBlurbText.color = roleInfo.color;
             }
+
+            if (Deputy.knowsSheriff && Deputy.deputy != null && Sheriff.sheriff != null)
+            {
+                if (infos.Any(info => info.roleId == RoleId.Sheriff))
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\nYour Deputy is {Deputy.deputy?.Data?.PlayerName ?? ""}");
+                else if (infos.Any(info => info.roleId == RoleId.Deputy))
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\nYour Sheriff is {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
+            }
+            else if (Lawyer.lawyer != null && Lawyer.target != null && infos.Any(info => info.roleId == RoleId.Lawyer))
+            {
+                __instance.RoleBlurbText.text = Lawyer.isProsecutor
+                    ? cs(Lawyer.color, $"\nVote {Lawyer.target?.Data?.PlayerName ?? " Out!"}")
+                    : cs(Lawyer.color, $"\nYour target is {Lawyer.target?.Data?.PlayerName ?? ""}");
+            }
+
             if (modifierInfo != null)
             {
                 if (modifierInfo.roleId != RoleId.Lover)
@@ -296,13 +312,6 @@ class IntroPatch
                     PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
                     __instance.RoleBlurbText.text += cs(Lovers.color, $"\n♥ You are in love with {otherLover?.Data?.PlayerName ?? ""} ♥");
                 }
-            }
-            if (Deputy.knowsSheriff && Deputy.deputy != null && Sheriff.sheriff != null)
-            {
-                if (infos.Any(info => info.roleId == RoleId.Sheriff))
-                    __instance.RoleBlurbText.text += cs(Sheriff.color, $"\nYour Deputy is {Deputy.deputy?.Data?.PlayerName ?? ""}");
-                else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text += cs(Sheriff.color, $"\nYour Sheriff is {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
             }
         }
         public static bool Prefix(IntroCutscene __instance)
