@@ -180,6 +180,7 @@ public class CustomOptionHolder
     public static CustomOption sheriffCanKillThief;
     public static CustomOption sheriffCanKillAmnesiac;
     public static CustomOption sheriffCanKillPursuer;
+    public static CustomOption sheriffCanKillDoomsayer;
     public static CustomOption deputySpawnRate;
 
     public static CustomOption deputyNumberOfHandcuffs;
@@ -797,7 +798,7 @@ public class CustomOptionHolder
 
         jackalSpawnRate = Create(20040, Types.Neutral, cs(Jackal.color, "Jackal"), rates, null, true);
         jackalKillCooldown = Create(20041, Types.Neutral, "Jackal/Sidekick Kill Cooldown", 30f, 10f, 60f, 2.5f, jackalSpawnRate);
-        jackalChanceSwoop = Create(20042, Types.Neutral, "Chance That Jackal Can Swoop", rates, jackalSpawnRate);
+        jackalChanceSwoop = Create(20042, Types.Neutral, cs(Swooper.color, "Chance That Jackal Can Swoop"), rates, jackalSpawnRate);
         swooperCooldown = Create(20043, Types.Neutral, "Swoop Cooldown", 30f, 10f, 60f, 2.5f, jackalChanceSwoop);
         swooperDuration = Create(20044, Types.Neutral, "Swoop Duration", 10f, 1f, 20f, 0.5f, jackalChanceSwoop);
         jackalCanUseVents = Create(20045, Types.Neutral, "Jackal Can Use Vents", true, jackalSpawnRate);
@@ -894,8 +895,9 @@ public class CustomOptionHolder
         sheriffCanKillLawyer = Create(30049, Types.Crewmate, "Sheriff Can Kill " + cs(Lawyer.color, "Lawyer"), false, sheriffCanKillNeutrals);
         sheriffCanKillThief = Create(30050, Types.Crewmate, "Sheriff Can Kill " + cs(Thief.color, "Thief"), false, sheriffCanKillNeutrals);
         sheriffCanKillPursuer = Create(30051, Types.Crewmate, "Sheriff Can Kill " + cs(Pursuer.color, "Pursuer"), false, sheriffCanKillNeutrals);
+        sheriffCanKillDoomsayer = Create(30052, Types.Crewmate, "Sheriff Can Kill " + cs(Doomsayer.color, "Doomsayer"), false, sheriffCanKillNeutrals);
 
-        deputySpawnRate = Create(30060, Types.Crewmate, "Sheriff Has A Deputy", rates, sheriffSpawnRate);
+        deputySpawnRate = Create(30060, Types.Crewmate, cs(Deputy.color, "Sheriff Has A Deputy"), rates, sheriffSpawnRate);
         deputyNumberOfHandcuffs = Create(30061, Types.Crewmate, "Deputy Number Of Handcuffs", 3f, 1f, 10f, 1f, deputySpawnRate);
         deputyHandcuffCooldown = Create(30062, Types.Crewmate, "Handcuff Cooldown", 30f, 10f, 60f, 2.5f, deputySpawnRate);
         deputyHandcuffDuration = Create(30063, Types.Crewmate, "Handcuff Duration", 15f, 5f, 60f, 2.5f, deputySpawnRate);

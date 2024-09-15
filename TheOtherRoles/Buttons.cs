@@ -543,6 +543,7 @@ static class HudManagerStartPatch
                         (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillLawyer && !Lawyer.isProsecutor) ||
                         (Thief.thief == Sheriff.currentTarget && Sheriff.canKillThief) ||
                         (Amnisiac.amnisiac == Sheriff.currentTarget && Sheriff.canKillAmnesiac) ||
+                        (Doomsayer.doomsayer == Sheriff.currentTarget && Sheriff.canKillDoomsayer) ||
                         (Lawyer.lawyer == Sheriff.currentTarget && Sheriff.canKillProsecutor && Lawyer.isProsecutor) ||
                         (Pursuer.pursuer == Sheriff.currentTarget && Sheriff.canKillPursuer)))))
                     {
@@ -1468,20 +1469,24 @@ static class HudManagerStartPatch
             KeyCode.Q
         );
 
-        //if (rnd.NextDouble() < Jackal.chanceSwoop) {
         swooperSwoopButton = new CustomButton(
             () =>
             { /* On Use */
-                MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
+                var invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.SetSwoop, SendOption.Reliable, -1);
                 invisibleWriter.Write(Jackal.jackal.PlayerId);
                 invisibleWriter.Write(byte.MinValue);
                 AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
                 RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MinValue);
             },
-            () => { /* Can See */ return Jackal.canSwoop && Jackal.jackal != null && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () => 
+            {
+                /* Can See */ 
+                return Jackal.jackal != null && Jackal.canSwoop && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl
+                       && !CachedPlayer.LocalPlayer.Data.IsDead; 
+            },
             () =>
             {  /* On Click */
-                Swooper.swooper = Jackal.jackal;
                 return Jackal.canSwoop && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () =>
@@ -1492,9 +1497,9 @@ static class HudManagerStartPatch
                 Jackal.isInvisable = false;
             },
             Jackal.getSwoopButtonSprite(),
-            Jackal.getSwooperSwoopVector(),
+            ButtonPositions.upperRowLeft,
             __instance,
-            KeyCode.V,
+            KeyCode.C,
             true,
             Jackal.duration,
             () => { swooperSwoopButton.Timer = swooperSwoopButton.MaxTimer; }

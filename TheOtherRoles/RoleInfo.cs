@@ -47,7 +47,6 @@ public class RoleInfo
     public static RoleInfo doomsayer = new("Doomsayer", Doomsayer.color, "Guess People's Roles To Win!", "Win by guessing player's roles", RoleId.Doomsayer, true);
     public static RoleInfo jackal = new("Jackal", Jackal.color, "Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win", "Kill everyone", RoleId.Jackal, true);
     public static RoleInfo sidekick = new("Sidekick", Sidekick.color, "Help your Jackal to kill everyone", "Help your Jackal to kill everyone", RoleId.Sidekick, true);
-    public static RoleInfo swooper = new("Swooper", Swooper.color, "Turn Invisible and kill everyone", "Turn Invisible", RoleId.Swooper, false, true);
     public static RoleInfo arsonist = new("Arsonist", Arsonist.color, "Let them burn", "Let them burn", RoleId.Arsonist, true);
     public static RoleInfo werewolf = new("Werewolf", Werewolf.color, "Rampage and kill everyone", "Rampage and kill everyone", RoleId.Werewolf, true);
     public static RoleInfo juggernaut = new("Juggernaut", Juggernaut.color, "Your Power Grows With Every Kill", "With each kill your kill cooldown decreases", RoleId.Juggernaut, true);
@@ -153,7 +152,6 @@ public class RoleInfo
             juggernaut,
             doomsayer,
             thief,
-            swooper,
 
             //Crewmate
             crewmate,
@@ -264,7 +262,6 @@ public class RoleInfo
             if (p == Tunneler.tunneler) infos.Add(tunneler);
             if (p == Slueth.slueth) infos.Add(slueth);
             if (p == Giant.giant) infos.Add(giant);
-            if (p == Swooper.swooper) infos.Add(swooper);
             if (p == Disperser.disperser) infos.Add(disperser);
             if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
             if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
@@ -356,6 +353,8 @@ public class RoleInfo
         if (Lawyer.target != null && p.PlayerId == Lawyer.target.PlayerId && CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target)
             roleName += useColors ? cs(Pursuer.color, " §") : " §";
         if (HandleGuesser.isGuesserGm && HandleGuesser.isGuesser(p.PlayerId)) roleName += " (Guesser)";
+
+        if (p == Jackal.jackal && Jackal.canSwoop) roleName += " (Swooper)";
 
         if (!suppressGhostInfo && p != null)
         {

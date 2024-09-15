@@ -70,8 +70,6 @@ class PropHunt
     public static GameObject currentTarget;
     private static GameObject poolablesBackground;
 
-    public static float dangerMeterActive;
-
     private static List<GameObject> duplicatedCollider = new();
     private static GameObject introObject;
 

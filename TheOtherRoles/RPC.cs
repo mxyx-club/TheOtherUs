@@ -218,6 +218,7 @@ internal enum CustomRPC
     DoomsayerMeeting,
     PlaceBomb,
     DefuseBomb,
+    JackalCanSwooper,
     //ShareRoom,
 
     // Gamemode
@@ -1633,6 +1634,11 @@ public static class RPCProcedure
             Deputy.deputy = null;
             // No clear and reload, as we need to keep the number of handcuffs left etc
         }
+    }
+
+    public static void jackalCanSwooper(bool chance)
+    {
+        Jackal.canSwoop = chance;
     }
 
     public static void jackalCreatesSidekick(byte targetId)
@@ -3282,6 +3288,11 @@ internal class RPCHandlerPatch
             case CustomRPC.JackalCreatesSidekick:
                 RPCProcedure.jackalCreatesSidekick(reader.ReadByte());
                 break;
+
+            case CustomRPC.JackalCanSwooper:
+                RPCProcedure.jackalCanSwooper(reader.ReadBoolean());
+                break;
+
             case CustomRPC.SidekickPromotes:
                 RPCProcedure.sidekickPromotes();
                 break;

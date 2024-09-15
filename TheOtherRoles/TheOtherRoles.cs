@@ -496,6 +496,7 @@ public static class TheOtherRoles
         public static bool canKillLawyer;
         public static bool canKillJester;
         public static bool canKillPursuer;
+        public static bool canKillDoomsayer;
         public static bool canKillVulture;
         public static bool canKillThief;
         public static bool canKillAmnesiac;
@@ -528,6 +529,7 @@ public static class TheOtherRoles
             canKillArsonist = CustomOptionHolder.sheriffCanKillArsonist.getBool();
             canKillLawyer = CustomOptionHolder.sheriffCanKillLawyer.getBool();
             canKillJester = CustomOptionHolder.sheriffCanKillJester.getBool();
+            canKillDoomsayer = CustomOptionHolder.sheriffCanKillDoomsayer.getBool();
             canKillPursuer = CustomOptionHolder.sheriffCanKillPursuer.getBool();
             canKillVulture = CustomOptionHolder.sheriffCanKillVulture.getBool();
             canKillThief = CustomOptionHolder.sheriffCanKillThief.getBool();
@@ -1364,26 +1366,28 @@ public static class Jackal
     public static List<PlayerControl> formerJackals = new();
 
     public static float cooldown = 30f;
-    public static bool isInvisable;
-    public static float duration = 5f;
-    public static float swoopCooldown = 30f;
-    public static float swoopTimer;
     public static float createSidekickCooldown = 30f;
     public static bool canUseVents = true;
     public static bool canCreateSidekick = true;
     public static Sprite buttonSprite;
-    public static Sprite buttonSprite2;
+    public static Sprite swoopButton;
     public static bool jackalPromotedFromSidekickCanCreateSidekick = true;
     public static bool canCreateSidekickFromImpostor = true;
     public static bool killFakeImpostor;
     public static bool hasImpostorVision;
-    public static bool wasTeamRed;
     public static bool ImpostorCanFindSidekick;
     public static bool canSabotage;
+
+    public static bool wasTeamRed;
     public static bool wasImpostor;
     public static bool wasSpy;
+
     public static float chanceSwoop;
     public static bool canSwoop;
+    public static float swoopTimer;
+    public static float swoopCooldown = 30f;
+    public static float duration = 5f;
+    public static bool isInvisable;
 
 
     public static Sprite getSidekickButtonSprite()
@@ -1394,13 +1398,19 @@ public static class Jackal
     }
     public static Sprite getSwoopButtonSprite()
     {
-        if (buttonSprite2) return buttonSprite2;
-        buttonSprite2 = loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
-        return buttonSprite2;
+        if (swoopButton) return swoopButton;
+        swoopButton = loadSpriteFromResources("TheOtherRoles.Resources.Swoop.png", 115f);
+        return swoopButton;
     }
-    public static Vector3 getSwooperSwoopVector()
+
+    public static void setSwoop()
     {
-        return CustomButton.ButtonPositions.upperRowLeft; //brb
+        var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
+        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+                    (byte)CustomRPC.JackalCanSwooper, SendOption.Reliable);
+        writer.Write(chance);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.jackalCanSwooper(chance);
     }
 
     public static void removeCurrentJackal()
@@ -1418,32 +1428,23 @@ public static class Jackal
         jackal = null;
         currentTarget = null;
         fakeSidekick = null;
-        isInvisable = false;
+        formerJackals.Clear();
         cooldown = CustomOptionHolder.jackalKillCooldown.getFloat();
         createSidekickCooldown = CustomOptionHolder.jackalCreateSidekickCooldown.getFloat();
         canUseVents = CustomOptionHolder.jackalCanUseVents.getBool();
         canSabotage = CustomOptionHolder.jackalCanUseSabo.getBool();
         canCreateSidekick = CustomOptionHolder.jackalCanCreateSidekick.getBool();
         jackalPromotedFromSidekickCanCreateSidekick = CustomOptionHolder.jackalPromotedFromSidekickCanCreateSidekick.getBool();
-        swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
         ImpostorCanFindSidekick = CustomOptionHolder.jackalImpostorCanFindSidekick.getBool();
-        duration = CustomOptionHolder.swooperDuration.getFloat();
         canCreateSidekickFromImpostor = CustomOptionHolder.jackalCanCreateSidekickFromImpostor.getBool();
         killFakeImpostor = CustomOptionHolder.jackalKillFakeImpostor.getBool();
-        formerJackals.Clear();
         hasImpostorVision = CustomOptionHolder.jackalAndSidekickHaveImpostorVision.getBool();
         wasTeamRed = wasImpostor = wasSpy = false;
+
+        swoopCooldown = CustomOptionHolder.swooperCooldown.getFloat();
         chanceSwoop = CustomOptionHolder.jackalChanceSwoop.getSelection() / 10f;
-        if (rnd.NextDouble() < chanceSwoop)
-        {
-            canSwoop = true;
-        }
-        else
-        {
-            canSwoop = false;
-        }
-
-
+        duration = CustomOptionHolder.swooperDuration.getFloat();
+        isInvisable = false;
     }
 
 }
