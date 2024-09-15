@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using AmongUs.GameOptions;
 using Hazel;
@@ -15,7 +16,8 @@ namespace TheOtherRoles.Patches
     {
         public static void Postfix(ref int __result)
         {
-            if (CustomOptionHolder.activateRoles.getBool() && GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
+            // Deactivate Vanilla Roles if the mod roles are active
+            if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0;
         }
     }
 
@@ -62,8 +64,7 @@ namespace TheOtherRoles.Patches
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.resetVariables();
             if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.PropHunt || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return; // Don't assign Roles in Hide N Seek
-            if (CustomOptionHolder.activateRoles.getBool()) // Don't assign Roles in Tutorial or if deactivated
-                assignRoles();
+            assignRoles();
         }
 
         private static void assignRoles()
@@ -88,36 +89,21 @@ namespace TheOtherRoles.Patches
             List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
             impostors.RemoveAll(x => !x.Data.Role.IsImpostor);
 
-            var crewmateMin = CustomOptionHolder.crewmateRolesCountMin.getSelection();
-            var crewmateMax = CustomOptionHolder.crewmateRolesCountMax.getSelection();
             var neutralMin = CustomOptionHolder.neutralRolesCountMin.getSelection();
             var neutralMax = CustomOptionHolder.neutralRolesCountMax.getSelection();
-            var impostorMin = CustomOptionHolder.impostorRolesCountMin.getSelection();
-            var impostorMax = CustomOptionHolder.impostorRolesCountMax.getSelection();
+            var impostorNum = TORMapOptions.NumImpostors;
 
             // Make sure min is less or equal to max
-            if (crewmateMin > crewmateMax) crewmateMin = crewmateMax;
             if (neutralMin > neutralMax) neutralMin = neutralMax;
-            if (impostorMin > impostorMax) impostorMin = impostorMax;
-
-            // Automatically force everyone to get a role by setting crew Min / Max according to Neutral Settings
-            if (CustomOptionHolder.crewmateRolesFill.getBool())
-            {
-                crewmateMax = crewmates.Count - neutralMin;
-                crewmateMin = crewmates.Count - neutralMax;
-                crewmateMin += neutralMax;
-                crewmateMax += neutralMax;
-            }
 
             // Get the maximum allowed count of each role type based on the minimum and maximum option
-            int crewCountSettings = rnd.Next(crewmateMin, crewmateMax + 1);
             int neutralCountSettings = rnd.Next(neutralMin, neutralMax + 1);
-            int impCountSettings = rnd.Next(impostorMin, impostorMax + 1);
+            var crewCountSettings = PlayerControl.AllPlayerControls.Count - neutralCountSettings - impostorNum;
 
             // Potentially lower the actual maximum to the assignable players
             int maxCrewmateRoles = Mathf.Min(crewmates.Count, crewCountSettings);
             int maxNeutralRoles = Mathf.Min(crewmates.Count, neutralCountSettings);
-            int maxImpostorRoles = Mathf.Min(impostors.Count, impCountSettings);
+            int maxImpostorRoles = Mathf.Min(impostors.Count, impostorNum);
 
             // Fill in the lists with the roles that should be assigned to players. Note that the special roles (like Mafia or Lovers) are NOT included in these lists
             Dictionary<byte, int> impSettings = new Dictionary<byte, int>();
@@ -207,14 +193,14 @@ namespace TheOtherRoles.Patches
             }
             if (data.impostors.Count < 2 && data.maxImpostorRoles < 2 && (rnd.Next(1, 101) <= CustomOptionHolder.cultistSpawnRate.getSelection() * 10))
             {
-                //       var index = rnd.Next(0, data.impostors.Count);
-                //     PlayerControl playerControl = data.impostors[index];
+                //var index = rnd.Next(0, data.impostors.Count);
+                //PlayerControl playerControl = data.impostors[index];
 
-                //    Helpers.turnToCrewmate(playerControl);
+                //Helpers.turnToCrewmate(playerControl);
 
-                //    data.impostors.RemoveAt(index);
-                //    data.crewmates.Add(playerControl);
-                //      setRoleToRandomPlayer((byte)RoleId.Cultist, data.impostors);
+                //data.impostors.RemoveAt(index);
+                //data.crewmates.Add(playerControl);
+                //setRoleToRandomPlayer((byte)RoleId.Cultist, data.impostors);
                 //data.impostors.Count = 1;
                 data.impostors.Capacity = 1;
                 data.maxImpostorRoles = 1;

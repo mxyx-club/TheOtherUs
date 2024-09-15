@@ -34,7 +34,7 @@ namespace TheOtherRoles
 
         public static int optionsPage = 2;
 
-        public static ConfigEntry<string> DebugMode { get; private set; }
+        public static ConfigEntry<bool> DebugMode { get; private set; }
         public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
         public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
         public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
@@ -93,7 +93,7 @@ namespace TheOtherRoles
             _ = checkBeta(); // Exit if running an expired beta
             _ = Patches.CredentialsPatch.MOTD.loadMOTDs();
 
-            DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
+            DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
             GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
             GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
             GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
@@ -112,10 +112,11 @@ namespace TheOtherRoles
 
             UpdateRegions();
 
-            DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
+            DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
             Harmony.PatchAll();
 
             CustomOptionHolder.Load();
+            TORMapOptions.reloadPluginOptions();
             CustomColors.Load();
             CustomHatManager.LoadHats();
             if (ToggleCursor.Value)

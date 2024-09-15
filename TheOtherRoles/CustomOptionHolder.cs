@@ -13,14 +13,8 @@ public class CustomOptionHolder
     public static string[] presets = ["Preset 1", "Preset 2", "Preset 3", "Random Preset Skeld", "Random Preset Mira HQ", "Random Preset Polus", "Random Preset Airship", "Random Preset Fungle", "Random Preset Submerged"];
 
     public static CustomOption presetSelection;
-    public static CustomOption activateRoles;
-    public static CustomOption crewmateRolesCountMin;
-    public static CustomOption crewmateRolesCountMax;
-    public static CustomOption crewmateRolesFill;
     public static CustomOption neutralRolesCountMin;
     public static CustomOption neutralRolesCountMax;
-    public static CustomOption impostorRolesCountMin;
-    public static CustomOption impostorRolesCountMax;
     public static CustomOption modifiersCountMin;
     public static CustomOption modifiersCountMax;
 
@@ -609,32 +603,17 @@ public class CustomOptionHolder
         vanillaSettings = TheOtherRolesPlugin.Instance.Config.Bind("Preset0", "VanillaOptions", "");
 
         // Role Options
-        presetSelection = Create(0, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Preset"), presets, null, true);
-        activateRoles = Create(1, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Enable Mod Roles And Block Vanilla Roles"), true, null, true);
+        presetSelection = Create(0, Types.General, cs(new Color32(204, 204, 0, 255), "Preset"), presets, null, true);
 
-        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Any Player Can Stop The Start"), false, null, false);
+        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color32(204, 204, 0, 255), "Any Player Can Stop The Start"), false, null, false);
 
         if (Utilities.EventUtility.canBeEnabled) enableEventMode = Create(3, Types.General, cs(Color.green, "Enable Special Mode"), true, null, true);
 
         // Using new id's for the options to not break compatibilty with older versions
-        crewmateRolesCountMin = Create(5, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Minimum Crewmate Roles"), 15f, 0f, 15f, 1f, null, true);
-        crewmateRolesCountMax = Create(6, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Maximum Crewmate Roles"), 15f, 0f, 15f, 1f);
-        crewmateRolesFill = Create(7, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Fill Crewmate Roles\n(Ignores Min/Max)"), false);
-        neutralRolesCountMin = Create(8, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Minimum Neutral Roles"), 15f, 0f, 15f, 1f);
-        neutralRolesCountMax = Create(9, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Maximum Neutral Roles"), 15f, 0f, 15f, 1f);
-        impostorRolesCountMin = Create(10, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Minimum Impostor Roles"), 15f, 0f, 15f, 1f);
-        impostorRolesCountMax = Create(11, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Maximum Impostor Roles"), 15f, 0f, 15f, 1f);
-        modifiersCountMin = Create(12, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Minimum Modifiers"), 15f, 0f, 15f, 1f);
-        modifiersCountMax = Create(13, Types.General,
-            cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Maximum Modifiers"), 15f, 0f, 15f, 1f);
+        neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "Minimum Neutral Roles"), 15f, 0f, 15f, 1f);
+        neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "Maximum Neutral Roles"), 15f, 0f, 15f, 1f);
+        modifiersCountMin = Create(12, Types.General, cs(new Color32(204, 204, 0, 255), "Minimum Modifiers"), 15f, 0f, 15f, 1f);
+        modifiersCountMax = Create(13, Types.General, cs(new Color32(204, 204, 0, 255), "Maximum Modifiers"), 15f, 0f, 15f, 1f);
 
         //-------------------------- Other options 1 - 599 -------------------------- //
 

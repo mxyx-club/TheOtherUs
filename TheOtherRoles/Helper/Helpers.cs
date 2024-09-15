@@ -606,6 +606,12 @@ public static class Helpers
         return !player.isDead();
     }
 
+    public static List<T> ToList<T>(this Il2CppSystem.Collections.Generic.List<T> list)
+    {
+        List<T> newList = [.. list];
+        return newList;
+    }
+
     public static bool hasFakeTasks(this PlayerControl player)
     {
         return player == Werewolf.werewolf
