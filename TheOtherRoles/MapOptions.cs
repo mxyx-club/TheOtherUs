@@ -33,6 +33,7 @@ static class TORMapOptions
     public static bool hideOutOfSightNametags;
     public static bool ShowVentsOnMap;
     public static bool ShowVentsOnMeetingMap = true;
+	public static bool ShowChatNotifications = true;
     public static bool showFPS;
     public static bool disableMedscanWalking;
     public static int restrictDevices;
@@ -104,9 +105,10 @@ static class TORMapOptions
         enableSoundEffects = Main.EnableSoundEffects.Value;
         enableHorseMode = Main.EnableHorseMode.Value;
         showFPS = Main.ShowFPS.Value;
+		ShowChatNotifications = Main.ShowChatNotifications.Value;
 
-        //Patches.ShouldAlwaysHorseAround.isHorseMode = Main.EnableHorseMode.Value;
-    }
+		//Patches.ShouldAlwaysHorseAround.isHorseMode = Main.EnableHorseMode.Value;
+	}
     public static void resetDeviceTimes()
     {
         //restrictAdminTime = restrictAdminTimeMax;

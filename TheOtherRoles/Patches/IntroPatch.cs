@@ -29,7 +29,7 @@ class IntroCutsceneOnDestroyPatch
 
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
-                GameData.PlayerInfo data = p.Data;
+                NetworkedPlayerInfo data = p.Data;
                 PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);

@@ -5,6 +5,7 @@ using AmongUs.Data;
 using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using Hazel;
+using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -116,7 +117,7 @@ internal enum CustomRPC
 {
     // Main Controls
 
-    ResetVaribles = 60,
+    ResetVaribles = 100,
     ShareOptions,
     ForceEnd,
     WorkaroundSetRoles,
@@ -135,7 +136,7 @@ internal enum CustomRPC
 
     // Role functionality
 
-    EngineerFixLights = 101,
+    EngineerFixLights = 120,
     EngineerFixSubmergedOxygen,
     EngineerUsedRepair,
     CleanBody,
@@ -271,7 +272,7 @@ public static class RPCProcedure
                 uint optionId = reader.ReadPackedUInt32();
                 uint selection = reader.ReadPackedUInt32();
                 CustomOption option = CustomOption.options.First(option => option.id == (int)optionId);
-                option.updateSelection((int)selection);
+                option.updateSelection((int)selection, i == numberOfOptions - 1);
             }
         }
         catch (Exception e)
@@ -289,7 +290,7 @@ public static class RPCProcedure
             {
 
                 GameData.Instance.GetPlayerById(player.PlayerId); // player.RemoveInfected(); (was removed in 2022.12.08, no idea if we ever need that part again, replaced by these 2 lines.) 
-                player.SetRole(RoleTypes.Crewmate);
+                player.CoSetRole(RoleTypes.Crewmate, true);
 
                 player.MurderPlayer(player);
                 player.Data.IsDead = true;
@@ -305,7 +306,10 @@ public static class RPCProcedure
     public static void shareGamemode(byte gm)
     {
         gameMode = (CustomGamemodes)gm;
-    }
+		LobbyViewSettingsPatch.currentButtons?.ForEach(x => x.gameObject?.Destroy());
+		LobbyViewSettingsPatch.currentButtons?.Clear();
+		LobbyViewSettingsPatch.currentButtonTypes?.Clear();
+	}
 
     public static void stopStart(byte playerId)
     {
@@ -541,7 +545,7 @@ public static class RPCProcedure
                 if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
                 {
                     player.RpcSetRole(RoleTypes.Engineer);
-                    player.SetRole(RoleTypes.Engineer);
+                    player.CoSetRole(RoleTypes.Engineer, true);
                 }
             }
     }
@@ -1558,7 +1562,6 @@ public static class RPCProcedure
 
     public static void yoyoBlink(bool isFirstJump, byte[] buff)
     {
-        Message($"blink fistjumpo: {isFirstJump}");
         if (Yoyo.yoyo == null || Yoyo.markedLocation == null) return;
         var markedPos = (Vector3)Yoyo.markedLocation;
         Yoyo.yoyo.NetTransform.SnapTo(markedPos);
@@ -2560,7 +2563,8 @@ public static class RPCProcedure
             }
         }
 
-        if (Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
+		bool lawyerDiedAdditionally = false;
+		if (Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
         {
             // Lawyer guessed client.
             if (CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer)
@@ -2569,7 +2573,9 @@ public static class RPCProcedure
                 if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
             }
             Lawyer.lawyer.Exiled();
-        }
+			lawyerDiedAdditionally = true;
+			GameHistory.overrideDeathReasonAndKiller(Lawyer.lawyer, DeadPlayer.CustomDeathReason.LawyerSuicide, guesser);
+		}
 
         dyingTarget.Exiled();
         overrideDeathReasonAndKiller(dyingTarget, DeadPlayer.CustomDeathReason.Guess, guesser);
@@ -2579,18 +2585,18 @@ public static class RPCProcedure
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
         if (MeetingHud.Instance)
         {
-            MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, dyingTargetId);
             foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
             {
-                if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId)
+                if (pva.TargetPlayerId == dyingTargetId || pva.TargetPlayerId == partnerId || lawyerDiedAdditionally && Lawyer.lawyer.PlayerId == pva.TargetPlayerId)
                 {
                     pva.SetDead(pva.DidReport, true);
                     pva.Overlay.gameObject.SetActive(true);
-                }
+					MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, pva.TargetPlayerId);
+				}
 
-                //Give players back their vote if target is shot dead
-                if (pva.VotedFor != dyingTargetId || pva.VotedFor != partnerId) continue;
-                pva.UnsetVote();
+				//Give players back their vote if target is shot dead
+				if (pva.VotedFor != dyingTargetId && pva.VotedFor != partnerId && (!lawyerDiedAdditionally || Lawyer.lawyer.PlayerId != pva.VotedFor)) continue;
+				pva.UnsetVote();
                 var voteAreaPlayer = playerById(pva.TargetPlayerId);
                 if (!voteAreaPlayer.AmOwner) continue;
                 MeetingHud.Instance.ClearVote();

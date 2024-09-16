@@ -340,7 +340,7 @@ static class HudManagerStartPatch
         // Add poolable player to the button so that the target outfit is shown
         button.actionButton.cooldownTimerText.transform.localPosition = new Vector3(0, 0, -1f);  // Before the poolable player
         targetDisplay = UnityEngine.Object.Instantiate<PoolablePlayer>(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
-        GameData.PlayerInfo data = target.Data;
+        NetworkedPlayerInfo data = target.Data;
         target.SetPlayerMaterialColors(targetDisplay.cosmetics.currentBodySprite.BodySprite);
         targetDisplay.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
         targetDisplay.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
@@ -449,7 +449,7 @@ static class HudManagerStartPatch
                             Vector2 truePosition2 = component.TruePosition;
                             if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                             {
-                                GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody, SendOption.Reliable, -1);
                                 writer.Write(playerInfo.PlayerId);
@@ -1796,7 +1796,7 @@ static class HudManagerStartPatch
                             Vector2 truePosition2 = component.TruePosition;
                             if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                             {
-                                GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody, SendOption.Reliable, -1);
                                 writer.Write(playerInfo.PlayerId);
@@ -1832,7 +1832,6 @@ static class HudManagerStartPatch
 
                 if (Yoyo.markedLocation == null)
                 {
-                    Message($"marked location is null in button press");
                     MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
                     writer.WriteBytesAndSize(buff);
                     writer.EndMessage();
@@ -1845,9 +1844,7 @@ static class HudManagerStartPatch
                 }
                 else
                 {
-                    Message("in else for some reason");
                     // Jump to location
-                    Message($"trying to blink!");
                     var exit = (Vector3)Yoyo.markedLocation;
                     if (SubmergedCompatibility.IsSubmerged)
                     {
@@ -1984,7 +1981,7 @@ static class HudManagerStartPatch
                                 Vector2 deadBodyPosition = deadBody.TruePosition;
                                 if (Vector2.Distance(deadBodyPosition, playerPosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(playerPosition, deadBodyPosition, Constants.ShipAndObjectsMask, false) && !Undertaker.isDraging)
                                 {
-                                    GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
+                                    NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(deadBody.ParentId);
                                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DragBody, SendOption.Reliable, -1);
                                     writer.Write(playerInfo.PlayerId);
                                     AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -2377,7 +2374,7 @@ static class HudManagerStartPatch
                             Vector2 truePosition2 = component.TruePosition;
                             if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                             {
-                                GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody, SendOption.Reliable, -1);
                                 writer.Write(playerInfo.PlayerId);
@@ -2416,7 +2413,7 @@ static class HudManagerStartPatch
                             Vector2 truePosition2 = component.TruePosition;
                             if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                             {
-                                GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AmnisiacTakeRole, SendOption.Reliable, -1);
                                 writer.Write(playerInfo.PlayerId);
@@ -3013,7 +3010,7 @@ static class HudManagerStartPatch
         terroristButton = new CustomButton(
             () =>
             {
-                if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist) != MurderAttemptResult.BlankKill)
+                if (checkMuderAttempt(Terrorist.terrorist, Terrorist.terrorist, ignoreMedic: true) != MurderAttemptResult.BlankKill)
                 {
                     var pos = CachedPlayer.LocalPlayer.transform.position;
                     byte[] buff = new byte[sizeof(float) * 2];
@@ -3178,7 +3175,7 @@ static class HudManagerStartPatch
             },
             () => { return true; },
             () => { return; },
-            loadSpriteFromResources("TheOtherRoles.Resources.MinusButton.png", 150f),  // Invisible button!
+            null, // Invisible button!
             new Vector3(0.4f, 2.8f, 0),
             __instance,
             KeyCode.KeypadPlus

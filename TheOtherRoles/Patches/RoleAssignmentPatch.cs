@@ -11,7 +11,7 @@ using static TheOtherRoles.TheOtherRoles;
 
 namespace TheOtherRoles.Patches;
 
-[HarmonyPatch(typeof(RoleOptionsCollectionV07), nameof(RoleOptionsCollectionV07.GetNumPerGame))]
+[HarmonyPatch(typeof(RoleOptionsCollectionV08), nameof(RoleOptionsCollectionV08.GetNumPerGame))]
 class RoleOptionsDataGetNumPerGamePatch
 {
     public static void Postfix(ref int __result)
@@ -78,7 +78,7 @@ class RoleManagerSelectRolesPatch
         assignRoleTargets(data); // Assign targets for Lawyer & Prosecutor
         if (isGuesserGamemode) assignGuesserGamemode();
         assignModifiers(); // Assign modifier
-        setRolesAgain(); //brb
+        //setRolesAgain(); //brb
         if (Jackal.jackal != null) Jackal.setSwoop();
     }
 
@@ -692,7 +692,7 @@ class RoleManagerSelectRolesPatch
 
         playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
 
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetRole, SendOption.Reliable, -1);
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetRole, SendOption.Reliable, -1);
         writer.Write(roleId);
         writer.Write(playerId);
         AmongUsClient.Instance.FinishRpcImmediately(writer);

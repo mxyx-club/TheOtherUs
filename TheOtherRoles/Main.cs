@@ -42,7 +42,8 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ShowRoleSummary { get; set; }
     public static ConfigEntry<bool> ShowLighterDarker { get; set; }
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
-    public static ConfigEntry<bool> ShowFPS { get; set; }
+	public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+	public static ConfigEntry<bool> ShowFPS { get; set; }
     public static ConfigEntry<bool> EnableHorseMode { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
@@ -105,12 +106,15 @@ public class TheOtherRolesPlugin : BasePlugin
         EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
+		ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
 
-        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
+		Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         defaultRegions = ServerManager.DefaultRegions;
+		// Removes vanilla Servers
+		ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>(new IRegionInfo[0]);
 
-        UpdateRegions();
+		UpdateRegions();
 
         DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
         Harmony.PatchAll();
@@ -172,7 +176,7 @@ public static class DebugManager
     public static void Postfix(KeyboardJoystick __instance)
     {
         // Spawn dummys
-        if (AmongUsClient.Instance.AmHost && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.RightShift))
+        /*if (AmongUsClient.Instance.AmHost && Input.GetKeyDown(KeyCode.F) && Input.GetKey(KeyCode.RightShift))
         {
             var playerControl = UnityEngine.Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
             var i = playerControl.PlayerId = (byte)GameData.Instance.GetAvailableId();
@@ -187,7 +191,7 @@ public static class DebugManager
             playerControl.SetName(RandomString(10));
             playerControl.SetColor((byte)random.Next(Palette.PlayerColors.Length));
             GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
-        }
+        }*/
 
         // Terminate round
         if (AmongUsClient.Instance.AmHost && gameStarted && Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift))
