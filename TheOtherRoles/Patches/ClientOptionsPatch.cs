@@ -21,8 +21,6 @@ public static class ClientOptionsPatch
             TORMapOptions.ghostsSeeRoles = Main.GhostsSeeRoles.Value = !Main.GhostsSeeRoles.Value, Main.GhostsSeeRoles.Value),
         new("Ghosts Can Additionally See Modifier", () =>
             TORMapOptions.ghostsSeeModifier = Main.GhostsSeeModifier.Value = !Main.GhostsSeeModifier.Value, Main.GhostsSeeModifier.Value),
-        new("Show Role Summary", () =>
-            TORMapOptions.showRoleSummary = Main.ShowRoleSummary.Value = !Main.ShowRoleSummary.Value, Main.ShowRoleSummary.Value),
         new("Show Lighter / Darker", () =>
             TORMapOptions.showLighterDarker = Main.ShowLighterDarker.Value = !Main.ShowLighterDarker.Value, Main.ShowLighterDarker.Value),
         new("Better Cursor", () =>
@@ -33,6 +31,8 @@ public static class ClientOptionsPatch
             TORMapOptions.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
         new("Show Chat Notifications", () =>
             TORMapOptions.ShowChatNotifications = Main.ShowChatNotifications.Value = !Main.ShowChatNotifications.Value, Main.ShowChatNotifications.Value),
+        new ("Mute Lobby BGM", () => 
+            TORMapOptions.muteLobbyBGM = Main.MuteLobbyBGM.Value = !Main.MuteLobbyBGM.Value, Main.MuteLobbyBGM.Value),
     ];
 
     private static GameObject popUp;

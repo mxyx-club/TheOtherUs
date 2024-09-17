@@ -609,6 +609,7 @@ public class CustomOptionHolder
 
         if (Utilities.EventUtility.canBeEnabled) enableEventMode = Create(3, Types.General, cs(Color.green, "Enable Special Mode"), true, null, true);
 
+        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color32(204, 204, 0, 255), "Any Player Can Stop The Start"), false, null, false);
         // Using new id's for the options to not break compatibilty with older versions
         neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "Minimum Neutral Roles"), 15f, 0f, 15f, 1f, heading: "Min/Max Roles");
         neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "Maximum Neutral Roles"), 15f, 0f, 15f, 1f);
@@ -619,7 +620,6 @@ public class CustomOptionHolder
 
 
         maxNumberOfMeetings = Create(3, Types.General, "Number Of Meetings (excluding Mayor meeting)", 10, 0, 15, 1, null, true, heading: "Gameplay Settings");
-        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Any Player Can Stop The Start"), false, null, false);
         resteButtonCooldown = Create(20, Types.General, "Game Start CoolDown", 10f, 2.5f, 30f, 2.5f);
         blockSkippingInEmergencyMeetings = Create(22, Types.General, "Block Skipping In Emergency Meetings", false);
         noVoteIsSelfVote = Create(23, Types.General, "No Vote Is Self Vote", false, blockSkippingInEmergencyMeetings);

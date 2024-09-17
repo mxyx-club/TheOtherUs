@@ -34,6 +34,7 @@ static class TORMapOptions
     public static bool ShowVentsOnMap;
     public static bool ShowVentsOnMeetingMap = true;
     public static bool ShowChatNotifications = true;
+    public static bool muteLobbyBGM = true;
     public static bool showFPS;
     public static bool disableMedscanWalking;
     public static int restrictDevices;
@@ -99,13 +100,13 @@ static class TORMapOptions
         ghostsSeeModifier = Main.GhostsSeeModifier.Value;
         ghostsSeeInformation = Main.GhostsSeeInformation.Value;
         ghostsSeeVotes = Main.GhostsSeeVotes.Value;
-        showRoleSummary = Main.ShowRoleSummary.Value;
         showLighterDarker = Main.ShowLighterDarker.Value;
         toggleCursor = Main.ToggleCursor.Value;
         enableSoundEffects = Main.EnableSoundEffects.Value;
         enableHorseMode = Main.EnableHorseMode.Value;
         showFPS = Main.ShowFPS.Value;
         ShowChatNotifications = Main.ShowChatNotifications.Value;
+        muteLobbyBGM = Main.MuteLobbyBGM.Value;
 
         //Patches.ShouldAlwaysHorseAround.isHorseMode = Main.EnableHorseMode.Value;
     }

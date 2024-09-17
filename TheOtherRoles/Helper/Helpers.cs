@@ -679,6 +679,11 @@ public static class Helpers
         return list.Any(x => keySelector(x).Equals(keySelector(item)));
     }
 
+    public static T Find<T>(this Il2CppSystem.Collections.Generic.List<T> data, Predicate<T> match)
+    {
+        return data.ToList().Find(match);
+    }
+
     public static bool IsAlive(this PlayerControl player)
     {
         return player != null && !player.Data.Disconnected && !player.Data.IsDead;
