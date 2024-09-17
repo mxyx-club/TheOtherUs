@@ -2090,7 +2090,7 @@ public static class RPCProcedure
                 yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
                 yoyoButton.Timer = 10f;
                 yoyoButton.HasEffect = false;
-                yoyoButton.buttonText = "BlinkText".Translate();
+                yoyoButton.buttonText = "Blink...";
             }
             else
             {
@@ -2110,7 +2110,7 @@ public static class RPCProcedure
                 yoyoButton.EffectDuration = Yoyo.blinkDuration;
                 yoyoButton.Timer = 10f;
                 yoyoButton.HasEffect = true;
-                yoyoButton.buttonText = "ReturningText".Translate();
+                yoyoButton.buttonText = "Returning...";
                 SoundEffectsManager.play("morphlingMorph");
             }
         }
