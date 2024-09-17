@@ -14,10 +14,10 @@ namespace TheOtherRoles.Patches;
 internal class ExileControllerBeginPatch
 {
     public static NetworkedPlayerInfo lastExiled;
-    public static void Prefix(ExileController __instance, [HarmonyArgument(0)] ref NetworkedPlayerInfo exiled, [HarmonyArgument(1)] bool tie)
+    public static void Prefix(ExileController __instance, [HarmonyArgument(0)] ref ExileController.InitProperties init)
     {
-        lastExiled = exiled;
-
+        lastExiled = init?.networkedPlayer;
+        __instance.initData = init;
         // Medic shield
         if (Medic.medic != null && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
         { // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
@@ -66,15 +66,15 @@ internal class ExileControllerBeginPatch
         // Witch execute casted spells
         if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)
         {
-            bool exiledIsWitch = exiled != null && exiled.PlayerId == Witch.witch.PlayerId;
-            bool witchDiesWithExiledLover = exiled != null && Lovers.existing() && Lovers.bothDie && (Lovers.lover1.PlayerId == Witch.witch.PlayerId || Lovers.lover2.PlayerId == Witch.witch.PlayerId) && (exiled.PlayerId == Lovers.lover1.PlayerId || exiled.PlayerId == Lovers.lover2.PlayerId);
+            bool exiledIsWitch = init?.networkedPlayer.PlayerId == Witch.witch.PlayerId;
+            bool witchDiesWithExiledLover = Lovers.existing() && Lovers.bothDie && (Lovers.lover1.PlayerId == Witch.witch.PlayerId || Lovers.lover2.PlayerId == Witch.witch.PlayerId) && (init?.networkedPlayer.PlayerId == Lovers.lover1.PlayerId || init?.networkedPlayer.PlayerId == Lovers.lover2.PlayerId);
 
             if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets) Witch.futureSpelled = new List<PlayerControl>();
             foreach (PlayerControl target in Witch.futureSpelled)
             {
                 if (target != null && !target.Data.IsDead && checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill)
                 {
-                    if (exiled != null && Lawyer.lawyer != null && (target == Lawyer.lawyer || target == Lovers.otherLover(Lawyer.lawyer)) && Lawyer.target != null && Lawyer.isProsecutor && Lawyer.target.PlayerId == exiled.PlayerId)
+                    if (Lawyer.lawyer != null && (target == Lawyer.lawyer || target == Lovers.otherLover(Lawyer.lawyer)) && Lawyer.target != null && Lawyer.isProsecutor && Lawyer.target.PlayerId == init?.networkedPlayer.PlayerId)
                         continue;
                     if (target == Lawyer.target && Lawyer.lawyer != null)
                     {
@@ -149,7 +149,7 @@ internal class ExileControllerWrapUpPatch
     {
         public static void Postfix(ExileController __instance)
         {
-            WrapUpPostfix(__instance.exiled);
+            WrapUpPostfix(__instance.initData.networkedPlayer);
         }
     }
 
@@ -158,7 +158,7 @@ internal class ExileControllerWrapUpPatch
     {
         public static void Postfix(AirshipExileController __instance)
         {
-            WrapUpPostfix(__instance.exiled);
+            WrapUpPostfix(__instance.initData.networkedPlayer);
         }
     }
 
@@ -355,9 +355,9 @@ internal class ExileControllerMessagePatch
     {
         try
         {
-            if (ExileController.Instance != null && ExileController.Instance.exiled != null)
+            if (ExileController.Instance != null && ExileController.Instance.initData.networkedPlayer != null)
             {
-                PlayerControl player = playerById(ExileController.Instance.exiled.Object.PlayerId);
+                PlayerControl player = playerById(ExileController.Instance.initData.networkedPlayer.Object.PlayerId);
                 if (player == null) return;
                 // Exile role text
                 if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP || id == StringNames.ExileTextSP)
