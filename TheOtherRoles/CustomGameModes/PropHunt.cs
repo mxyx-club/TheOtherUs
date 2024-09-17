@@ -401,7 +401,7 @@ class PropHunt
             float bestDist = 9999;
             if (whitelistedObjects == null || whitelistedObjects.Count == 0 || verbose)
             {
-                updateWhitelistedObjects(true);
+                updateWhitelistedObjects(false);
             }
             foreach (Collider2D collider in Physics2D.OverlapCircleAll(origin.transform.position, radius))
             {
@@ -676,7 +676,7 @@ class PropHunt
     [HarmonyPrefix]
     public static bool IsValidTarget(RoleBehaviour __instance, NetworkedPlayerInfo target, ref bool __result)
     {
-        if (!PropHunt.isPropHuntGM) return true;
+        if (!isPropHuntGM) return true;
         __result = !(target == null) && !target.Disconnected && !target.IsDead && target.PlayerId != __instance.Player.PlayerId && !(target.Role == null) && !(target.Object == null) && !target.Object.inVent && !target.Object.inMovingPlat;
         return false;
     }
