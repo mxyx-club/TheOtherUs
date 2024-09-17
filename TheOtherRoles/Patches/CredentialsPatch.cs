@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AmongUs.GameOptions;
+using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -14,7 +17,7 @@ public static class CredentialsPatch
     public static string fullCredentialsVersion =
 $@"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
     public static string fullCredentials =
-    $@"<size=60%>Modified by <color=#FCCE03FF>Spex</color>
+    $@"<size=70%>Modified by <color=#FCCE03FF>Spex</color>
 Based on TheOtherRoles";
 
     public static string mainMenuCredentials =
@@ -35,30 +38,48 @@ $@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, 
             DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
             var fps = Mathf.Ceil(1f / DeltaTime);
             var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms {(TORMapOptions.showFPS ? $"FPS: {fps}" : "")}</size>";
-            var host = $"<size=80%>{"Host"}: {GameData.Instance?.GetHost()?.PlayerName}</size>";
-
-            __instance.text.alignment = TextAlignmentOptions.TopRight;
+            var host = $"<size=80%>Host: {GameData.Instance?.GetHost()?.PlayerName}</size>";
+            __instance.text.SetOutlineThickness(0.01f);
             var position = __instance.GetComponent<AspectPosition>();
             var gameModeText = TORMapOptions.gameMode switch
             {
-                CustomGamemodes.HideNSeek => $"Hide 'N Seek",
-                CustomGamemodes.Guesser => $"Guesser",
-                CustomGamemodes.PropHunt => $"Prop Hunt",
+                CustomGamemodes.HideNSeek => "Hide 'N Seek",
+                CustomGamemodes.Guesser => "Guesser",
+                CustomGamemodes.PropHunt => "Prop Hunt",
                 _ => ""
             };
-
-            if (gameModeText != "") gameModeText = cs(Color.yellow, gameModeText) + "\n";
+            gameModeText = string.IsNullOrEmpty(gameModeText) ? "" : cs(Color.yellow, gameModeText) + "\n";
             if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
             {
-                __instance.text.text = $"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}\n<size=90%>{PingText}\n {gameModeText}</size>";
-                position.DistanceFromEdge = new Vector3(2.25f, 0.11f, 0);
+                __instance.text.alignment = TextAlignmentOptions.TopRight;
+                position.Alignment = AspectPosition.EdgeAlignments.RightTop;
+                __instance.text.text = $"<size=130%><color=#ff351f>TheOtherUs</color></size> v{Main.Version.ToString() + (Main.betaDays > 0 ? "-BETA" : "")}\n<size=90%>{gameModeText}{PingText}\n</size>";
+                position.DistanceFromEdge = new Vector3(2.7f, 0.1f, 0);
             }
             else
             {
-                __instance.text.text = $"{fullCredentialsVersion}\n {PingText}\n  {gameModeText + fullCredentials}\n {host}";
-                position.DistanceFromEdge = new Vector3(3.5f, 0.1f, 0);
+                __instance.text.alignment = TextAlignmentOptions.TopLeft;
+                position.Alignment = AspectPosition.EdgeAlignments.LeftTop;
+                __instance.text.text = $"{fullCredentialsVersion}\n{gameModeText}{fullCredentials}\n{PingText}";
+                position.DistanceFromEdge = new(0.4f, 0.06f);
+
+                try
+                {
+                    UpdateGameModeText(gameModeText);
+                }
+                catch { }
             }
             position.AdjustPosition();
+        }
+
+        private static void UpdateGameModeText(string gameModeText)
+        {
+            var GameModeText = GameObject.Find("GameModeText")?.GetComponent<TextMeshPro>();
+            GameModeText.text = string.IsNullOrEmpty(gameModeText) 
+                ? (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek 
+                    ? "Van. HideNSeek" : "Classic") : gameModeText;
+            var modeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
+            modeLabel.text = "Game Mode";
         }
     }
 

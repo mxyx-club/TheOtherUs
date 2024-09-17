@@ -31,6 +31,8 @@ public static class ClientOptionsPatch
             TORMapOptions.enableSoundEffects = Main.EnableSoundEffects.Value = !Main.EnableSoundEffects.Value, Main.EnableSoundEffects.Value),
         new("ShowFPS", () =>
             TORMapOptions.showFPS = Main.ShowFPS.Value = !Main.ShowFPS.Value, Main.ShowFPS.Value),
+        new("Show Chat Notifications", () =>
+            TORMapOptions.ShowChatNotifications = Main.ShowChatNotifications.Value = !Main.ShowChatNotifications.Value, Main.ShowChatNotifications.Value),
     ];
 
     private static GameObject popUp;

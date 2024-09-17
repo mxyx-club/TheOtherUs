@@ -67,7 +67,7 @@ public class CameraPatch
                     for (int i = 4; i < ShipStatus.Instance.AllCameras.Length; i++)
                     {
                         SurvCamera surv = ShipStatus.Instance.AllCameras[i];
-                        Camera camera = UnityEngine.Object.Instantiate<Camera>(__instance.CameraPrefab);
+                        Camera camera = UnityEngine.Object.Instantiate(__instance.CameraPrefab);
                         camera.transform.SetParent(__instance.transform);
                         camera.transform.position = new Vector3(surv.transform.position.x, surv.transform.position.y, 8f);
                         camera.orthographicSize = 2.35f;

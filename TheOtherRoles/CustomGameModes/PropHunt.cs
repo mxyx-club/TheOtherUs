@@ -120,19 +120,14 @@ class PropHunt
         return loadSpriteFromResources($"TheOtherRoles.Resources.IntroAnimation.intro_{index + 1000}.png", 150f, cache: false);
     }
 
-    public static void updateWhitelistedObjects()
+    public static void updateWhitelistedObjects(bool debug = false)
     {
         string allNames = readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
-        bool debug = false;
         if (debug)
         {
             allNames = readTextFromFile(System.IO.Directory.GetCurrentDirectory() + "\\Props.txt");
         }
-        Message($"after debug");
         whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
-        Message($"after split");
-
-        Message($"Last element: {whitelistedObjects.Last()}");
     }
 
 
@@ -180,6 +175,7 @@ class PropHunt
         {
             poolablesBackground = new GameObject("poolablesBackground");
             poolablesBackground.AddComponent<SpriteRenderer>();
+            poolablesBackground.layer = LayerMask.NameToLayer("UI");
             if (poolablesBackgroundSprite == null) poolablesBackgroundSprite = loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
         }
         poolablesBackground.transform.SetParent(HudManager.Instance.transform);
@@ -208,10 +204,6 @@ class PropHunt
             {
                 // Display Prop
                 poolablePlayer.cosmetics.nameText.text = cs(Palette.CrewmateBlue, pc.Data.PlayerName); ;
-                if (isCurrentlyRevealed.ContainsKey(pc.PlayerId))
-                {
-
-                }
             }
             // update currently revealed:
             if (isCurrentlyRevealed.ContainsKey(pc.PlayerId))
@@ -219,6 +211,7 @@ class PropHunt
                 if (!revealRenderer.ContainsKey(pc.PlayerId))
                 {
                     var go = new GameObject($"reveal_renderer_{pc.PlayerId}");
+                    go.layer = LayerMask.NameToLayer("UI");
                     go.AddComponent<SpriteRenderer>();
                     go.transform.SetParent(poolablePlayer.transform.parent, false);
                     go.SetActive(true);
@@ -287,6 +280,7 @@ class PropHunt
 
     public static void dangerMeterUpdate()
     {
+        if (!HudManager.Instance || !HudManager.Instance.DangerMeter) return;
         if (HudManager.Instance.DangerMeter.gameObject.active)
         {
             float dist = 55f;
@@ -407,7 +401,7 @@ class PropHunt
             float bestDist = 9999;
             if (whitelistedObjects == null || whitelistedObjects.Count == 0 || verbose)
             {
-                updateWhitelistedObjects();
+                updateWhitelistedObjects(true);
             }
             foreach (Collider2D collider in Physics2D.OverlapCircleAll(origin.transform.position, radius))
             {
@@ -600,7 +594,7 @@ class PropHunt
 
     [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.CanUse))]
     [HarmonyPostfix]
-    public static void AdminCanUsePostfix(MapConsole __instance, GameData.PlayerInfo pc, ref bool canUse, ref bool couldUse, ref float __result)
+    public static void AdminCanUsePostfix(MapConsole __instance, NetworkedPlayerInfo pc, ref bool canUse, ref bool couldUse, ref float __result)
     {
         if (!isPropHuntGM || !PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
         if (canUse)
@@ -662,7 +656,7 @@ class PropHunt
     public static bool KillButtonClickPatch(KillButton __instance)
     {
         if (!isPropHuntGM || __instance.isCoolingDown || PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.inVent) return false;
-
+        var targets = PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray();
         __instance.SetTarget(PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray().FirstOrDefault());
 
         if (__instance.currentTarget == null)
@@ -675,6 +669,15 @@ class PropHunt
             __instance.SetTarget(null);
             PlayerControl.LocalPlayer.SetKillTimer(killCooldownHit);
         }
+        return false;
+    }
+
+    [HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.IsValidTarget))]
+    [HarmonyPrefix]
+    public static bool IsValidTarget(RoleBehaviour __instance, NetworkedPlayerInfo target, ref bool __result)
+    {
+        if (!PropHunt.isPropHuntGM) return true;
+        __result = !(target == null) && !target.Disconnected && !target.IsDead && target.PlayerId != __instance.Player.PlayerId && !(target.Role == null) && !(target.Object == null) && !target.Object.inVent && !target.Object.inMovingPlat;
         return false;
     }
 

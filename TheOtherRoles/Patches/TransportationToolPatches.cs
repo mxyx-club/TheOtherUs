@@ -31,7 +31,7 @@ public static class TransportationToolPatches
     public static void postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
     {
         // Fix camo:
-        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new System.Action<float>((p) =>
+        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new Action<float>((p) =>
         {
             HandZiplinePoolable hand;
             __instance.playerIdHands.TryGetValue(player.PlayerId, out hand);
@@ -72,7 +72,7 @@ public static class TransportationToolPatches
     {
         // Fix camo:
         var player = __instance.myPlayer;
-        __instance.StartCoroutine(Effects.Lerp(5.0f, new System.Action<float>((p) =>
+        __instance.StartCoroutine(Effects.Lerp(5.0f, new Action<float>((p) =>
         {
             if (Camouflager.camouflageTimer <= 0 && !MushroomSabotageActive() && player == Morphling.morphling && Morphling.morphTimer > 0.1f)
             {

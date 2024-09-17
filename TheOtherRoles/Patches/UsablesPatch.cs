@@ -18,7 +18,7 @@ namespace TheOtherRoles.Patches;
 [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
 public static class VentCanUsePatch
 {
-    public static bool Prefix(Vent __instance, ref float __result, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] ref bool canUse, [HarmonyArgument(2)] ref bool couldUse)
+    public static bool Prefix(Vent __instance, ref float __result, [HarmonyArgument(0)] NetworkedPlayerInfo pc, [HarmonyArgument(1)] ref bool canUse, [HarmonyArgument(2)] ref bool couldUse)
     {
         if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
         float num = float.MaxValue;
@@ -441,7 +441,7 @@ class EmergencyMinigameUpdatePatch
 [HarmonyPatch(typeof(Console), nameof(Console.CanUse))]
 public static class ConsoleCanUsePatch
 {
-    public static bool Prefix(ref float __result, Console __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
+    public static bool Prefix(ref float __result, Console __instance, [HarmonyArgument(0)] NetworkedPlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
     {
         canUse = couldUse = false;
         if (Swapper.swapper != null && Swapper.swapper == CachedPlayer.LocalPlayer.PlayerControl && !Swapper.canFixSabotages)
@@ -528,7 +528,7 @@ class VitalsMinigamePatch
                 for (int k = 0; k < __instance.vitals.Length; k++)
                 {
                     VitalsPanel vitalsPanel = __instance.vitals[k];
-                    GameData.PlayerInfo player = vitalsPanel.PlayerInfo;
+                    NetworkedPlayerInfo player = vitalsPanel.PlayerInfo;
 
                     // Hacker update
                     if (vitalsPanel.IsDead)
@@ -615,7 +615,7 @@ class AdminPanelPatch
                                 DeadBody bodyComponent = collider2D.GetComponent<DeadBody>();
                                 if (bodyComponent)
                                 {
-                                    GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(bodyComponent.ParentId);
+                                    NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(bodyComponent.ParentId);
                                     if (playerInfo != null)
                                     {
                                         var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
@@ -681,7 +681,7 @@ class AdminPanelPatch
                     if (renderer != null)
                     {
                         if (defaultMat == null) defaultMat = renderer.material;
-                        if (newMat == null) newMat = UnityEngine.Object.Instantiate<Material>(defaultMat);
+                        if (newMat == null) newMat = UnityEngine.Object.Instantiate(defaultMat);
                         if (showHackerInfo && colors.Count > i)
                         {
                             renderer.material = newMat;
@@ -734,7 +734,7 @@ class SurveillanceMinigamePatch
                 for (int i = 4; i < MapUtilities.CachedShipStatus.AllCameras.Length; i++)
                 {
                     SurvCamera surv = MapUtilities.CachedShipStatus.AllCameras[i];
-                    Camera camera = UnityEngine.Object.Instantiate<Camera>(__instance.CameraPrefab);
+                    Camera camera = UnityEngine.Object.Instantiate(__instance.CameraPrefab);
                     camera.transform.SetParent(__instance.transform);
                     camera.transform.position = new Vector3(surv.transform.position.x, surv.transform.position.y, 8f);
                     camera.orthographicSize = 2.35f;

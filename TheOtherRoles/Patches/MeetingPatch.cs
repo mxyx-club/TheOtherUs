@@ -18,11 +18,11 @@ class MeetingHudPatch
 {
     static bool[] selections;
     static SpriteRenderer[] renderers;
-    private static GameData.PlayerInfo target;
+    private static NetworkedPlayerInfo target;
     private const float scale = 0.65f;
-    private static TMPro.TextMeshPro meetingExtraButtonText;
+    private static TextMeshPro meetingExtraButtonText;
     private static PassiveButton[] swapperButtonList;
-    private static TMPro.TextMeshPro meetingExtraButtonLabel;
+    private static TextMeshPro meetingExtraButtonLabel;
     public static bool shookAlready;
     private static PlayerVoteArea swapped1;
     private static PlayerVoteArea swapped2;
@@ -92,10 +92,10 @@ class MeetingHudPatch
                 Dictionary<byte, int> self = CalculateVotes(__instance);
                 bool tie;
                 KeyValuePair<byte, int> max = self.MaxPair(out tie);
-                GameData.PlayerInfo exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
+                NetworkedPlayerInfo exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
 
                 // TieBreaker 
-                List<GameData.PlayerInfo> potentialExiled = new();
+                List<NetworkedPlayerInfo> potentialExiled = new();
                 bool skipIsTie = false;
                 if (self.Count > 0)
                 {
@@ -157,9 +157,9 @@ class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.BloopAVoteIcon))]
     class MeetingHudBloopAVoteIconPatch
     {
-        public static bool Prefix(MeetingHud __instance, GameData.PlayerInfo voterPlayer, int index, Transform parent)
+        public static bool Prefix(MeetingHud __instance, NetworkedPlayerInfo voterPlayer, int index, Transform parent)
         {
-            var spriteRenderer = UnityEngine.Object.Instantiate<SpriteRenderer>(__instance.PlayerVotePrefab);
+            var spriteRenderer = UnityEngine.Object.Instantiate(__instance.PlayerVotePrefab);
             var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
                                   (CachedPlayer.LocalPlayer.Data.IsDead && ghostsSeeVotes) ||
                                   (Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl && Mayor.canSeeVoteColors && TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data).Item1 >= Mayor.tasksNeededToSeeVoteColors) ||
@@ -227,7 +227,7 @@ class MeetingHudPatch
                 for (int j = 0; j < states.Length; j++)
                 {
                     MeetingHud.VoterState voterState = states[j];
-                    GameData.PlayerInfo playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
+                    NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
                     if (playerById == null)
                     {
                         Error(string.Format("Couldn't find player info for voter: {0}", voterState.VoterId));
@@ -258,7 +258,7 @@ class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.VotingComplete))]
     class MeetingHudVotingCompletedPatch
     {
-        static void Postfix(MeetingHud __instance, [HarmonyArgument(0)] byte[] states, [HarmonyArgument(1)] GameData.PlayerInfo exiled, [HarmonyArgument(2)] bool tie)
+        static void Postfix(MeetingHud __instance, [HarmonyArgument(0)] byte[] states, [HarmonyArgument(1)] NetworkedPlayerInfo exiled, [HarmonyArgument(2)] bool tie)
         {
             // Reset swapper values
             Swapper.playerId1 = Byte.MaxValue;
@@ -405,7 +405,7 @@ class MeetingHudPatch
             Swapper.charges++;
             int copyI = i;
             swapperButtonList[i].OnClick.RemoveAllListeners();
-            swapperButtonList[i].OnClick.AddListener((System.Action)(() => swapperOnClick(copyI, __instance)));
+            swapperButtonList[i].OnClick.AddListener((Action)(() => swapperOnClick(copyI, __instance)));
         }
         meetingExtraButtonText.text = $"Swaps: {Swapper.charges}";
         meetingExtraButtonLabel.text = cs(Color.red, "Confirm Swap");
@@ -465,7 +465,7 @@ class MeetingHudPatch
         exitButtonParent.transform.localScale = new Vector3(0.217f, 0.9f, 1);
         guesserUIExitButton = exitButton.GetComponent<PassiveButton>();
         guesserUIExitButton.OnClick.RemoveAllListeners();
-        guesserUIExitButton.OnClick.AddListener((System.Action)(() =>
+        guesserUIExitButton.OnClick.AddListener((Action)(() =>
         {
             __instance.playerStates.ToList().ForEach(x =>
             {
@@ -546,7 +546,7 @@ class MeetingHudPatch
             buttonParent.SetParent(container);
             Transform button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
             Transform buttonMask = UnityEngine.Object.Instantiate(maskTemplate, buttonParent);
-            TMPro.TextMeshPro label = UnityEngine.Object.Instantiate(textTemplate, button);
+            TextMeshPro label = UnityEngine.Object.Instantiate(textTemplate, button);
             button.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             buttons.Add(button);
             int row = i / 5, col = i % 5;
@@ -559,7 +559,7 @@ class MeetingHudPatch
             int copiedIndex = i;
 
             button.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
-            if (!CachedPlayer.LocalPlayer.Data.IsDead && !playerById(__instance.playerStates[buttonTarget].TargetPlayerId).Data.IsDead) button.GetComponent<PassiveButton>().OnClick.AddListener((System.Action)(() =>
+            if (!CachedPlayer.LocalPlayer.Data.IsDead && !playerById(__instance.playerStates[buttonTarget].TargetPlayerId).Data.IsDead) button.GetComponent<PassiveButton>().OnClick.AddListener((Action)(() =>
             {
                 if (selectedButton != button)
                 {
@@ -712,7 +712,7 @@ class MeetingHudPatch
             Transform meetingExtraButton = UnityEngine.Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
 
             Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
-            TMPro.TextMeshPro meetingInfo = infoTransform != null ? infoTransform.GetComponent<TMPro.TextMeshPro>() : null;
+            TextMeshPro meetingInfo = infoTransform != null ? infoTransform.GetComponent<TextMeshPro>() : null;
             meetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
             meetingExtraButtonText.text = addSwapperButtons ? $"Swaps: {Swapper.charges}" : "";
             meetingExtraButtonText.enableWordWrapping = false;
@@ -804,7 +804,7 @@ class MeetingHudPatch
                 PassiveButton button = targetBox.GetComponent<PassiveButton>();
                 button.OnClick.RemoveAllListeners();
                 int copiedIndex = i;
-                button.OnClick.AddListener((System.Action)(() => guesserOnClick(copiedIndex, __instance)));
+                button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
             }
         }
     }
@@ -834,7 +834,7 @@ class MeetingHudPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
     class StartMeetingPatch
     {
-        public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo meetingTarget)
+        public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo meetingTarget)
         {
             RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
             byte roomId = byte.MinValue;

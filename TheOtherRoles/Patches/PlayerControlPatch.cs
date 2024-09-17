@@ -1454,7 +1454,7 @@ public static class PlayerControlFixedUpdatePatch
 
                 gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                 Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
-                HideNSeek.timerText = gameObject.GetComponent<TMPro.TMP_Text>();
+                HideNSeek.timerText = gameObject.GetComponent<TMP_Text>();
 
                 // Use local position to place it in the player's view instead of the world location
                 gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
@@ -1761,7 +1761,7 @@ class PlayerControlCmdReportDeadBodyPatch
 [HarmonyPatch(typeof(PlayerControl), nameof(CachedPlayer.LocalPlayer.PlayerControl.CmdReportDeadBody))]
 class BodyReportPatch
 {
-    static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
+    static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
         // Medic or Detective report
         bool isMedicReport = Medic.medic != null && Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && __instance.PlayerId == Medic.medic.PlayerId;

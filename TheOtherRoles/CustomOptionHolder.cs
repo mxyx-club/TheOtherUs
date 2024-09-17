@@ -607,21 +607,20 @@ public class CustomOptionHolder
         // Role Options
         presetSelection = Create(0, Types.General, cs(new Color32(204, 204, 0, 255), "Preset"), presets, null, true);
 
-        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color32(204, 204, 0, 255), "Any Player Can Stop The Start"), false, null, false);
-
         if (Utilities.EventUtility.canBeEnabled) enableEventMode = Create(3, Types.General, cs(Color.green, "Enable Special Mode"), true, null, true);
 
         // Using new id's for the options to not break compatibilty with older versions
-        neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "Minimum Neutral Roles"), 15f, 0f, 15f, 1f);
+        neutralRolesCountMin = Create(8, Types.General, cs(new Color32(204, 204, 0, 255), "Minimum Neutral Roles"), 15f, 0f, 15f, 1f, heading: "Min/Max Roles");
         neutralRolesCountMax = Create(9, Types.General, cs(new Color32(204, 204, 0, 255), "Maximum Neutral Roles"), 15f, 0f, 15f, 1f);
         modifiersCountMin = Create(12, Types.General, cs(new Color32(204, 204, 0, 255), "Minimum Modifiers"), 15f, 0f, 15f, 1f);
         modifiersCountMax = Create(13, Types.General, cs(new Color32(204, 204, 0, 255), "Maximum Modifiers"), 15f, 0f, 15f, 1f);
 
         //-------------------------- Other options 1 - 599 -------------------------- //
 
-        resteButtonCooldown = Create(20, Types.General, "Game Start CoolDown", 10f, 2.5f, 30f, 2.5f, null, true);
 
-        maxNumberOfMeetings = Create(21, Types.General, "Number Of Meetings (excluding Mayor meeting)", 10, 0, 15, 1, null, true);
+        maxNumberOfMeetings = Create(3, Types.General, "Number Of Meetings (excluding Mayor meeting)", 10, 0, 15, 1, null, true, heading: "Gameplay Settings");
+        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Any Player Can Stop The Start"), false, null, false);
+        resteButtonCooldown = Create(20, Types.General, "Game Start CoolDown", 10f, 2.5f, 30f, 2.5f);
         blockSkippingInEmergencyMeetings = Create(22, Types.General, "Block Skipping In Emergency Meetings", false);
         noVoteIsSelfVote = Create(23, Types.General, "No Vote Is Self Vote", false, blockSkippingInEmergencyMeetings);
         shieldFirstKill = Create(24, Types.General, "Shield Last Game First Kill", false);
@@ -661,7 +660,7 @@ public class CustomOptionHolder
         camsNoNightVisionIfImpVision = Create(108, Types.General, "Impostor Vision Ignores Night Vision Cams", false, camsNightVision, false);
         deadImpsBlockSabotage = Create(109, Types.General, cs(Palette.ImpostorRed, "Block Dead Impostor From Sabotaging"), false, null, false);
 
-        dynamicMap = Create(120, Types.General, "Play On A Random Map", false, null, true);
+        dynamicMap = Create(120, Types.General, "Play On A Random Map", false, null, true, heading: "Random Maps");
         dynamicMapEnableSkeld = Create(121, Types.General, "Skeld", rates, dynamicMap, false);
         dynamicMapEnableMira = Create(122, Types.General, "Mira", rates, dynamicMap, false);
         dynamicMapEnablePolus = Create(123, Types.General, "Polus", rates, dynamicMap, false);
@@ -1024,7 +1023,7 @@ public class CustomOptionHolder
 
         //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-        modifiersAreHidden = Create(1000, Types.Modifier, cs(Color.yellow, "Hide After Death Modifiers"), true, null, true);
+        modifiersAreHidden = CustomOption.Create(1009, Types.Modifier, cs(Color.yellow, "VIP, Bait & Bloody Are Hidden"), true, null, true, heading: cs(Color.yellow, "Hide After Death Modifiers"));
 
         modifierDisperser = Create(1010, Types.Modifier, cs(Color.red, "Disperser"), rates, null, true);
         modifierDisperserCooldown = Create(1011, Types.Modifier, "Disperser Cooldown", 30f, 10f, 60f, 2.5f, modifierDisperser);
@@ -1107,13 +1106,13 @@ public class CustomOptionHolder
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
-        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "Number of Crew Guessers"), 15f, 1f, 15f, 1f, null, true);
+        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "Number of Crew Guessers"), 15f, 1f, 15f, 1f, null, true, heading: "Amount of Guessers");
         guesserGamemodeNeutralNumber = Create(2002, Types.Guesser, cs(Guesser.color, "Number of Neutral Guessers"), 15f, 1f, 15f, 1f);
         guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Guesser.color, "Number of Impostor Guessers"), 15f, 1f, 15f, 1f);
-        guesserForceJackalGuesser = Create(2007, Types.Guesser, "Force Jackal Guesser", false, null, true);
+        guesserForceJackalGuesser = Create(2007, Types.Guesser, "Force Jackal Guesser", false, null, true, heading: "Force Guessers");
         guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "Sidekick Is Always Guesser", false);
         guesserForceThiefGuesser = Create(2011, Types.Guesser, "Force Thief Guesser", false);
-        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "Guessers Can Have A Modifier", true, null, true);
+        guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "Guessers Can Have A Modifier", true, null, true, heading: "General Guesser Settings");
         guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "Guesser Number Of Shots", 3f, 1f, 15f, 1f);
         guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "Guesser Can Shoot Multiple Times Per Meeting", false);
         guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "Guesses Ignore The Medic Shield", true);
@@ -1136,7 +1135,7 @@ public class CustomOptionHolder
         hideNSeekCanSabotage = Create(3019, Types.HideNSeekMain, cs(Color.yellow, "Enable Sabotages"), false);
         hideNSeekHunterWaiting = Create(3022, Types.HideNSeekMain, cs(Color.yellow, "Time The Hunter Needs To Wait"), 15f, 2.5f, 60f, 2.5f);
 
-        hunterLightCooldown = Create(3005, Types.HideNSeekRoles, cs(Color.red, "Hunter Light Cooldown"), 30f, 5f, 60f, 1f, null, true);
+        hunterLightCooldown = Create(3005, Types.HideNSeekRoles, cs(Color.red, "Hunter Light Cooldown"), 30f, 5f, 60f, 1f, null, true, heading: "Hunter Settings");
         hunterLightDuration = Create(3006, Types.HideNSeekRoles, cs(Color.red, "Hunter Light Duration"), 5f, 1f, 60f, 1f);
         hunterLightVision = Create(3007, Types.HideNSeekRoles, cs(Color.red, "Hunter Light Vision"), 3f, 1f, 5f, 0.25f);
         hunterLightPunish = Create(3008, Types.HideNSeekRoles, cs(Color.red, "Hunter Light Punish In Sec"), 5f, 0f, 30f, 1f);
@@ -1147,7 +1146,7 @@ public class CustomOptionHolder
         hunterArrowDuration = Create(3013, Types.HideNSeekRoles, cs(Color.red, "Hunter Arrow Duration"), 5f, 0f, 60f, 1f);
         hunterArrowPunish = Create(3014, Types.HideNSeekRoles, cs(Color.red, "Hunter Arrow Punish In Sec"), 5f, 0f, 30f, 1f);
 
-        huntedShieldCooldown = Create(3015, Types.HideNSeekRoles, cs(Color.gray, "Hunted Shield Cooldown"), 30f, 5f, 60f, 1f, null, true);
+        huntedShieldCooldown = Create(3015, Types.HideNSeekRoles, cs(Color.gray, "Hunted Shield Cooldown"), 30f, 5f, 60f, 1f, null, true, heading: "Hunted Settings");
         huntedShieldDuration = Create(3016, Types.HideNSeekRoles, cs(Color.gray, "Hunted Shield Duration"), 5f, 1f, 60f, 1f);
         huntedShieldRewindTime = Create(3018, Types.HideNSeekRoles, cs(Color.gray, "Hunted Rewind Time"), 3f, 1f, 10f, 1f);
         huntedShieldNumber = Create(3026, Types.HideNSeekRoles, cs(Color.gray, "Hunted Shield Number"), 3f, 1f, 15f, 1f);
@@ -1160,13 +1159,13 @@ public class CustomOptionHolder
                 int map = propHuntMap.selection; if (map >= 3) map++;
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId = (byte)map;
             });
-        propHuntTimer = Create(4021, Types.PropHunt, cs(Color.yellow, "Timer In Min"), 5f, 1f, 30f, 0.5f);
+        propHuntTimer = Create(4021, Types.PropHunt, cs(Color.yellow, "Timer In Min"), 5f, 1f, 30f, 0.5f, null, true, heading: "General PropHunt Settings");
         propHuntUnstuckCooldown = Create(4011, Types.PropHunt, cs(Color.yellow, "Unstuck Cooldown"), 30f, 2.5f, 60f, 2.5f);
         propHuntUnstuckDuration = Create(4012, Types.PropHunt, cs(Color.yellow, "Unstuck Duration"), 2f, 1f, 60f, 1f);
         propHunterVision = Create(4006, Types.PropHunt, cs(Color.yellow, "Hunter Vision"), 0.5f, 0.25f, 2f, 0.25f);
         propVision = Create(4007, Types.PropHunt, cs(Color.yellow, "Prop Vision"), 2f, 0.25f, 5f, 0.25f);
         // Hunter Options
-        propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "Number Of Hunters"), 1f, 1f, 5f, 1f, null, true);
+        propHuntNumberOfHunters = Create(4000, Types.PropHunt, cs(Color.red, "Number Of Hunters"), 1f, 1f, 5f, 1f, null, true, heading: "Hunter Settings");
         hunterInitialBlackoutTime = Create(4001, Types.PropHunt, cs(Color.red, "Hunter Initial Blackout Duration"), 10f, 5f, 20f, 1f);
         hunterMissCooldown = Create(4004, Types.PropHunt, cs(Color.red, "Kill Cooldown After Miss"), 10f, 2.5f, 60f, 2.5f);
         hunterHitCooldown = Create(4005, Types.PropHunt, cs(Color.red, "Kill Cooldown After Hit"), 10f, 2.5f, 60f, 2.5f);
@@ -1177,7 +1176,7 @@ public class CustomOptionHolder
         propHuntFindCooldown = Create(4023, Types.PropHunt, cs(Color.red, "Find Cooldown"), 60f, 2.5f, 1800f, 2.5f);
         propHuntFindDuration = Create(4024, Types.PropHunt, cs(Color.red, "Find Duration"), 5f, 1f, 15f, 1f);
         // Prop Options
-        propBecomesHunterWhenFound = Create(4003, Types.PropHunt, cs(Palette.CrewmateBlue, "Props Become Hunters When Found"), false, null, true);
+        propBecomesHunterWhenFound = Create(4003, Types.PropHunt, cs(Palette.CrewmateBlue, "Props Become Hunters When Found"), false, null, true, heading: "Prop Settings");
         propHuntInvisEnabled = Create(4013, Types.PropHunt, cs(Palette.CrewmateBlue, "Invisibility Enabled"), true, null, true);
         propHuntInvisCooldown = Create(4014, Types.PropHunt, cs(Palette.CrewmateBlue, "Invisibility Cooldown"), 120f, 10f, 1800f, 2.5f, propHuntInvisEnabled);
         propHuntInvisDuration = Create(4015, Types.PropHunt, cs(Palette.CrewmateBlue, "Invisibility Duration"), 5f, 1f, 30f, 1f, propHuntInvisEnabled);

@@ -58,7 +58,7 @@ public static class DynamicLobbies
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.HostGame))]
     public static class InnerNetClientHostPatch
     {
-        public static void Prefix(InnerNet.InnerNetClient __instance, [HarmonyArgument(0)] GameOptionsData settings)
+        public static void Prefix(InnerNetClient __instance, [HarmonyArgument(0)] GameOptionsData settings)
         {
             int maxPlayers;
             try
@@ -73,7 +73,7 @@ public static class DynamicLobbies
             settings.MaxPlayers = 15; // Force 15 Player Lobby on Server
             DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
         }
-        public static void Postfix(InnerNet.InnerNetClient __instance, [HarmonyArgument(0)] GameOptionsData settings)
+        public static void Postfix(InnerNetClient __instance, [HarmonyArgument(0)] GameOptionsData settings)
         {
             settings.MaxPlayers = LobbyLimit;
         }
@@ -81,7 +81,7 @@ public static class DynamicLobbies
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.JoinGame))]
     public static class InnerNetClientJoinPatch
     {
-        public static void Prefix(InnerNet.InnerNetClient __instance)
+        public static void Prefix(InnerNetClient __instance)
         {
             DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
         }
