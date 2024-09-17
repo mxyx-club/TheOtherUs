@@ -48,7 +48,7 @@ jobs:
         run: unzip ExtraData.zip -d ./Release/
 
       - name: download Reactor
-        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.2.0/Reactor.dll -P ./Release/BepInEx/plugins
+        run: wget https://github.com/NuclearPowered/Reactor/releases/download/2.3.1/Reactor.dll -P ./Release/BepInEx/plugins
         
       - name: Build
         run: dotnet build TheOtherRoles/TheOtherRoles.csproj --configuration Release --output ./Release/BepInEx/plugins
