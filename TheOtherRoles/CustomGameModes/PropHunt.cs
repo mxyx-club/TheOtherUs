@@ -175,8 +175,8 @@ class PropHunt
         {
             poolablesBackground = new GameObject("poolablesBackground");
             poolablesBackground.AddComponent<SpriteRenderer>();
-			poolablesBackground.layer = LayerMask.NameToLayer("UI");
-			if (poolablesBackgroundSprite == null) poolablesBackgroundSprite = loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
+            poolablesBackground.layer = LayerMask.NameToLayer("UI");
+            if (poolablesBackgroundSprite == null) poolablesBackgroundSprite = loadSpriteFromResources("TheOtherRoles.Resources.poolablesBackground.jpg", 200f);
         }
         poolablesBackground.transform.SetParent(HudManager.Instance.transform);
         poolablesBackground.transform.localPosition = IntroCutsceneOnDestroyPatch.bottomLeft + new Vector3(-1.45f, -0.05f, 0) + (Vector3.right * PlayerControl.AllPlayerControls.Count * 0.2f);
@@ -211,8 +211,8 @@ class PropHunt
                 if (!revealRenderer.ContainsKey(pc.PlayerId))
                 {
                     var go = new GameObject($"reveal_renderer_{pc.PlayerId}");
-					go.layer = LayerMask.NameToLayer("UI");
-					go.AddComponent<SpriteRenderer>();
+                    go.layer = LayerMask.NameToLayer("UI");
+                    go.AddComponent<SpriteRenderer>();
                     go.transform.SetParent(poolablePlayer.transform.parent, false);
                     go.SetActive(true);
                     go.transform.localPosition = poolablePlayer.transform.localPosition + new Vector3(0, 0, -50f);
@@ -280,8 +280,8 @@ class PropHunt
 
     public static void dangerMeterUpdate()
     {
-		if (!HudManager.Instance || !HudManager.Instance.DangerMeter) return;
-		if (HudManager.Instance.DangerMeter.gameObject.active)
+        if (!HudManager.Instance || !HudManager.Instance.DangerMeter) return;
+        if (HudManager.Instance.DangerMeter.gameObject.active)
         {
             float dist = 55f;
             float dist2 = 15f;
@@ -656,8 +656,8 @@ class PropHunt
     public static bool KillButtonClickPatch(KillButton __instance)
     {
         if (!isPropHuntGM || __instance.isCoolingDown || PlayerControl.LocalPlayer.Data.IsDead || PlayerControl.LocalPlayer.inVent) return false;
-		var targets = PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray();
-		__instance.SetTarget(PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray().FirstOrDefault());
+        var targets = PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray();
+        __instance.SetTarget(PlayerControl.LocalPlayer.Data.Role.GetPlayersInAbilityRangeSorted(RoleBehaviour.GetTempPlayerList(), true).ToArray().FirstOrDefault());
 
         if (__instance.currentTarget == null)
         {
@@ -672,16 +672,16 @@ class PropHunt
         return false;
     }
 
-	[HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.IsValidTarget))]
-	[HarmonyPrefix]
-	public static bool IsValidTarget(RoleBehaviour __instance, NetworkedPlayerInfo target, ref bool __result)
-	{
-		if (!PropHunt.isPropHuntGM) return true;
-		__result = !(target == null) && !target.Disconnected && !target.IsDead && target.PlayerId != __instance.Player.PlayerId && !(target.Role == null) && !(target.Object == null) && !target.Object.inVent && !target.Object.inMovingPlat;
-		return false;
-	}
+    [HarmonyPatch(typeof(RoleBehaviour), nameof(RoleBehaviour.IsValidTarget))]
+    [HarmonyPrefix]
+    public static bool IsValidTarget(RoleBehaviour __instance, NetworkedPlayerInfo target, ref bool __result)
+    {
+        if (!PropHunt.isPropHuntGM) return true;
+        __result = !(target == null) && !target.Disconnected && !target.IsDead && target.PlayerId != __instance.Player.PlayerId && !(target.Role == null) && !(target.Object == null) && !target.Object.inVent && !target.Object.inMovingPlat;
+        return false;
+    }
 
-	[HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Show))]
+    [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Show))]
     [HarmonyPrefix]
     public static void MapBehaviourShowPatch(MapBehaviour __instance, ref MapOptions opts)
     {

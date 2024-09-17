@@ -43,7 +43,7 @@ public class ModUpdater : MonoBehaviour
     {
         if (_busy) return;
         this.StartCoroutine(CoCheckForUpdate());
-        SceneManager.add_sceneLoaded((System.Action<Scene, LoadSceneMode>)OnSceneLoaded);
+        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)OnSceneLoaded);
     }
 
 
@@ -192,7 +192,7 @@ public class ModUpdater : MonoBehaviour
 
         var text = button.transform.GetComponentInChildren<TMPro.TMP_Text>();
         string t = "Update TOU";
-        StartCoroutine(Effects.Lerp(0.1f, (System.Action<float>)(p => text.SetText(t))));
+        StartCoroutine(Effects.Lerp(0.1f, (Action<float>)(p => text.SetText(t))));
         passiveButton.OnMouseOut.AddListener((Action)(() => text.color = Color.red));
         passiveButton.OnMouseOver.AddListener((Action)(() => text.color = Color.white));
         var announcement = $"<size=150%>A new THE OTHER US update to {latestRelease.Tag} is available</size>\n{latestRelease.Description}";
@@ -216,7 +216,7 @@ public class ModUpdater : MonoBehaviour
 
         popUp.gameObject.SetActive(true);
 
-        Assets.InnerNet.Announcement creditsAnnouncement = new()
+        Announcement creditsAnnouncement = new()
         {
             Id = "touAnnouncement",
             Language = 0,

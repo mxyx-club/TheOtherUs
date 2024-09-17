@@ -35,8 +35,8 @@ public class GameStartManagerPatch
             {
                 shareGameVersion();
             }
-			GameStartManagerUpdatePatch.sendGamemode = true;
-		}
+            GameStartManagerUpdatePatch.sendGamemode = true;
+        }
     }
 
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Start))]
@@ -65,9 +65,9 @@ public class GameStartManagerPatch
         private static bool update;
         private static string currentText = "";
         private static GameObject copiedStartButton;
-		public static bool sendGamemode = true;
+        public static bool sendGamemode = true;
 
-		public static void Prefix(GameStartManager __instance)
+        public static void Prefix(GameStartManager __instance)
         {
             if (!GameData.Instance) return; // No instance
             update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
@@ -125,20 +125,20 @@ public class GameStartManagerPatch
                 if (versionMismatch)
                 {
                     __instance.GameStartText.text = message;
-					__instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
-					__instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
-					__instance.GameStartTextParent.SetActive(true);
-				}
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
+                    __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
+                    __instance.GameStartTextParent.SetActive(true);
+                }
                 else
                 {
-					__instance.GameStartText.transform.localPosition = Vector3.zero;
-					__instance.GameStartText.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-					if (!__instance.GameStartText.text.StartsWith(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameStarting).Replace("{0}", "")) && CustomOptionHolder.anyPlayerCanStopStart.getBool())
-					{
-						__instance.GameStartText.text = String.Empty;
-						__instance.GameStartTextParent.SetActive(false);
-					}
-				}
+                    __instance.GameStartText.transform.localPosition = Vector3.zero;
+                    __instance.GameStartText.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+                    if (!__instance.GameStartText.text.StartsWith(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameStarting).Replace("{0}", "")) && CustomOptionHolder.anyPlayerCanStopStart.getBool())
+                    {
+                        __instance.GameStartText.text = String.Empty;
+                        __instance.GameStartTextParent.SetActive(false);
+                    }
+                }
 
                 if (__instance.startState != GameStartManager.StartingStates.Countdown)
                     copiedStartButton?.Destroy();
@@ -189,26 +189,26 @@ public class GameStartManagerPatch
                     }
 
                     __instance.GameStartText.text = $"<color=#FF0000FF>The host has no or a different version of The Other Us\nYou will be kicked in {Math.Round(10 - kickingTimer)}s</color>";
-					__instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
-					__instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
-					__instance.GameStartTextParent.SetActive(true);
-				}
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
+                    __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
+                    __instance.GameStartTextParent.SetActive(true);
+                }
                 else if (versionMismatch)
                 {
                     __instance.GameStartText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
-					__instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
-					__instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
-					__instance.GameStartTextParent.SetActive(true);
-				}
+                    __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
+                    __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
+                    __instance.GameStartTextParent.SetActive(true);
+                }
                 else
                 {
-					__instance.GameStartText.transform.localPosition = Vector3.zero;
-					__instance.GameStartText.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-					if (!__instance.GameStartText.text.StartsWith(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameStarting).Replace("{0}", "")) && CustomOptionHolder.anyPlayerCanStopStart.getBool())
-					{
-						__instance.GameStartText.text = String.Empty;
-						__instance.GameStartTextParent.SetActive(false);
-					}
+                    __instance.GameStartText.transform.localPosition = Vector3.zero;
+                    __instance.GameStartText.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+                    if (!__instance.GameStartText.text.StartsWith(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameStarting).Replace("{0}", "")) && CustomOptionHolder.anyPlayerCanStopStart.getBool())
+                    {
+                        __instance.GameStartText.text = String.Empty;
+                        __instance.GameStartTextParent.SetActive(false);
+                    }
                 }
 
                 if (!__instance.GameStartText.text.StartsWith(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameStarting).Replace("{0}", "")) || !CustomOptionHolder.anyPlayerCanStopStart.getBool())
@@ -250,27 +250,27 @@ public class GameStartManagerPatch
             {
                 startingTimer -= Time.deltaTime;
             }
-			// Lobby timer
-			if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
+            // Lobby timer
+            if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
 
-			if (update) currentText = __instance.PlayerCounter.text;
+            if (update) currentText = __instance.PlayerCounter.text;
 
             timer = Mathf.Max(0f, timer -= Time.deltaTime);
             int minutes = (int)timer / 60;
             int seconds = (int)timer % 60;
             string suffix = $" ({minutes:00}:{seconds:00})";
 
-			if (!AmongUsClient.Instance) return;
+            if (!AmongUsClient.Instance) return;
 
-			if (AmongUsClient.Instance.AmHost && sendGamemode && CachedPlayer.LocalPlayer != null)
-			{
+            if (AmongUsClient.Instance.AmHost && sendGamemode && CachedPlayer.LocalPlayer != null)
+            {
                 var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
                     (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
                 writer.Write((byte)TORMapOptions.gameMode);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.shareGameMode((byte)TORMapOptions.gameMode);
-				sendGamemode = false;
-			}
+                sendGamemode = false;
+            }
         }
     }
 

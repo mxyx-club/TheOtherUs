@@ -306,10 +306,10 @@ public static class RPCProcedure
     public static void shareGamemode(byte gm)
     {
         gameMode = (CustomGamemodes)gm;
-		LobbyViewSettingsPatch.currentButtons?.ForEach(x => x.gameObject?.Destroy());
-		LobbyViewSettingsPatch.currentButtons?.Clear();
-		LobbyViewSettingsPatch.currentButtonTypes?.Clear();
-	}
+        LobbyViewSettingsPatch.currentButtons?.ForEach(x => x.gameObject?.Destroy());
+        LobbyViewSettingsPatch.currentButtons?.Clear();
+        LobbyViewSettingsPatch.currentButtonTypes?.Clear();
+    }
 
     public static void stopStart(byte playerId)
     {
@@ -1162,7 +1162,7 @@ public static class RPCProcedure
                 if (CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
                 {
                     Vector3 bottomLeft = new Vector3(-FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z) + new Vector3(-0.25f, 1f, 0);
-                    BountyHunter.cooldownText = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                    BountyHunter.cooldownText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                     BountyHunter.cooldownText.alignment = TMPro.TextAlignmentOptions.Center;
                     BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
                     BountyHunter.cooldownText.gameObject.SetActive(true);
@@ -1849,15 +1849,15 @@ public static class RPCProcedure
                 else
                 {
                     var SpawnPositions = GameOptionsManager.Instance.currentNormalGameOptions.MapId switch
-                        {
-                            0 => MapData.SkeldSpawnPosition,
-                            1 => MapData.MiraSpawnPosition,
-                            2 => MapData.PolusSpawnPosition,
-                            3 => MapData.DleksSpawnPosition,
-                            4 => MapData.AirshipSpawnPosition,
-                            5 => MapData.FungleSpawnPosition,
-                            _ => MapData.FindVentSpawnPositions()
-                        };
+                    {
+                        0 => MapData.SkeldSpawnPosition,
+                        1 => MapData.MiraSpawnPosition,
+                        2 => MapData.PolusSpawnPosition,
+                        3 => MapData.DleksSpawnPosition,
+                        4 => MapData.AirshipSpawnPosition,
+                        5 => MapData.FungleSpawnPosition,
+                        _ => MapData.FindVentSpawnPositions()
+                    };
                     CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo
                         (SpawnPositions[rnd.Next(SpawnPositions.Count)]);
                 }
@@ -2430,7 +2430,7 @@ public static class RPCProcedure
         position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
         position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
 
-        var camera = UnityEngine.Object.Instantiate<SurvCamera>(referenceCamera);
+        var camera = UnityEngine.Object.Instantiate(referenceCamera);
         camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
         camera.CamName = $"Security Camera {SecurityGuard.placedCameras}";
         camera.Offset = new Vector3(0f, 0f, camera.Offset.z);
@@ -2563,8 +2563,8 @@ public static class RPCProcedure
             }
         }
 
-		bool lawyerDiedAdditionally = false;
-		if (Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
+        bool lawyerDiedAdditionally = false;
+        if (Lawyer.lawyer != null && !Lawyer.isProsecutor && Lawyer.lawyer.PlayerId == killerId && Lawyer.target != null && Lawyer.target.PlayerId == dyingTargetId)
         {
             // Lawyer guessed client.
             if (CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer)
@@ -2573,9 +2573,9 @@ public static class RPCProcedure
                 if (MeetingHudPatch.guesserUI != null) MeetingHudPatch.guesserUIExitButton.OnClick.Invoke();
             }
             Lawyer.lawyer.Exiled();
-			lawyerDiedAdditionally = true;
-			GameHistory.overrideDeathReasonAndKiller(Lawyer.lawyer, DeadPlayer.CustomDeathReason.LawyerSuicide, guesser);
-		}
+            lawyerDiedAdditionally = true;
+            GameHistory.overrideDeathReasonAndKiller(Lawyer.lawyer, DeadPlayer.CustomDeathReason.LawyerSuicide, guesser);
+        }
 
         dyingTarget.Exiled();
         overrideDeathReasonAndKiller(dyingTarget, DeadPlayer.CustomDeathReason.Guess, guesser);
@@ -2591,12 +2591,12 @@ public static class RPCProcedure
                 {
                     pva.SetDead(pva.DidReport, true);
                     pva.Overlay.gameObject.SetActive(true);
-					MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, pva.TargetPlayerId);
-				}
+                    MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, pva.TargetPlayerId);
+                }
 
-				//Give players back their vote if target is shot dead
-				if (pva.VotedFor != dyingTargetId && pva.VotedFor != partnerId && (!lawyerDiedAdditionally || Lawyer.lawyer.PlayerId != pva.VotedFor)) continue;
-				pva.UnsetVote();
+                //Give players back their vote if target is shot dead
+                if (pva.VotedFor != dyingTargetId && pva.VotedFor != partnerId && (!lawyerDiedAdditionally || Lawyer.lawyer.PlayerId != pva.VotedFor)) continue;
+                pva.UnsetVote();
                 var voteAreaPlayer = playerById(pva.TargetPlayerId);
                 if (!voteAreaPlayer.AmOwner) continue;
                 MeetingHud.Instance.ClearVote();

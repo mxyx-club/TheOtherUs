@@ -343,7 +343,7 @@ public class EndGameManagerSetUpPatch
                 return 0;
             }
             return -1;
-        }).ToList<CachedPlayerData>();
+        }).ToList();
         for (int i = 0; i < list.Count; i++)
         {
             CachedPlayerData winningPlayerData2 = list[i];
@@ -352,7 +352,7 @@ public class EndGameManagerSetUpPatch
             float num4 = num3 / (float)num;
             float num5 = Mathf.Lerp(1f, 0.75f, num4);
             float num6 = (i == 0) ? -8 : -1;
-            PoolablePlayer poolablePlayer = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, __instance.transform);
+            PoolablePlayer poolablePlayer = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, __instance.transform);
             poolablePlayer.transform.localPosition = new Vector3(1f * num2 * num3 * num5, FloatRange.SpreadToEdges(-1.125f, 0f, num3, num), num6 + (num3 * 0.01f)) * 0.9f;
             float num7 = Mathf.Lerp(1f, 0.65f, num4) * 0.9f;
             Vector3 vector = new(num7, num7, 1f);

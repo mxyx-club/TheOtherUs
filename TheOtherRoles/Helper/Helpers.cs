@@ -1365,15 +1365,15 @@ public static class Helpers
             if (cam != null && cam.gameObject.name == "UI Camera") cam.orthographicSize = orthographicSize;  // The UI is scaled too, else we cant click the buttons. Downside: map is super small.
         }
 
-		var tzGO = GameObject.Find("TOGGLEZOOMBUTTON");
-		if (tzGO != null)
-		{
-			var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
-			var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
-			rend.sprite = zoomOutStatus ? Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Plus_Button.png", 100f) : Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Minus_Button.png", 100f);
-			rendActive.sprite = zoomOutStatus ? Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Plus_ButtonActive.png", 100f) : Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Minus_ButtonActive.png", 100f);
-			tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (zoomOutStatus ? 4 : 1);
-		}
+        var tzGO = GameObject.Find("TOGGLEZOOMBUTTON");
+        if (tzGO != null)
+        {
+            var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
+            var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
+            rend.sprite = zoomOutStatus ? Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Plus_Button.png", 100f) : Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Minus_Button.png", 100f);
+            rendActive.sprite = zoomOutStatus ? Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Plus_ButtonActive.png", 100f) : Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Minus_ButtonActive.png", 100f);
+            tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (zoomOutStatus ? 4 : 1);
+        }
         ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height, Screen.fullScreen); // This will move button positions to the correct position.
     }
 

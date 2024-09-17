@@ -42,8 +42,8 @@ public class TheOtherRolesPlugin : BasePlugin
     public static ConfigEntry<bool> ShowRoleSummary { get; set; }
     public static ConfigEntry<bool> ShowLighterDarker { get; set; }
     public static ConfigEntry<bool> EnableSoundEffects { get; set; }
-	public static ConfigEntry<bool> ShowChatNotifications { get; set; }
-	public static ConfigEntry<bool> ShowFPS { get; set; }
+    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    public static ConfigEntry<bool> ShowFPS { get; set; }
     public static ConfigEntry<bool> EnableHorseMode { get; set; }
     public static ConfigEntry<bool> ToggleCursor { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
@@ -106,15 +106,15 @@ public class TheOtherRolesPlugin : BasePlugin
         EnableHorseMode = Config.Bind("Custom", "Enable Horse Mode", false);
         ShowPopUpVersion = Config.Bind("Custom", "Show PopUp", "0");
         ShowFPS = Config.Bind("Custom", "Show FPS", true);
-		ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
+        ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
 
-		Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
+        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         defaultRegions = ServerManager.DefaultRegions;
-		// Removes vanilla Servers
-		ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>(new IRegionInfo[0]);
+        // Removes vanilla Servers
+        ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>(new IRegionInfo[0]);
 
-		UpdateRegions();
+        UpdateRegions();
 
         DebugMode = Config.Bind("Custom", "Enable Debug Mode", false);
         Harmony.PatchAll();

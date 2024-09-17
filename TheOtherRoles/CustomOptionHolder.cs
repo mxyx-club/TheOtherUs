@@ -618,10 +618,10 @@ public class CustomOptionHolder
         //-------------------------- Other options 1 - 599 -------------------------- //
 
 
-		maxNumberOfMeetings = Create(3, Types.General, "Number Of Meetings (excluding Mayor meeting)", 10, 0, 15, 1, null, true, heading: "Gameplay Settings");
-		anyPlayerCanStopStart = Create(2, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Any Player Can Stop The Start"), false, null, false);
-		resteButtonCooldown = Create(20, Types.General, "Game Start CoolDown", 10f, 2.5f, 30f, 2.5f);
-		blockSkippingInEmergencyMeetings = Create(22, Types.General, "Block Skipping In Emergency Meetings", false);
+        maxNumberOfMeetings = Create(3, Types.General, "Number Of Meetings (excluding Mayor meeting)", 10, 0, 15, 1, null, true, heading: "Gameplay Settings");
+        anyPlayerCanStopStart = Create(2, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Any Player Can Stop The Start"), false, null, false);
+        resteButtonCooldown = Create(20, Types.General, "Game Start CoolDown", 10f, 2.5f, 30f, 2.5f);
+        blockSkippingInEmergencyMeetings = Create(22, Types.General, "Block Skipping In Emergency Meetings", false);
         noVoteIsSelfVote = Create(23, Types.General, "No Vote Is Self Vote", false, blockSkippingInEmergencyMeetings);
         shieldFirstKill = Create(24, Types.General, "Shield Last Game First Kill", false);
         hidePlayerNames = Create(25, Types.General, "Hide Player Names", false);
@@ -656,7 +656,7 @@ public class CustomOptionHolder
         restrictCameras = Create(104, Types.General, "Restrict Cameras", 30f, 0f, 600f, 5f, restrictDevices);
         restrictVents = Create(105, Types.General, "Restrict Vitals", 30f, 0f, 600f, 5f, restrictDevices);
         disableCamsRound1 = Create(106, Types.General, "No Cameras First Round", false, null, false);
-		camsNightVision = Create(107, Types.General, "Cams Switch To Night Vision If Lights Are Off", false, null, true);
+        camsNightVision = Create(107, Types.General, "Cams Switch To Night Vision If Lights Are Off", false, null, true);
         camsNoNightVisionIfImpVision = Create(108, Types.General, "Impostor Vision Ignores Night Vision Cams", false, camsNightVision, false);
         deadImpsBlockSabotage = Create(109, Types.General, cs(Palette.ImpostorRed, "Block Dead Impostor From Sabotaging"), false, null, false);
 
@@ -1021,11 +1021,11 @@ public class CustomOptionHolder
         trapperInfoType = Create(30256, Types.Crewmate, "Trap Information Type", ["Role", "Good/Evil Role", "Name"], trapperSpawnRate);
         trapperTrapDuration = Create(30257, Types.Crewmate, "Trap Duration", 5f, 1f, 15f, 1f, trapperSpawnRate);
 
-		//-------------------------- Modifier (1000 - 1999) -------------------------- //
+        //-------------------------- Modifier (1000 - 1999) -------------------------- //
 
-		modifiersAreHidden = CustomOption.Create(1009, Types.Modifier, cs(Color.yellow, "VIP, Bait & Bloody Are Hidden"), true, null, true, heading: cs(Color.yellow, "Hide After Death Modifiers"));
+        modifiersAreHidden = CustomOption.Create(1009, Types.Modifier, cs(Color.yellow, "VIP, Bait & Bloody Are Hidden"), true, null, true, heading: cs(Color.yellow, "Hide After Death Modifiers"));
 
-		modifierDisperser = Create(1010, Types.Modifier, cs(Color.red, "Disperser"), rates, null, true);
+        modifierDisperser = Create(1010, Types.Modifier, cs(Color.red, "Disperser"), rates, null, true);
         modifierDisperserCooldown = Create(1011, Types.Modifier, "Disperser Cooldown", 30f, 10f, 60f, 2.5f, modifierDisperser);
         modifierDisperserNumberOfUses = Create(1012, Types.Modifier, "Number Of Uses", 1, 1, 5, 1, modifierDisperser);
         modifierDisperserDispersesToVent = Create(1013, Types.Modifier, "disperse To Vent", true, modifierDisperser);

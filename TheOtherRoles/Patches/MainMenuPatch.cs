@@ -38,14 +38,14 @@ public class MainMenuPatch
         buttonDiscord.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.542f, 0.5f);
 
         var textDiscord = buttonDiscord.transform.GetComponentInChildren<TMPro.TMP_Text>();
-        __instance.StartCoroutine(Effects.Lerp(0.5f, new System.Action<float>((p) =>
+        __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((p) =>
         {
             textDiscord.SetText("TOU Discord");
         })));
         PassiveButton passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
 
         passiveButtonDiscord.OnClick = new Button.ButtonClickedEvent();
-        passiveButtonDiscord.OnClick.AddListener((System.Action)(() => Application.OpenURL("https://discord.gg/yspVyP5meR")));
+        passiveButtonDiscord.OnClick.AddListener((Action)(() => Application.OpenURL("https://discord.gg/yspVyP5meR")));
 
 
 
@@ -57,7 +57,7 @@ public class MainMenuPatch
         creditsButton.GetComponent<AspectPosition>().anchorPoint = new Vector2(0.462f, 0.5f);
 
         var textCreditsButton = creditsButton.transform.GetComponentInChildren<TMPro.TMP_Text>();
-        __instance.StartCoroutine(Effects.Lerp(0.5f, new System.Action<float>((p) =>
+        __instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((p) =>
         {
             textCreditsButton.SetText("TOU Credits");
         })));
@@ -65,7 +65,7 @@ public class MainMenuPatch
 
         passiveCreditsButton.OnClick = new Button.ButtonClickedEvent();
 
-        passiveCreditsButton.OnClick.AddListener((System.Action)delegate
+        passiveCreditsButton.OnClick.AddListener((Action)delegate
         {
             // do stuff
             if (popUp != null) Object.Destroy(popUp);
@@ -124,7 +124,7 @@ TheOtherRolesGMIA - Some button photos from this mod,by Imp11
 ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             creditsString += "</align>";
 
-            Assets.InnerNet.Announcement creditsAnnouncement = new()
+            Announcement creditsAnnouncement = new()
             {
                 Id = "torCredits",
                 Language = 0,
@@ -172,7 +172,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             var guesserButtonPassiveButton = guesserButton.GetComponentInChildren<PassiveButton>();
 
             guesserButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
-            guesserButtonPassiveButton.OnClick.AddListener((System.Action)(() =>
+            guesserButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
                 TORMapOptions.gameMode = CustomGamemodes.Guesser;
                 template.OnClick();
@@ -184,7 +184,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             var HideNSeekButtonPassiveButton = HideNSeekButton.GetComponentInChildren<PassiveButton>();
 
             HideNSeekButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
-            HideNSeekButtonPassiveButton.OnClick.AddListener((System.Action)(() =>
+            HideNSeekButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
                 TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
                 template.OnClick();
@@ -196,13 +196,13 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
             var PropHuntButtonPassiveButton = PropHuntButton.GetComponentInChildren<PassiveButton>();
 
             PropHuntButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
-            PropHuntButtonPassiveButton.OnClick.AddListener((System.Action)(() =>
+            PropHuntButtonPassiveButton.OnClick.AddListener((Action)(() =>
             {
                 TORMapOptions.gameMode = CustomGamemodes.PropHunt;
                 template.OnClick();
             }));
 
-            template.StartCoroutine(Effects.Lerp(0.1f, new System.Action<float>((p) =>
+            template.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) =>
             {
                 guesserButtonText.SetText("TOU Guesser");
                 HideNSeekButtonText.SetText("TOU Hide N Seek");

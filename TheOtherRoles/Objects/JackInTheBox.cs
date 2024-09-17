@@ -9,7 +9,7 @@ namespace TheOtherRoles.Objects;
 
 public class JackInTheBox
 {
-    public static System.Collections.Generic.List<JackInTheBox> AllJackInTheBoxes = new();
+    public static List<JackInTheBox> AllJackInTheBoxes = new();
     public static int JackInTheBoxLimit = 3;
     public static bool boxesConvertedToVents;
     public static Sprite[] boxAnimationSprites = new Sprite[18];
@@ -57,7 +57,7 @@ public class JackInTheBox
 
         // Create the vent
         var referenceVent = UnityEngine.Object.FindObjectOfType<Vent>();
-        vent = UnityEngine.Object.Instantiate<Vent>(referenceVent);
+        vent = UnityEngine.Object.Instantiate(referenceVent);
         vent.gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         vent.transform.position = gameObject.transform.position;
         vent.Left = null;

@@ -339,7 +339,7 @@ static class HudManagerStartPatch
         }
         // Add poolable player to the button so that the target outfit is shown
         button.actionButton.cooldownTimerText.transform.localPosition = new Vector3(0, 0, -1f);  // Before the poolable player
-        targetDisplay = UnityEngine.Object.Instantiate<PoolablePlayer>(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
+        targetDisplay = UnityEngine.Object.Instantiate(IntroCutsceneOnDestroyPatch.playerPrefab, button.actionButton.transform);
         NetworkedPlayerInfo data = target.Data;
         target.SetPlayerMaterialColors(targetDisplay.cosmetics.currentBodySprite.BodySprite);
         targetDisplay.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
@@ -1479,11 +1479,11 @@ static class HudManagerStartPatch
                 AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
                 RPCProcedure.setSwoop(Jackal.jackal.PlayerId, byte.MinValue);
             },
-            () => 
+            () =>
             {
-                /* Can See */ 
+                /* Can See */
                 return Jackal.jackal != null && Jackal.canSwoop && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl
-                       && !CachedPlayer.LocalPlayer.Data.IsDead; 
+                       && !CachedPlayer.LocalPlayer.Data.IsDead;
             },
             () =>
             {  /* On Click */

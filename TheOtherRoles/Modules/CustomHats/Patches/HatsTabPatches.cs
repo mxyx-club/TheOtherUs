@@ -15,10 +15,10 @@ internal static class HatsTabPatches
     private static TextMeshPro textTemplate;
 
 
-	[HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
-	[HarmonyPrefix]
-	private static bool OnEnablePrefix(HatsTab __instance)
-	{
+    [HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
+    [HarmonyPrefix]
+    private static bool OnEnablePrefix(HatsTab __instance)
+    {
         for (var i = 0; i < __instance.scroller.Inner.childCount; i++)
         {
             Object.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
@@ -66,8 +66,8 @@ internal static class HatsTabPatches
         }
 
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
-		return false;
-	}
+        return false;
+    }
 
     private static float CreateHatPackage(List<Tuple<HatData, HatExtension>> hats, string packageName, float yStart,
         HatsTab hatsTab)

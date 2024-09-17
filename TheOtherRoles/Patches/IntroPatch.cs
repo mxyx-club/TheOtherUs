@@ -30,7 +30,7 @@ class IntroCutsceneOnDestroyPatch
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
                 NetworkedPlayerInfo data = p.Data;
-                PoolablePlayer player = UnityEngine.Object.Instantiate<PoolablePlayer>(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
+                PoolablePlayer player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
@@ -91,7 +91,7 @@ class IntroCutsceneOnDestroyPatch
             BountyHunter.bountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
-                BountyHunter.cooldownText = UnityEngine.Object.Instantiate<TMPro.TextMeshPro>(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                BountyHunter.cooldownText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 BountyHunter.cooldownText.alignment = TMPro.TextAlignmentOptions.Center;
                 BountyHunter.cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -62f);
                 BountyHunter.cooldownText.transform.localScale = Vector3.one * 0.4f;
@@ -150,7 +150,7 @@ class IntroCutsceneOnDestroyPatch
                 var list = UnityEngine.Object.FindObjectsOfType<Vent>().ToList();
                 var adminVent = list.FirstOrDefault(x => x.gameObject.name == "AdminVent");
                 var bathroomVent = list.FirstOrDefault(x => x.gameObject.name == "BathroomVent");
-                HideNSeek.polusVent = UnityEngine.Object.Instantiate<Vent>(adminVent);
+                HideNSeek.polusVent = UnityEngine.Object.Instantiate(adminVent);
                 HideNSeek.polusVent.gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                 HideNSeek.polusVent.transform.position = new Vector3(36.55068f, -21.5168f, -0.0215168f);
                 HideNSeek.polusVent.Left = adminVent;
