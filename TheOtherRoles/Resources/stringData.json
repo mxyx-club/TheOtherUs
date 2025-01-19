@@ -2955,7 +2955,7 @@
         "0": "TOU Hide N Seek",
         "13": "TOU\u6349\u8ff7\u85cf\u6a21\u5f0f"
     },
-    "gameModeTextPH": {
+    "gameModeTextPh": {
         "0": "TOU Prop Hunt",
         "13": "TOU\u53d8\u5f62\u72e9\u730e\u6a21\u5f0f"
     },
@@ -3454,6 +3454,30 @@
     "roleSummaryTorched": {
         "0": " - burnt by {0}",
         "13": " - \u88ab{0}\u70e7\u6b7b"
+    },
+    "PingTrackerPatchHns": {
+        "0": "Hide 'N Seek",
+        "13": "\u6349\u8ff7\u85cf\u6a21\u5f0f"
+    },
+    "PingTrackerPatchGuesser": {
+        "0": "Guesser",
+        "13": "\u8d4c\u602a\u6a21\u5f0f"
+    },
+    "PingTrackerPatchPh": {
+        "0": "Prop Hunt",
+        "13": "\u53d8\u5f62\u72e9\u730e\u6a21\u5f0f"
+    },
+    "UpdateGameModeText": {
+        "0": "Game Mode",
+        "13": "\u6e38\u620f\u6a21\u5f0f"
+    },
+    "UpdateGameModeText1": {
+        "0": "Van. HideNSeek",
+        "13": "\u539f\u7248\u6349\u8ff7\u85cf"
+    },
+    "UpdateGameModeText2": {
+        "0": "Classic",
+        "13": "\u7ecf\u5178"
     },
     "colorSalmon": {
         "0": "Salmon",
