@@ -20,7 +20,7 @@ class IntroCutsceneOnDestroyPatch
         // Generate and initialize player icons
         int playerCounter = 0;
         int hideNSeekCounter = 0;
-        if (CachedPlayer.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
+        if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
             float aspect = Camera.main.aspect;
             float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
@@ -28,7 +28,7 @@ class IntroCutsceneOnDestroyPatch
             float ypos = 0.15f - (safeOrthographicSize * 1.7f);
             bottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
 
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 NetworkedPlayerInfo data = p.Data;
                 PoolablePlayer player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
@@ -36,14 +36,14 @@ class IntroCutsceneOnDestroyPatch
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(ResetButtonCooldown.killCooldown);
+                PlayerControl.LocalPlayer.SetKillTimer(ResetButtonCooldown.killCooldown);
                 // PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
                 TORMapOptions.playerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
-                if (CachedPlayer.LocalPlayer.PlayerControl == Arsonist.arsonist && p != Arsonist.arsonist)
+                if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
                 {
                     player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) + (Vector3.right * playerCounter++ * 0.35f);
                     player.transform.localScale = Vector3.one * 0.2f;
@@ -87,7 +87,7 @@ class IntroCutsceneOnDestroyPatch
         }
 
         // Force Bounty Hunter to load a new Bounty when the Intro is over
-        if (BountyHunter.bounty != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter)
+        if (BountyHunter.bounty != null && PlayerControl.LocalPlayer == BountyHunter.bountyHunter)
         {
             BountyHunter.bountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
@@ -117,7 +117,7 @@ class IntroCutsceneOnDestroyPatch
             PlayerControl target = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(TORMapOptions.firstKillName));
             if (target != null)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFirstKill, SendOption.Reliable, -1);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetFirstKill, SendOption.Reliable, -1);
                 writer.Write(target.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.setFirstKill(target.PlayerId);
@@ -185,22 +185,22 @@ class IntroPatch
     public static void setupIntroTeamIcons(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
         // Intro solo teams
-        if (isNeutral(CachedPlayer.LocalPlayer.PlayerControl))
+        if (isNeutral(PlayerControl.LocalPlayer))
         {
             var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-            soloTeam.Add(CachedPlayer.LocalPlayer.PlayerControl);
+            soloTeam.Add(PlayerControl.LocalPlayer);
             yourTeam = soloTeam;
         }
 
         // Add the Spy to the Impostor team (for the Impostors)
-        if (Spy.spy != null && CachedPlayer.LocalPlayer.Data.Role.IsImpostor)
+        if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
         {
             List<PlayerControl> players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
             var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
-            fakeImpostorTeam.Add(CachedPlayer.LocalPlayer.PlayerControl);
+            fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
             foreach (PlayerControl p in players)
             {
-                if (CachedPlayer.LocalPlayer.PlayerControl != p && (p == Spy.spy || p.Data.Role.IsImpostor))
+                if (PlayerControl.LocalPlayer != p && (p == Spy.spy || p.Data.Role.IsImpostor))
                     fakeImpostorTeam.Add(p);
             }
             yourTeam = fakeImpostorTeam;
@@ -209,7 +209,7 @@ class IntroPatch
 
     public static void setupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+        List<RoleInfo> infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
         RoleInfo roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
         if (roleInfo == null) return;
         if (roleInfo.isNeutral)
@@ -266,7 +266,7 @@ class IntroPatch
         public static void SetRoleTexts(IntroCutscene __instance)
         {
             // Don't override the intro of the vanilla roles
-            var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+            var infos = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer);
             var roleInfo = infos.Where(info => !info.isModifier).FirstOrDefault();
             var modifierInfo = infos.Where(info => info.isModifier).FirstOrDefault();
 
@@ -310,7 +310,7 @@ class IntroPatch
                     __instance.RoleBlurbText.text += cs(modifierInfo.color, $"\n{modifierInfo.introDescription}");
                 else
                 {
-                    PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
+                    PlayerControl otherLover = PlayerControl.LocalPlayer == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
                     __instance.RoleBlurbText.text += cs(Lovers.color, string.Format("introLover".Translate(), otherLover?.Data?.PlayerName ?? ""));
                 }
             }

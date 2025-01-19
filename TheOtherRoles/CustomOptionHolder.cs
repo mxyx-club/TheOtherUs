@@ -456,6 +456,7 @@ public class CustomOptionHolder
     public static CustomOption modifierChameleonFadeDuration;
     public static CustomOption modifierChameleonMinVisibility;
 
+    public static CustomOption modifierArmored;
 
     public static CustomOption modifierShifter;
 
@@ -525,6 +526,7 @@ public class CustomOptionHolder
     public static CustomOption guesserGamemodeKillsThroughShield;
     public static CustomOption guesserGamemodeEvilCanKillSpy;
     public static CustomOption guesserGamemodeCantGuessSnitchIfTaksDone;
+    public static CustomOption guesserGamemodeCrewGuesserNumberOfTasks;
 
     // Hide N Seek Gamemode
     public static CustomOption hideNSeekHunterCount;
@@ -650,7 +652,7 @@ public class CustomOptionHolder
         //Map options
         randomGameStartPosition = Create(50, Types.General, "randomGameStartPosition", false, null, true, heading: "mapOptions");
         randomGameStartToVents = Create(51, Types.General, "randomGameStartToVents", false, randomGameStartPosition);
-        ShowVentsOnMap = Create(65, Types.General, "ShowVentsOnMap", false, null, true);
+        ShowVentsOnMap = Create(65, Types.General, "ShowVentsOnMap", false, null);
         ShowVentsOnMeetingMap = Create(66, Types.General, "ShowVentsOnMeetingMap", true, ShowVentsOnMap);
 
         enableBetterPolus = Create(60, Types.General, "enableBetterPolus", false, null, true, heading: "betterPolus");
@@ -839,7 +841,7 @@ public class CustomOptionHolder
         pursuerBlanksNumber = Create(20078, Types.Neutral, "pursuerBlanksNumber", 5f, 1f, 20f, 1f, lawyerSpawnRate);
 
         doomsayerSpawnRate = Create(20221, Types.Neutral, cs(Doomsayer.color, "doomsayer"), rates, null, true);
-        doomsayerCooldown = Create(20222, Types.Neutral, "", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
+        doomsayerCooldown = Create(20222, Types.Neutral, "doomsayerCooldown", 20f, 2.5f, 60f, 2.5f, doomsayerSpawnRate);
         //doomsayerHasMultipleShotsPerMeeting = Create(20223, Types.Neutral, "", true, doomsayerSpawnRate);
         //doomsayerCanGuessImpostor = Create(20226, Types.Neutral, $"Can Guess {cs(Palette.ImpostorRed, "Impostor")}", true, doomsayerSpawnRate);
         doomsayerCanGuessNeutral = Create(20225, Types.Neutral, $"doomsayerCanGuessNeutral".Translate() + $" {cs(Color.gray, "neutral")}", true, doomsayerSpawnRate);
@@ -878,7 +880,7 @@ public class CustomOptionHolder
         mayorTasksNeededToSeeVoteColors = Create(30012, Types.Crewmate, "mayorTasksNeededToSeeVoteColors", 5f, 0f, 20f, 1f, mayorCanSeeVoteColors);
         mayorMeetingButton = Create(30013, Types.Crewmate, "mayorMeetingButton", true, mayorSpawnRate);
         mayorMaxRemoteMeetings = Create(30014, Types.Crewmate, "mayorMaxRemoteMeetings", 1f, 1f, 5f, 1f, mayorMeetingButton);
-        mayorChooseSingleVote = Create(30015, Types.Crewmate, "mayorChooseSingleVote", ["opyionOff".Translate(), "mayorChooseSingleVote1".Translate(), "mayorChooseSingleVote2".Translate()], mayorSpawnRate);
+        mayorChooseSingleVote = Create(30015, Types.Crewmate, "mayorChooseSingleVote", ["optionOff".Translate(), "mayorChooseSingleVote1".Translate(), "mayorChooseSingleVote2".Translate()], mayorSpawnRate);
 
         engineerSpawnRate = Create(30020, Types.Crewmate, cs(Engineer.color, "engineer"), rates, null, true);
         engineerRemoteFix = Create(30021, Types.Crewmate, "engineerRemoteFix", true, engineerSpawnRate);
@@ -1107,20 +1109,22 @@ public class CustomOptionHolder
         modifierChameleonFadeDuration = Create(1213, Types.Modifier, "modifierChameleonFadeDuration", 1f, 0.25f, 10f, 0.25f, modifierChameleon);
         modifierChameleonMinVisibility = Create(1214, Types.Modifier, "modifierChameleonMinVisibility", ["0%", "10%", "20%", "30%", "40%", "50%"], modifierChameleon);
 
+        modifierArmored = CustomOption.Create(1101, Types.Modifier, cs(Color.yellow, "armored"), rates, null, true);
+
         modifierShifter = Create(1220, Types.Modifier, cs(Color.yellow, "shifter"), rates, null, true);
 
         //-------------------------- Guesser Gamemode 2000 - 2999 -------------------------- //
 
-        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "guesserGamemodeCrewNumber"), 24f, 1f, 24f, 1f, null, true, heading: "headingAmountOfGuessers");
-        guesserGamemodeNeutralNumber = Create(2002, Types.Guesser, cs(Guesser.color, "guesserGamemodeNeutralNumber"), 24f, 1f, 24f, 1f, null, false);
-        guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Guesser.color, "guesserGamemodeImpNumber"), 24f, 1f, 24f, 1f, null, false);
+        guesserGamemodeCrewNumber = Create(2001, Types.Guesser, cs(Guesser.color, "guesserGamemodeCrewNumber"), 24f, 0f, 24f, 1f, null, true, heading: "headingAmountOfGuessers");
+        guesserGamemodeNeutralNumber = Create(2002, Types.Guesser, cs(Guesser.color, "guesserGamemodeNeutralNumber"), 24f, 0f, 24f, 1f, null, false);
+        guesserGamemodeImpNumber = Create(2003, Types.Guesser, cs(Guesser.color, "guesserGamemodeImpNumber"), 24f, 0f, 24f, 1f, null, false);
         guesserForceJackalGuesser = Create(2007, Types.Guesser, "guesserForceJackalGuesser", false, null, true, heading: "headingForceGuesser");
         guesserGamemodeSidekickIsAlwaysGuesser = Create(2012, Types.Guesser, "guesserGamemodeSidekickIsAlwaysGuesser", false, null);
         guesserForceThiefGuesser = Create(2011, Types.Guesser, "guesserForceThiefGuesser", false, null, true);
         guesserGamemodeHaveModifier = Create(2004, Types.Guesser, "guesserGamemodeHaveModifier", true, null, true, heading: "headingGeneralGuesser");
         guesserGamemodeNumberOfShots = Create(2005, Types.Guesser, "guesserGamemodeNumberOfShots", 3f, 1f, 24f, 1f, null, false);
         guesserGamemodeHasMultipleShotsPerMeeting = Create(2006, Types.Guesser, "guesserGamemodeHasMultipleShotsPerMeeting", false, null);
-        guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "guesserGamemodeKillsThroughShield", true, null);
+        guesserGamemodeCrewGuesserNumberOfTasks = Create(2013, Types.Guesser, "guesserGamemodeCrewGuesserNumberOfTasks", 0f, 0f, 15f, 1f, null); guesserGamemodeKillsThroughShield = Create(2008, Types.Guesser, "guesserGamemodeKillsThroughShield", true, null);
         guesserGamemodeEvilCanKillSpy = Create(2009, Types.Guesser, "guesserGamemodeEvilCanKillSpy", true, null);
         guesserGamemodeCantGuessSnitchIfTaksDone = Create(2010, Types.Guesser, "guesserGamemodeCantGuessSnitchIfTaksDone", true, null);
 

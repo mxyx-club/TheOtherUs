@@ -110,6 +110,7 @@ public static class TheOtherRoles
         Vip.clearAndReload();
         Invert.clearAndReload();
         Chameleon.clearAndReload();
+        Armored.clearAndReload();
 
         // Gamemodes
         HandleGuesser.clearAndReload();
@@ -576,12 +577,12 @@ public static class TheOtherRoles
         public static void setHandcuffedKnows(bool active = true, byte playerId = Byte.MaxValue)
         {
             if (playerId == Byte.MaxValue)
-                playerId = CachedPlayer.LocalPlayer.PlayerId;
+                playerId = PlayerControl.LocalPlayer.PlayerId;
 
-            if (active && playerId == CachedPlayer.LocalPlayer.PlayerId)
+            if (active && playerId == PlayerControl.LocalPlayer.PlayerId)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable, -1);
-                writer.Write(CachedPlayer.LocalPlayer.PlayerId);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGhostInfo, SendOption.Reliable, -1);
+                writer.Write(PlayerControl.LocalPlayer.PlayerId);
                 writer.Write((byte)RPCProcedure.GhostInfoTypes.HandcuffNoticed);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
             }
@@ -592,7 +593,7 @@ public static class TheOtherRoles
                 handcuffedPlayers.RemoveAll(x => x == playerId);
             }
 
-            if (playerId == CachedPlayer.LocalPlayer.PlayerId)
+            if (playerId == PlayerControl.LocalPlayer.PlayerId)
             {
                 HudManagerStartPatch.setAllButtonsHandcuffedStatus(active);
                 SoundEffectsManager.play("deputyHandcuff");
@@ -793,10 +794,10 @@ public static class Medic
         if (Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
         {
             hasVisibleShield = Medic.showShielded == 0 || Helpers.shouldShowGhostInfo() // Everyone or Ghost info
-                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
-                || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
+                || (Medic.showShielded == 1 && (PlayerControl.LocalPlayer == Medic.shielded || PlayerControl.LocalPlayer == Medic.medic)) // Shielded + Medic
+                || (Medic.showShielded == 2 && PlayerControl.LocalPlayer == Medic.medic); // Medic only
             // Make shield invisible till after the next meeting if the option is set (the medic can already see the shield)
-            hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic || Helpers.shouldShowGhostInfo());
+            hasVisibleShield = hasVisibleShield && (Medic.meetingAfterShielding || !Medic.showShieldAfterMeeting || PlayerControl.LocalPlayer == Medic.medic || Helpers.shouldShowGhostInfo());
         }
         return hasVisibleShield;
     }
@@ -1021,7 +1022,7 @@ public static class Camouflager
     {
         if (isCamoComms()) return;
         camouflageTimer = 0f;
-        foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
             if ((p == Ninja.ninja && Ninja.isInvisble) || (p == Jackal.jackal && Jackal.isInvisable))
                 continue;
@@ -1407,7 +1408,7 @@ public static class Jackal
     public static void setSwoop()
     {
         var chance = canSwoop = rnd.NextDouble() < chanceSwoop;
-        var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                     (byte)CustomRPC.JackalCanSwooper, SendOption.Reliable);
         writer.Write(chance);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1537,7 +1538,7 @@ public static class Doomsayer
 
             AllMessage.Add(message.ToString());
 
-            var writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.DoomsayerMeeting, SendOption.Reliable);
             writer.WritePacked(AllMessage.Count);
             AllMessage.Do(writer.Write);
@@ -2047,7 +2048,7 @@ public static class Arsonist
 
     public static bool dousedEveryoneAlive()
     {
-        return CachedPlayer.AllPlayers.All(x => { return x.PlayerControl == arsonist || x.Data.IsDead || x.Data.Disconnected || dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+        return PlayerControl.AllPlayerControls.ToArray().All(x => { return x == arsonist || x.Data.IsDead || x.Data.Disconnected || dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
     }
 
     public static void clearAndReload()
@@ -2321,7 +2322,7 @@ public static class Medium
         chanceAdditionalInfo = CustomOptionHolder.mediumChanceAdditionalInfo.getSelection() / 10f;
     }
 
-    public static string getInfo(PlayerControl target, PlayerControl killer)
+    public static string getInfo(PlayerControl target, PlayerControl killer, DeadPlayer.CustomDeathReason deathReason)
     {
         string msg = "";
 
@@ -2330,10 +2331,10 @@ public static class Medium
         // suicides:
         if (killer == target)
         {
-            if (target == Sheriff.sheriff || target == Sheriff.formerSheriff) infos.Add(SpecialMediumInfo.SheriffSuicide);
+            if ((target == Sheriff.sheriff || target == Sheriff.formerSheriff) && deathReason != DeadPlayer.CustomDeathReason.LoverSuicide) infos.Add(SpecialMediumInfo.SheriffSuicide);
             if (target == Lovers.lover1 || target == Lovers.lover2) infos.Add(SpecialMediumInfo.PassiveLoverSuicide);
-            if (target == Thief.thief) infos.Add(SpecialMediumInfo.ThiefSuicide);
-            if (target == Warlock.warlock) infos.Add(SpecialMediumInfo.WarlockSuicide);
+            if (target == Thief.thief && deathReason != DeadPlayer.CustomDeathReason.LoverSuicide) infos.Add(SpecialMediumInfo.ThiefSuicide);
+            if (target == Warlock.warlock && deathReason != DeadPlayer.CustomDeathReason.LoverSuicide) infos.Add(SpecialMediumInfo.WarlockSuicide);
         }
         else
         {
@@ -2938,9 +2939,9 @@ public static class AntiTeleport
     public static void setPosition()
     {
         if (position == Vector3.zero) return;  // Check if this has been set, otherwise first spawn on submerged will fail
-        if (antiTeleport.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count > 0)
+        if (antiTeleport.FindAll(x => x.PlayerId == PlayerControl.LocalPlayer.PlayerId).Count > 0)
         {
-            CachedPlayer.LocalPlayer.NetTransform.RpcSnapTo(position);
+            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(position);
             if (SubmergedCompatibility.IsSubmerged)
             {
                 SubmergedCompatibility.ChangeFloor(position.y > -7);
@@ -3287,6 +3288,17 @@ public static class Chameleon
             catch { }
         }
 
+    }
+}
+public static class Armored
+{
+    public static PlayerControl armored;
+
+    public static bool isBrokenArmor = false;
+    public static void clearAndReload()
+    {
+        armored = null;
+        isBrokenArmor = false;
     }
 }
 

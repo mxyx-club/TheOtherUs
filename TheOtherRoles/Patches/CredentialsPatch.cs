@@ -27,14 +27,13 @@ $@"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Ver
             DeltaTime += (Time.deltaTime - DeltaTime) * 0.1f;
             var fps = Mathf.Ceil(1f / DeltaTime);
             var PingText = $"<size=80%>Ping: {AmongUsClient.Instance.Ping}ms {(TORMapOptions.showFPS ? $"FPS: {fps}" : "")}</size>";
-            var host = $"<size=80%>Host: {GameData.Instance?.GetHost()?.PlayerName}</size>";
             __instance.text.SetOutlineThickness(0.01f);
             var position = __instance.GetComponent<AspectPosition>();
             var gameModeText = TORMapOptions.gameMode switch
             {
-                CustomGamemodes.HideNSeek => "Hide 'N Seek",
-                CustomGamemodes.Guesser => "Guesser",
-                CustomGamemodes.PropHunt => "Prop Hunt",
+                CustomGamemodes.HideNSeek => "PingTrackerPatchHns".Translate(),
+                CustomGamemodes.Guesser => "PingTrackerPatchGuesser".Translate(),
+                CustomGamemodes.PropHunt => "PingTrackerPatchPh".Translate(),
                 _ => ""
             };
             gameModeText = string.IsNullOrEmpty(gameModeText) ? "" : cs(Color.yellow, gameModeText) + "\n";
@@ -66,9 +65,9 @@ $@"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Ver
             var GameModeText = GameObject.Find("GameModeText")?.GetComponent<TextMeshPro>();
             GameModeText.text = string.IsNullOrEmpty(gameModeText) 
                 ? (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek 
-                    ? "Van. HideNSeek" : "Classic") : gameModeText;
+                    ? "UpdateGameModeText1".Translate() : "UpdateGameModeText2".Translate()) : gameModeText;
             var modeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
-            modeLabel.text = "Game Mode";
+            modeLabel.text = "UpdateGameModeText".Translate();
         }
     }
 

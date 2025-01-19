@@ -74,9 +74,9 @@ static class AdditionalTempData
 
 
 [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
-public class OnGameEndPatch
+public static class OnGameEndPatch
 {
-    private static GameOverReason gameOverReason;
+    public static GameOverReason gameOverReason = GameOverReason.HumansByTask;
     public static void Prefix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
         gameOverReason = endGameResult.GameOverReason;
@@ -90,7 +90,7 @@ public class OnGameEndPatch
     {
         AdditionalTempData.clear();
 
-        foreach (var playerControl in CachedPlayer.AllPlayers)
+        foreach (var playerControl in PlayerControl.AllPlayerControls)
         {
             var roles = RoleInfo.getRoleInfoForPlayer(playerControl);
             var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(playerControl.Data);
@@ -218,7 +218,7 @@ public class OnGameEndPatch
             {
                 AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-                foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null) continue;
                     if (p == Lovers.lover1 || p == Lovers.lover2)
@@ -442,6 +442,39 @@ public class EndGameManagerSetUpPatch
                 textRenderer.text = "JuggernautWin".Translate();
                 textRenderer.color = Juggernaut.color;
                 break;
+            case WinCondition.Default:
+                switch (OnGameEndPatch.gameOverReason)
+                {
+                    case GameOverReason.ImpostorDisconnect:
+                        textRenderer.text = "ImpostorDisconnect";
+                        textRenderer.color = Color.red;
+                        break;
+                    case GameOverReason.ImpostorByKill:
+                        textRenderer.text = "ImpostorByKill";
+                        textRenderer.color = Color.red;
+                        break;
+                    case GameOverReason.ImpostorBySabotage:
+                        textRenderer.text = "ImpostorBySabotage";
+                        textRenderer.color = Color.red;
+                        break;
+                    case GameOverReason.ImpostorByVote:
+                        textRenderer.text = "ImpostorByVote";
+                        textRenderer.color = Color.red;
+                        break;
+                    case GameOverReason.HumansByTask:
+                        textRenderer.text = "HumansByTask";
+                        textRenderer.color = Color.white;
+                        break;
+                    case GameOverReason.HumansDisconnect:
+                        textRenderer.text = "HumansDisconnect";
+                        textRenderer.color = Color.white;
+                        break;
+                    case GameOverReason.HumansByVote:
+                        textRenderer.text = "HumansByVote";
+                        textRenderer.color = Color.white;
+                        break;
+                }
+                break;
         }
 
         foreach (WinCondition cond in AdditionalTempData.additionalWinConditions)
@@ -470,14 +503,14 @@ public class EndGameManagerSetUpPatch
                 int seconds = (int)AdditionalTempData.timer % 60;
                 roleSummaryText.AppendLine($"<color=#FAD934FF>"+ "gameTime".Translate() + " {minutes:00}:{seconds:00}</color> \n");
             }
-            roleSummaryText.AppendLine("Players and roles at the end of the game:");
+            roleSummaryText.AppendLine("endGameInfo".Translate());
             foreach (var data in AdditionalTempData.playerRoles)
             {
                 //var roles = string.Join(" ", data.Roles.Select(x => Helpers.cs(x.color, x.name)));
                 string roles = data.RoleNames;
                 //if (data.IsGuesser) roles += " (Guesser)";
                 var taskInfo = data.TasksTotal > 0 ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
-                if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(" + "killsCount".Translate() + " {data.Kills})</color>";
+                if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(" + "killsCount".Translate() + $" {data.Kills})</color>";
                 roleSummaryText.AppendLine($"{cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
             }
             TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
