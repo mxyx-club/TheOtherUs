@@ -8,6 +8,7 @@ using InnerNet;
 using Reactor.Utilities.Extensions;
 using Sentry.Internal.Extensions;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using TMPro;
@@ -765,7 +766,7 @@ public static class PlayerControlFixedUpdatePatch
                     {
                         var tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP")
                             .GetComponent<TextMeshPro>();
-                        tabText.SetText($"Tasks {taskInfo}");
+                        tabText.SetText(string.Format("playerTask".Translate(), taskInfo));
                     }
 
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
@@ -941,7 +942,7 @@ public static class PlayerControlFixedUpdatePatch
             }
             else if (!snitchIsDead)
             {
-                Snitch.text.text = $"Snitch is alive: {playerCompleted} / {playerTotal}";
+                Snitch.text.text = string.Format("snitchText".Translate(), playerCompleted, playerTotal);
             }
             else
             {
@@ -1778,22 +1779,22 @@ class BodyReportPatch
 
                 if (isMedicReport)
                 {
-                    msg = $"Body Report: Killed {Math.Round(timeSinceDeath / 1000)}s ago!";
+                    msg = string.Format(getString("medicReport"), Math.Round(timeSinceDeath / 1000));
                 }
                 else if (isDetectiveReport)
                 {
                     if (timeSinceDeath < Detective.reportNameDuration * 1000)
                     {
-                        msg = $"Body Report: The killer appears to be {deadPlayer.killerIfExisting.Data.PlayerName}!";
+                        msg = string.Format(getString("detectiveReportName"), deadPlayer.killerIfExisting.Data.PlayerName);
                     }
                     else if (timeSinceDeath < Detective.reportColorDuration * 1000)
                     {
-                        var typeOfColor = isLighterColor(deadPlayer.killerIfExisting) ? "lighter" : "darker";
-                        msg = $"Body Report: The killer appears to be a {typeOfColor} color!";
+                        var typeOfColor = isLighterColor(deadPlayer.killerIfExisting) ? ModTranslation.getString("detectiveColorLight") : ModTranslation.getString("detectiveColorDark");
+                        msg = string.Format(ModTranslation.getString("detectiveReportColor"), typeOfColor);
                     }
                     else
                     {
-                        msg = $"Body Report: The corpse is too old to gain information from!";
+                        msg = ModTranslation.getString("detectiveReportNone");
                     }
                 }
 
@@ -1891,7 +1892,7 @@ public static class MurderPlayerPatch
         // Seer show flash and add dead player position
         if (Seer.seer != null && (CachedPlayer.LocalPlayer.PlayerControl == Seer.seer || shouldShowGhostInfo()) && !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
         {
-            showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: "Seer Info: Someone Died");
+            showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f), message: "seerInfo".Translate());
         }
         if (Seer.deadBodyPositions != null) Seer.deadBodyPositions.Add(target.transform.position);
 

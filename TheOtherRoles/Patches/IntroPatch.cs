@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -55,7 +56,7 @@ class IntroCutsceneOnDestroyPatch
                     {
                         player.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0.4f, 0) + (Vector3.right * playerCounter++ * 0.6f);
                         player.transform.localScale = Vector3.one * 0.3f;
-                        player.cosmetics.nameText.text += $"{cs(Color.red, " (Hunter)")}";
+                        player.cosmetics.nameText.text += $"{cs(Color.red, $" ({"hunter".Translate()})")}";
                         player.gameObject.SetActive(true);
                     }
                     else if (!p.Data.Role.IsImpostor)
@@ -215,7 +216,7 @@ class IntroPatch
         {
             var neutralColor = new Color32(76, 84, 78, 255);
             __instance.BackgroundBar.material.color = roleInfo.color;
-            __instance.TeamTitle.text = "Neutral";
+            __instance.TeamTitle.text = "neutralTeam".Translate();
             __instance.TeamTitle.color = neutralColor;
 
         }
@@ -226,13 +227,13 @@ class IntroPatch
             if (isCrew)
             {
                 __instance.BackgroundBar.material.color = roleInfo.color;
-                __instance.TeamTitle.text = "Crewmate";
+                __instance.TeamTitle.text = "crewmateTeam".Translate();
                 __instance.TeamTitle.color = Color.cyan;
             }
             else
             {
                 __instance.BackgroundBar.material.color = roleInfo.color;
-                __instance.TeamTitle.text = "Impostor";
+                __instance.TeamTitle.text = "impostorTeam".Translate();
                 __instance.TeamTitle.color = Palette.ImpostorRed;
             }
         }
@@ -292,15 +293,15 @@ class IntroPatch
             if (Deputy.knowsSheriff && Deputy.deputy != null && Sheriff.sheriff != null)
             {
                 if (infos.Any(info => info.roleId == RoleId.Sheriff))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\nYour Deputy is {Deputy.deputy?.Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, string.Format("introDeputy".Translate(), Deputy.deputy?.Data?.PlayerName ?? ""));
                 else if (infos.Any(info => info.roleId == RoleId.Deputy))
-                    __instance.RoleBlurbText.text = cs(Sheriff.color, $"\nYour Sheriff is {Sheriff.sheriff?.Data?.PlayerName ?? ""}");
+                    __instance.RoleBlurbText.text = cs(Sheriff.color, string.Format("introSheriff".Translate(), Sheriff.sheriff?.Data?.PlayerName ?? ""));
             }
             else if (Lawyer.lawyer != null && Lawyer.target != null && infos.Any(info => info.roleId == RoleId.Lawyer))
             {
                 __instance.RoleBlurbText.text = Lawyer.isProsecutor
-                    ? cs(Lawyer.color, $"\nVote {Lawyer.target?.Data?.PlayerName ?? " Out!"}")
-                    : cs(Lawyer.color, $"\nYour target is {Lawyer.target?.Data?.PlayerName ?? ""}");
+                    ? cs(Lawyer.color, string.Format("introLawyer1".Translate(), Lawyer.target?.Data?.PlayerName))
+                    : cs(Lawyer.color, string.Format("introLawyer2".Translate(), Lawyer.target?.Data?.PlayerName));
             }
 
             if (modifierInfo != null)
@@ -310,7 +311,7 @@ class IntroPatch
                 else
                 {
                     PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl == Lovers.lover1 ? Lovers.lover2 : Lovers.lover1;
-                    __instance.RoleBlurbText.text += cs(Lovers.color, $"\n♥ You are in love with {otherLover?.Data?.PlayerName ?? ""} ♥");
+                    __instance.RoleBlurbText.text += cs(Lovers.color, string.Format("introLover".Translate(), otherLover?.Data?.PlayerName ?? ""));
                 }
             }
         }

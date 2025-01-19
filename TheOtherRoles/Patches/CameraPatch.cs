@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Hazel;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
@@ -112,7 +113,7 @@ public class CameraPatch
                     }
 
                     string timeString = TimeSpan.FromSeconds(TORMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
-                    TimeRemaining.text = String.Format("Remaining: {0}", timeString);
+                    TimeRemaining.text = String.Format("adminPatchTime".Translate(), timeString);
                     TimeRemaining.gameObject.SetActive(true);
 
                 }
@@ -228,7 +229,7 @@ public class CameraPatch
                     }
 
                     string timeString = TimeSpan.FromSeconds(TORMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
-                    TimeRemaining.text = String.Format("Remaining: {0}", timeString);
+                    TimeRemaining.text = String.Format("adminPatchTime".Translate(), timeString);
                     TimeRemaining.gameObject.SetActive(true);
                 }
 
@@ -299,7 +300,7 @@ public class CameraPatch
                     }
 
                     string timeString = TimeSpan.FromSeconds(TORMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
-                    TimeRemaining.text = String.Format("Remaining: {0}", timeString);
+                    TimeRemaining.text = String.Format("adminPatchTime".Translate(), timeString);
                     TimeRemaining.gameObject.SetActive(true);
                 }
 

@@ -16,17 +16,6 @@ public static class CredentialsPatch
 {
     public static string fullCredentialsVersion =
 $@"<size=130%><color=#ff351f>TheOtherUs</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
-    public static string fullCredentials =
-    $@"<size=70%>Modified by <color=#FCCE03FF>Spex</color>
-Based on TheOtherRoles";
-
-    public static string mainMenuCredentials =
-$@"Modified by <color=#FCCE03FF>Spex</color>, based on TheOtherRoles by <color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, 
-<color=#FCCE03FF>EndOfFile</color>, <color=#FCCE03FF>Mallöris</color> & <color=#FCCE03FF>Gendelo</color>
-Design by <color=#FCCE03FF>Bavari</color>";
-
-    public static string contributorsCredentials =
-$@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, Fangkuai, mxyx-club</color></size>";
 
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     internal static class PingTrackerPatch
@@ -60,7 +49,7 @@ $@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, 
             {
                 __instance.text.alignment = TextAlignmentOptions.TopLeft;
                 position.Alignment = AspectPosition.EdgeAlignments.LeftTop;
-                __instance.text.text = $"{fullCredentialsVersion}\n{gameModeText}{fullCredentials}\n{PingText}";
+                __instance.text.text = $"{fullCredentialsVersion}\n{gameModeText}{"fullCredentials".Translate()}\n{PingText}";
                 position.DistanceFromEdge = new(0.4f, 0.06f);
 
                 try
@@ -111,7 +100,7 @@ $@"<size=60%> <color=#FCCE03FF>Special thanks to Smeggy, Scoom, Xer, Mr_Fluuff, 
             renderer.sprite = EventUtility.isEnabled ? banner2Sprite : bannerSprite;
             var credentialObject = new GameObject("credentialsTOR");
             var credentials = credentialObject.AddComponent<TextMeshPro>();
-            credentials.SetText($"v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}\n<size=30f%>\n</size>{mainMenuCredentials}\n<size=30%>\n</size>{contributorsCredentials}");
+            credentials.SetText($"v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}\n<size=30f%>\n</size>{"mainMenuCredentials".Translate()}\n<size=30%>\n</size>{"contributorsCredentials".Translate()}");
             credentials.alignment = TextAlignmentOptions.Center;
             credentials.fontSize *= 0.05f;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -390,55 +391,55 @@ public class EndGameManagerSetUpPatch
         switch (AdditionalTempData.winCondition)
         {
             case WinCondition.EveryoneDied:
-                textRenderer.text = "Everyone Died";
+                textRenderer.text = "EveryoneDied".Translate();
                 textRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.MiniLose:
-                textRenderer.text = "Mini died";
+                textRenderer.text = "MiniLose".Translate();
                 textRenderer.color = Mini.color;
                 break;
             case WinCondition.LoversTeamWin:
-                textRenderer.text = "Lovers And Crewmates Win";
+                textRenderer.text = "LoversTeamWin".Translate();
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
                 break;
             case WinCondition.LoversSoloWin:
-                textRenderer.text = "Lovers Win";
+                textRenderer.text = "LoversSoloWin".Translate();
                 textRenderer.color = Lovers.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.color);
                 break;
             case WinCondition.JesterWin:
-                textRenderer.text = "Jester Wins";
+                textRenderer.text = "JesterWin".Translate();
                 textRenderer.color = Jester.color;
                 break;
             case WinCondition.JackalWin:
-                textRenderer.text = "Team Jackal Wins";
+                textRenderer.text = "JackalWin".Translate();
                 textRenderer.color = Jackal.color;
                 break;
             case WinCondition.ArsonistWin:
-                textRenderer.text = "Arsonist Wins";
+                textRenderer.text = "ArsonistWin".Translate();
                 textRenderer.color = Arsonist.color;
                 break;
             case WinCondition.VultureWin:
-                textRenderer.text = "Vulture Wins";
+                textRenderer.text = "VultureWin".Translate();
                 textRenderer.color = Vulture.color;
                 break;
             case WinCondition.ProsecutorWin:
-                textRenderer.text = "Prosecutor Wins";
+                textRenderer.text = "ProsecutorWin".Translate();
                 textRenderer.color = Lawyer.color;
                 break;
             case WinCondition.DoomsayerWin:
-                textRenderer.text = "Doomsayer Win";
+                textRenderer.text = "DoomsayerWin".Translate();
                 textRenderer.color = Doomsayer.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Doomsayer.color);
                 break;
             case WinCondition.WerewolfWin:
-                textRenderer.text = "Werewolf Wins";
+                textRenderer.text = "WerewolfWin".Translate();
                 textRenderer.color = Werewolf.color;
                 break;
             case WinCondition.JuggernautWin:
-                textRenderer.text = "Juggernaut Wins";
+                textRenderer.text = "JuggernautWin".Translate();
                 textRenderer.color = Juggernaut.color;
                 break;
         }
@@ -447,11 +448,11 @@ public class EndGameManagerSetUpPatch
         {
             if (cond == WinCondition.AdditionalLawyerBonusWin)
             {
-                textRenderer.text += $"\n{cs(Lawyer.color, "The Lawyer wins with the client")}";
+                textRenderer.text += $"\n{cs(Lawyer.color, "AdditionalLawyerBonusWin".Translate())}";
             }
             else if (cond == WinCondition.AdditionalAlivePursuerWin)
             {
-                textRenderer.text += $"\n{cs(Pursuer.color, "The Pursuer survived")}";
+                textRenderer.text += $"\n{cs(Pursuer.color, "AdditionalAlivePursuerWin".Translate())}";
             }
         }
 
@@ -467,7 +468,7 @@ public class EndGameManagerSetUpPatch
             {
                 int minutes = (int)AdditionalTempData.timer / 60;
                 int seconds = (int)AdditionalTempData.timer % 60;
-                roleSummaryText.AppendLine($"<color=#FAD934FF>Time: {minutes:00}:{seconds:00}</color> \n");
+                roleSummaryText.AppendLine($"<color=#FAD934FF>"+ "gameTime".Translate() + " {minutes:00}:{seconds:00}</color> \n");
             }
             roleSummaryText.AppendLine("Players and roles at the end of the game:");
             foreach (var data in AdditionalTempData.playerRoles)
@@ -476,7 +477,7 @@ public class EndGameManagerSetUpPatch
                 string roles = data.RoleNames;
                 //if (data.IsGuesser) roles += " (Guesser)";
                 var taskInfo = data.TasksTotal > 0 ? $" - <color=#FAD934FF>({data.TasksCompleted}/{data.TasksTotal})</color>" : "";
-                if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(Kills: {data.Kills})</color>";
+                if (data.Kills != null) taskInfo += $" - <color=#FF0000FF>(" + "killsCount".Translate() + " {data.Kills})</color>";
                 roleSummaryText.AppendLine($"{cs(data.IsAlive ? Color.white : new Color(.7f, .7f, .7f), data.PlayerName)} - {roles}{taskInfo}");
             }
             TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();

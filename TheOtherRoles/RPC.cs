@@ -12,6 +12,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using UnityEngine;
+using static Il2CppSystem.Globalization.CultureInfo;
 using static TheOtherRoles.GameHistory;
 using static TheOtherRoles.HudManagerStartPatch;
 using static TheOtherRoles.TheOtherRoles;
@@ -728,7 +729,7 @@ public static class RPCProcedure
         Engineer.remainingFixes--;
         if (shouldShowGhostInfo())
         {
-            showFlash(Engineer.color, 0.5f, "Engineer Fix"); ;
+            showFlash(Engineer.color, 0.5f, "enginneerFixRpc".Translate()); ;
         }
     }
 
@@ -1920,7 +1921,7 @@ public static class RPCProcedure
                     {
                         if (Bomber.timeLeft != timeLeft)
                         {
-                            _ = new CustomMessage("Your Bomb will explode in " + timeLeft + " seconds!", 1f);
+                            _ = new CustomMessage(string.Format("bombExplode".Translate(), timeLeft), 1f);
                             Bomber.timeLeft = timeLeft;
                         }
 
@@ -2081,7 +2082,6 @@ public static class RPCProcedure
 
             if (Yoyo.markedLocation == null)
             {
-                Message($"marked location is null in button press");
                 var writer = AmongUsClient.Instance.StartRpc(killer.NetId, (byte)CustomRPC.YoyoMarkLocation, SendOption.Reliable);
                 writer.WriteBytesAndSize(buff);
                 writer.EndMessage();
@@ -2090,13 +2090,11 @@ public static class RPCProcedure
                 yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
                 yoyoButton.Timer = 10f;
                 yoyoButton.HasEffect = false;
-                yoyoButton.buttonText = "Blink...";
+                yoyoButton.buttonText = "yoyoButtonRpc".Translate();
             }
             else
             {
-                Message("in else for some reason");
                 // Jump to location
-                Message($"trying to blink!");
                 var exit = (Vector3)Yoyo.markedLocation;
                 if (SubmergedCompatibility.IsSubmerged)
                 {
@@ -2110,7 +2108,7 @@ public static class RPCProcedure
                 yoyoButton.EffectDuration = Yoyo.blinkDuration;
                 yoyoButton.Timer = 10f;
                 yoyoButton.HasEffect = true;
-                yoyoButton.buttonText = "Returning...";
+                yoyoButton.buttonText = "yoyoReturn".Translate();
                 SoundEffectsManager.play("morphlingMorph");
             }
         }
@@ -2414,7 +2412,7 @@ public static class RPCProcedure
         // If the local player is impostor indicate lights out
         if (hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId)))
         {
-            new CustomMessage("Lights are out", Trickster.lightsOutDuration);
+            new CustomMessage("lightsOutText".Translate(), Trickster.lightsOutDuration);
         }
     }
 
@@ -2432,7 +2430,7 @@ public static class RPCProcedure
 
         var camera = UnityEngine.Object.Instantiate(referenceCamera);
         camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
-        camera.CamName = $"Security Camera {SecurityGuard.placedCameras}";
+        camera.CamName = string.Format("camName".Translate(), SecurityGuard.placedCameras);
         camera.Offset = new Vector3(0f, 0f, camera.Offset.z);
         if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 2 || GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4) camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship 
 
@@ -2546,7 +2544,7 @@ public static class RPCProcedure
             }
         }
 
-        //Ä©ÈÕ²Â²â
+        // Doomsayer guess
         if (Doomsayer.doomsayer != null && Doomsayer.doomsayer == guesser && Doomsayer.canGuess)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
@@ -2640,7 +2638,7 @@ public static class RPCProcedure
         if (CachedPlayer.LocalPlayer.Data.IsDead)
         {
             var roleInfo = RoleInfo.allRoleInfos.FirstOrDefault(x => (byte)x.roleId == guessedRoleId);
-            string msg = $"{guesser.Data.PlayerName} guessed the role {roleInfo?.name ?? ""} for {guessedTarget.Data.PlayerName}!";
+            string msg = string.Format("ghostGuesserText".Translate(), guesser.Data.PlayerName, roleInfo?.name ?? "", guessedTarget.Data.PlayerName);
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                 FastDestroyableSingleton<HudManager>.Instance!.Chat.AddChat(guesser, msg);
             if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))

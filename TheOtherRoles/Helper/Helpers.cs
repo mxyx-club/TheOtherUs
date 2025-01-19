@@ -681,9 +681,9 @@ public static class Helpers
 
     public static string GithubUrl(this string url)
     {
-        if (IsCN() && !url.Contains("github.moeyy.xyz"))
+        if (IsCN() && !url.Contains("ghfast.top"))
         {
-            return "https://github.moeyy.xyz/" + url;
+            return "https://ghfast.top/" + url;
         }
         return url;
     }

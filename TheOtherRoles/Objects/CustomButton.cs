@@ -34,7 +34,7 @@ public class CustomButton
     public HudManager hudManager;
     public bool mirror;
     public KeyCode? hotkey;
-    public string buttonText;
+    public string buttonText = "";
     public bool isHandcuffed;
     private static readonly int Desat = Shader.PropertyToID("_Desat");
 

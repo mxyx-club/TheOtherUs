@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -362,14 +363,14 @@ internal class ExileControllerMessagePatch
                 // Exile role text
                 if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP || id == StringNames.ExileTextSP)
                 {
-                    __result = player.Data.PlayerName + " was The " + String.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray());
+                    __result = player.Data.PlayerName + "exileControllerMessagePatch".Translate() + String.Join(" ", RoleInfo.getRoleInfoForPlayer(player, false).Select(x => x.name).ToArray());
                 }
                 // Hide number of remaining impostors on Jester win
                 if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
                 {
                     if (Jester.jester != null && player.PlayerId == Jester.jester.PlayerId) __result = "";
                 }
-                if (Tiebreaker.isTiebreak) __result += " (Tiebreaker)";
+                if (Tiebreaker.isTiebreak) __result += "exileTiebreaker".Translate();
                 Tiebreaker.isTiebreak = false;
             }
         }

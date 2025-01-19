@@ -6,6 +6,7 @@ using Hazel;
 using PowerTools;
 using Reactor.Utilities.Extensions;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
@@ -396,20 +397,20 @@ class EmergencyMinigameUpdatePatch
         if (Swapper.swapper != null && Swapper.swapper == CachedPlayer.LocalPlayer.PlayerControl && !Swapper.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = "The Swapper can't start an emergency meeting";
+            statusText = "swapperCallMeeting".Translate();
         }
         // Potentially deactivate emergency button for Jester
         if (Jester.jester != null && Jester.jester == CachedPlayer.LocalPlayer.PlayerControl && !Jester.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = "The Jester can't start an emergency meeting";
+            statusText = "jesterCallMeeting".Translate();
         }
         // Potentially deactivate emergency button for Lawyer/Prosecutor
         if (Lawyer.lawyer != null && Lawyer.lawyer == CachedPlayer.LocalPlayer.PlayerControl && !Lawyer.canCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = "The Lawyer can't start an emergency meeting";
-            if (Lawyer.isProsecutor) statusText = "The Prosecutor can't start an emergency meeting";
+            statusText = "lawyerCallMeeting".Translate();
+            if (Lawyer.isProsecutor) statusText = "prosecutorCallMeeting".Translate();
         }
 
         if (!roleCanCallEmergency)
@@ -428,7 +429,7 @@ class EmergencyMinigameUpdatePatch
             int localRemaining = CachedPlayer.LocalPlayer.PlayerControl.RemainingEmergencies;
             int teamRemaining = Mathf.Max(0, maxNumberOfMeetings - meetingsCount);
             int remaining = Mathf.Min(localRemaining, (Mayor.mayor != null && Mayor.mayor == CachedPlayer.LocalPlayer.PlayerControl) ? 1 : teamRemaining);
-            __instance.NumberText.text = $"{localRemaining.ToString()} and the ship has {teamRemaining.ToString()}";
+            __instance.NumberText.text = string.Format("shipMeetingCount".Translate(), localRemaining.ToString(), teamRemaining.ToString());
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
             __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);

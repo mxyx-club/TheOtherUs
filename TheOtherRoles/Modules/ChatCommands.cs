@@ -80,7 +80,7 @@ public static class ChatCommands
                     }
                     else
                     {
-                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Nice try, but you have to be the host to use this feature");
+                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "changeGameModeNotHost".Translate());
                     }
                     handled = true;
                 }
@@ -100,11 +100,11 @@ public static class ChatCommands
                     int col;
                     if (!Int32.TryParse(text.Substring(7), out col))
                     {
-                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Unable to parse color id\nUsage: /color {id}");
+                        __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "changeColorError".Translate());
                     }
                     col = Math.Clamp(col, 0, Palette.PlayerColors.Length - 1);
                     CachedPlayer.LocalPlayer.PlayerControl.SetColor(col);
-                    __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "Changed color succesfully"); ;
+                    __instance.AddChat(CachedPlayer.LocalPlayer.PlayerControl, "changeColorSuccesfully".Translate()); ;
                 }
             }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 using static TheOtherRoles.GameHistory;
@@ -90,7 +91,7 @@ public class VitalsPatch
                 }
 
                 string timeString = TimeSpan.FromSeconds(TORMapOptions.restrictVitalsTime).ToString(@"mm\:ss\.ff");
-                TimeRemaining.text = String.Format("Remaining: {0}", timeString);
+                TimeRemaining.text = String.Format("adminPatchTime".Translate(), timeString);
                 TimeRemaining.gameObject.SetActive(true);
             }
 

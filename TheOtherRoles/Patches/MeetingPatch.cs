@@ -311,7 +311,7 @@ class MeetingHudPatch
             {
                 selections[i] = true;
                 renderer.color = Color.yellow;
-                meetingExtraButtonLabel.text = cs(Color.yellow, "Confirm Swap");
+                meetingExtraButtonLabel.text = cs(Color.yellow, "meetingSwapperSwap");
             }
         }
         else if (selectedCount == 2)
@@ -320,7 +320,7 @@ class MeetingHudPatch
             {
                 renderer.color = Color.red;
                 selections[i] = false;
-                meetingExtraButtonLabel.text = cs(Color.red, "Confirm Swap");
+                meetingExtraButtonLabel.text = cs(Color.red, "meetingSwapperSwap");
             }
         }
     }
@@ -362,9 +362,9 @@ class MeetingHudPatch
             AmongUsClient.Instance.FinishRpcImmediately(writer);
 
             RPCProcedure.swapperSwap(firstPlayer.TargetPlayerId, secondPlayer.TargetPlayerId);
-            meetingExtraButtonLabel.text = cs(Color.green, "Swapping!");
+            meetingExtraButtonLabel.text = cs(Color.green, "meetingSwapperSwapping");
             Swapper.charges--;
-            meetingExtraButtonText.text = $"Swaps: {Swapper.charges}";
+            meetingExtraButtonText.text = string.Format("meetingSwapperSwapCount".Translate(), Swapper.charges);
         }
     }
 
@@ -407,8 +407,8 @@ class MeetingHudPatch
             swapperButtonList[i].OnClick.RemoveAllListeners();
             swapperButtonList[i].OnClick.AddListener((Action)(() => swapperOnClick(copyI, __instance)));
         }
-        meetingExtraButtonText.text = $"Swaps: {Swapper.charges}";
-        meetingExtraButtonLabel.text = cs(Color.red, "Confirm Swap");
+        meetingExtraButtonText.text = string.Format("meetingSwapperSwapCount".Translate(), Swapper.charges);
+        meetingExtraButtonLabel.text = cs(Color.red, "meetingSwapperSwap");
 
     }
 
@@ -432,7 +432,7 @@ class MeetingHudPatch
         writer.Write(Mayor.voteTwice);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
 
-        meetingExtraButtonLabel.text = cs(Mayor.color, "Double Vote: " + (Mayor.voteTwice ? cs(Color.green, "On ") : cs(Color.red, "Off")));
+        meetingExtraButtonLabel.text = cs(Mayor.color, "meetingMayer".Translate() + (Mayor.voteTwice ? cs(Color.green, "optionOn") : cs(Color.red, "optionOff")));
     }
 
     public static GameObject guesserUI;
@@ -714,7 +714,7 @@ class MeetingHudPatch
             Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
             TextMeshPro meetingInfo = infoTransform != null ? infoTransform.GetComponent<TextMeshPro>() : null;
             meetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
-            meetingExtraButtonText.text = addSwapperButtons ? $"Swaps: {Swapper.charges}" : "";
+            meetingExtraButtonText.text = addSwapperButtons ? string.Format("meetingSwapperSwapCount".Translate(), Swapper.charges) : "";
             meetingExtraButtonText.enableWordWrapping = false;
             meetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
             meetingExtraButtonText.transform.localPosition = new Vector3(-2.5f, 0f, 0f);
@@ -730,12 +730,12 @@ class MeetingHudPatch
             if (addSwapperButtons)
             {
                 meetingExtraButtonLabel.transform.localScale *= 1.7f;
-                meetingExtraButtonLabel.text = cs(Color.red, "Confirm Swap");
+                meetingExtraButtonLabel.text = cs(Color.red, "meetingSwapperSwap");
             }
             else if (addMayorButton)
             {
                 meetingExtraButtonLabel.transform.localScale = new Vector3(meetingExtraButtonLabel.transform.localScale.x * 1.5f, meetingExtraButtonLabel.transform.localScale.x * 1.7f, meetingExtraButtonLabel.transform.localScale.x * 1.7f);
-                meetingExtraButtonLabel.text = cs(Mayor.color, "Double Vote: " + (Mayor.voteTwice ? cs(Color.green, "On ") : cs(Color.red, "Off")));
+                meetingExtraButtonLabel.text = cs(Mayor.color, "meetingMayer".Translate() + (Mayor.voteTwice ? cs(Color.green, "optionOn") : cs(Color.red, "optionOff")));
             }
             PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
@@ -884,12 +884,12 @@ class MeetingHudPatch
             {
                 if (Portal.teleportedPlayers.Count > 0)
                 {
-                    string msg = "Portal Log:\n";
+                    string msg = "meetingPortalLog".Translate();
                     foreach (var entry in Portal.teleportedPlayers)
                     {
                         float timeBeforeMeeting = ((float)(DateTime.UtcNow - entry.time).TotalMilliseconds) / 1000;
-                        msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting}s ago: " : "";
-                        msg = msg + $"{entry.name} used the teleporter\n";
+                        msg += Portalmaker.logShowsTime ? string.Format("meetingPortalLog1".Translate(), (int)timeBeforeMeeting) : "";
+                        msg = msg + string.Format("meetingPortalLog2".Translate(), entry.name);
                     }
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Portalmaker.portalmaker, $"{msg}");
                 }
@@ -899,19 +899,19 @@ class MeetingHudPatch
             if (Trapper.trapper != null && (CachedPlayer.LocalPlayer.PlayerControl == Trapper.trapper || shouldShowGhostInfo()) && !Trapper.trapper.Data.IsDead)
             {
                 if (Trap.traps.Any(x => x.revealed))
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "Trap Logs:");
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "meetingTrapperTrapLog".Translate());
                 foreach (Trap trap in Trap.traps)
                 {
                     if (!trap.revealed) continue;
-                    string message = $"Trap {trap.instanceId}: \n";
+                    string message = string.Format("meetingTrapperTrap".Translate(), trap.instanceId);
                     trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
                     foreach (PlayerControl p in trap.trappedPlayer)
                     {
                         if (Trapper.infoType == 0) message += RoleInfo.GetRolesString(p, false, false, true) + "\n";
                         else if (Trapper.infoType == 1)
                         {
-                            if (isEvil(p) || p.Data.Role.IsImpostor) message += "Evil Role \n";
-                            else message += "Good Role \n";
+                            if (isEvil(p) || p.Data.Role.IsImpostor) message += "meetingTrapperTrapLogEvil".Translate();
+                            else message += "meetingTrapperTrapLogGood".Translate();
                         }
                         else message += p.Data.PlayerName + "\n";
                     }

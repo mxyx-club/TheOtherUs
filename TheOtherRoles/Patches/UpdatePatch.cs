@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Utilities;
 using UnityEngine;
@@ -191,19 +192,19 @@ class HudManagerUpdatePatch
         {
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
                 if (Godfather.godfather != null && Godfather.godfather == player)
-                    player.cosmetics.nameText.text = player.Data.PlayerName + " (G)";
+                    player.cosmetics.nameText.text = player.Data.PlayerName + "mafiaNameTextG".Translate();
                 else if (Mafioso.mafioso != null && Mafioso.mafioso == player)
-                    player.cosmetics.nameText.text = player.Data.PlayerName + " (M)";
+                    player.cosmetics.nameText.text = player.Data.PlayerName + "mafiaNameTextM".Translate();
                 else if (Janitor.janitor != null && Janitor.janitor == player)
-                    player.cosmetics.nameText.text = player.Data.PlayerName + " (J)";
+                    player.cosmetics.nameText.text = player.Data.PlayerName + "mafiaNameTextJ".Translate();
             if (MeetingHud.Instance != null)
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                     if (Godfather.godfather != null && Godfather.godfather.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Godfather.godfather.Data.PlayerName + " (G)";
+                        player.NameText.text = Godfather.godfather.Data.PlayerName + "mafiaNameTextG".Translate();
                     else if (Mafioso.mafioso != null && Mafioso.mafioso.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Mafioso.mafioso.Data.PlayerName + " (M)";
+                        player.NameText.text = Mafioso.mafioso.Data.PlayerName + "mafiaNameTextM".Translate();
                     else if (Janitor.janitor != null && Janitor.janitor.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Janitor.janitor.Data.PlayerName + " (J)";
+                        player.NameText.text = Janitor.janitor.Data.PlayerName + "mafiaNameTextJ".Translate();
         }
 
         // Lovers
@@ -252,7 +253,7 @@ class HudManagerUpdatePatch
             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
             {
                 var target = playerById(player.TargetPlayerId);
-                if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "L" : "D")})";
+                if (target != null) player.NameText.text += $" ({(isLighterColor(target) ? "playerColorL".Translate() : "playerColorD".Translate())})";
             }
         }
         // Add medic shield info:
