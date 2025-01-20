@@ -2482,10 +2482,12 @@
         "13": "\u88c5\u7532\u5175"
     },
     "armoredIntroDesc": {
-        "0": "You are protected from one murder attempt"
+        "0": "You are protected from one murder attempt",
+        "13": "\u4f60\u53d7\u5230\u4fdd\u62a4\uff0c\u514d\u906d\u4e00\u6b21\u8c0b\u6740\u4f01\u56fe"
     },
     "armoredShortDesc": {
-        "0": "You are protected from one murder attempt"
+        "0": "You are protected from one murder attempt",
+        "13": "\u4f60\u6709\u4e00\u6b21\u514d\u6b7b\u673a\u4f1a"
     },
     "hunter": {
         "0": "Hunter",
