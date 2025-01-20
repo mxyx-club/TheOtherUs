@@ -446,31 +446,31 @@ public class EndGameManagerSetUpPatch
                 switch (OnGameEndPatch.gameOverReason)
                 {
                     case GameOverReason.ImpostorDisconnect:
-                        textRenderer.text = "ImpostorDisconnect";
+                        textRenderer.text = "ImpostorDisconnect".Translate();
                         textRenderer.color = Color.red;
                         break;
                     case GameOverReason.ImpostorByKill:
-                        textRenderer.text = "ImpostorByKill";
+                        textRenderer.text = "ImpostorByKill".Translate();
                         textRenderer.color = Color.red;
                         break;
                     case GameOverReason.ImpostorBySabotage:
-                        textRenderer.text = "ImpostorBySabotage";
+                        textRenderer.text = "ImpostorBySabotage".Translate();
                         textRenderer.color = Color.red;
                         break;
                     case GameOverReason.ImpostorByVote:
-                        textRenderer.text = "ImpostorByVote";
+                        textRenderer.text = "ImpostorByVote".Translate();
                         textRenderer.color = Color.red;
                         break;
                     case GameOverReason.HumansByTask:
-                        textRenderer.text = "HumansByTask";
+                        textRenderer.text = "HumansByTask".Translate();
                         textRenderer.color = Color.white;
                         break;
                     case GameOverReason.HumansDisconnect:
-                        textRenderer.text = "HumansDisconnect";
+                        textRenderer.text = "HumansDisconnect".Translate();
                         textRenderer.color = Color.white;
                         break;
                     case GameOverReason.HumansByVote:
-                        textRenderer.text = "HumansByVote";
+                        textRenderer.text = "HumansByVote".Translate();
                         textRenderer.color = Color.white;
                         break;
                 }
